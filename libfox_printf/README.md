@@ -36,6 +36,7 @@ This is a school project I made and use regularly. It works just like printf but
 
 ###### To do :
 
+- [ ] UNIT TESTS !!!
 - [ ] Add flag support
 - [ ] Add extensive exception handling OR find a way to add custom behaviour for `format` attribute
 - [ ] Add pointer conversion specifiers (%p, %P)

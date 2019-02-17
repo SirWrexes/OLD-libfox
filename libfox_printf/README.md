@@ -43,3 +43,11 @@ This is a school project I made and use regularly. It works just like printf but
 - [ ] More custom conversion specifiers :
   - [ ] %m : prints strrerror (need to find a way to get the string directly instead of using a standard lib function)
   - [ ] Maybe more to come
+
+
+###### Versions
+- 1.0
+  - Initial commit
+- 1.0.1
+  - Added pointer conversion specifiers
+  - Added versions to README

@@ -19,7 +19,9 @@ static inline cspec_t _convspec_(char cs)
     case 'u' : return CS_UINT;
     case 'b' : return CS_BIN;
     case 'o' : return CS_OCT;
+    case 'p' :
     case 'x' : return CS_HEXL;
+    case 'P' :
     case 'X' : return CS_HEXU;
     case 'n' : return CS_LEN;
     case '%' : return CS_PERC;

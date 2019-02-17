@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 
-__attribute__ ((pure))
+static __attribute__ ((pure))
 size_t get_len(char const * const str)
 {
     size_t len;

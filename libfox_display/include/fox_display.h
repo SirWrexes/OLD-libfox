@@ -15,18 +15,22 @@
 ** fox_<name> : write to stdout
 ** fox_e<name> : write to stderr
 ** fox_f<name> : write to given file descriptor
+** Return value : number of written bytes or -1 in case of error
 */
 
 // Write a single character,
-// RETURN : write() return value
 ssize_t fox_putc(char c);
 ssize_t fox_eputc(char c);
 ssize_t fox_fputc(int fd, char c);
 
 // Write a complete string
-// RETURN : write() return value
 ssize_t fox_puts(char const *str);
 ssize_t fox_eputs(char const *str);
 ssize_t fox_fputs(int fd, char const *str);
+
+// Write an int
+ssize_t fox_putint(int nb);
+ssize_t fox_eputint(int nb);
+ssize_t fox_fputint(int fd, int nb);
 
 #endif //LIBFOX_LIBFOX_DISPLAY_H

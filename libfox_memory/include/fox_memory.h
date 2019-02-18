@@ -18,11 +18,11 @@
 #   define CLEANUP_PT __attribute__ ((cleanup(fox_autofree)))
 #   define CLEANUP_FD __attribute__ ((cleanup(fox_autoclose_fd)))
 #   define CLEANUP_FP __attribute__ ((cleanup(fox_autoclose_fp)))
+// For more information about these macros, see
+// GNU C documentation about variable attributes
 void fox_autofree(void *ptr);
 void fox_autoclose_fd(int *fd)  __attribute__ ((nonnull));
 void fox_autoclose_fp(FILE **fp);
-// For more information about these macros, see
-// GNU C documentation about variable attributes
 #endif
 
 // Set pointed memory to given data

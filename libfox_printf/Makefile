@@ -51,14 +51,22 @@ $(NAME):	$(OBJ)
 		echo "Creating fox_printf";	\
 		ar rc $(NAME) $(OBJ);		\
 	fi
+	@echo "Creating symlink in libfox/ root"
+    @cd ..; ln -s $(ROOT)/$(NAME)
 
 clean:
-	rm -f $(OBJ)
-	rm -f *~
-	rm -f a.out
+	@echo "fox_printf: Deleting object files"
+	@rm -f $(OBJ)
+	@echo "fox_printf: Deleting temp files"
+	@rm -f *~
+	@echo "fox_printf: Deleting test binaries"
+	@rm -f a.out
 
 fclean:clean
-	rm -f $(NAME)
+	@echo "fox_printf: Deleting $(NAME)"
+	@rm -f $(NAME)
+	@echo "fox_printf: Deleting symlink"
+    @rm -f ../$(NAME)
 
 re:	fclean all
 

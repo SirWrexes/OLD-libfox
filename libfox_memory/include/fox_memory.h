@@ -33,6 +33,10 @@ size_t fox_allocbytes(void *ptr);
 __attribute__ ((nonnull, returns_nonnull))
 void *fox_memset(void *ptr, size_t n, char data);
 
+// Copy up to n bytes from src to dst, stop when c is found
+__attribute__ ((nonnull))
+void *fox_memcpy(void *dst, void *src, int c, size_t n);
+
 // Allocate a pointer to n memebers of size and memset it to 0
 __attribute__ ((malloc, alloc_size(1, 2)))
 void *fox_calloc(size_t n, size_t size);

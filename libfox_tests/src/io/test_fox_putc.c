@@ -5,9 +5,7 @@
 ** fox_putc
 */
 
-#include <criterion/criterion.h>
-#include <criterion/redirect.h>
-#include "libfox_display.h"
+#include "libfox_tests.h"
 
 Test(putc, regular_usage)
 {

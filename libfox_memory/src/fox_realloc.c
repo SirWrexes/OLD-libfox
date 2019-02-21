@@ -25,7 +25,7 @@ void *fox_realloc(void *ptr, size_t newsize)
         oldmemsz = fox_allocbytes(ptr);
         newptr = malloc(newsize);
         tmpdst = (char *) newptr;
-        for (int i = 0 ; i < oldmemsz && i < newsize ; i += 1)
+        for (size_t i = 0 ; i < oldmemsz && i < newsize ; i += 1)
             tmpdst[i] = tmpsrc[i];
         return newptr;
     }

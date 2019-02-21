@@ -5,7 +5,7 @@
 ** Write a string
 */
 
-#include "private/__foxdisplay.h"
+#include "private/__foxio.h"
 
 inline ssize_t fox_puts(char const * const str)
 {

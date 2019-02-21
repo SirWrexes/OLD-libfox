@@ -1,11 +1,11 @@
 ##
-## EPITECH PROJECT, 2018
-## libfox_printf
+## EPITECH PROJECT, 2019
+## libfox_io
 ## File description:
 ## lib Makefile
 ##
 
-NAME		=	libfox_display.a
+NAME		=	libfox_io.a
 
 SHELL		=	/bin/sh
 
@@ -30,34 +30,34 @@ CDEBUG		=	-g3
 #CFLAGS		+=	$(CDEBUG)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(INCDIR)
+CFLAGS		+=	-iquote$(INCDIR) -iquote../libfox_macro/include
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	@if [ -e $(NAME) ];				\
 	then							\
-		echo "Updating fox_display";\
+		echo "Updating fox_io";		\
 		ar ru $(NAME) $(OBJ);		\
 	else							\
-		echo "Creating fox_display";\
+		echo "Creating fox_io";		\
 		ar rc $(NAME) $(OBJ);		\
 	fi
 	@echo "Creating symlink in libfox/ root"
 	@cd ..; ln -s $(ROOT)/$(NAME)
 
 clean:
-	@echo "fox_display: Deleting object files"
+	@echo "fox_io: Deleting object files"
 	@rm -f $(OBJ)
-	@echo "fox_display: Deleting temp files"
+	@echo "fox_io: Deleting temp files"
 	@rm -f *~
-	@echo "fox_display: Deleting test binaries"
+	@echo "fox_io: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "fox_display: Deleting $(NAME)"
+	@echo "fox_io: Deleting $(NAME)"
 	@rm -f $(NAME)
-	@echo "fox_display: Deleting symlink"
+	@echo "fox_io: Deleting symlink"
 	@rm -f ../$(NAME)
 
 re:	fclean all

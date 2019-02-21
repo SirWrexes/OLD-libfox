@@ -10,7 +10,7 @@
 __attribute__ ((nonnull))
 void fox_autoclose_fd(int *fd)
 {
-    if (fd < 0)
+    if (*fd < 0)
         return;
     close(*fd);
     *fd = -1;

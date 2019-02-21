@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2018
-** libfox_display
+** libfox_io
 ** File description:
 ** Get a number's digit count
 */

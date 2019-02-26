@@ -55,10 +55,10 @@ all: $(NAME) $(TESTS)
 $(NAME): $(OBJ)
 	@if [ -e $(NAME) ];				\
 	then							\
-		echo "Updating fox_io";	\
+		echo "Updating fox_io";		\
 		ar ru $(NAME) $(OBJ);		\
 	else							\
-		echo "Creating fox_io";	\
+		echo "Creating fox_io";		\
 		ar rc $(NAME) $(OBJ);		\
 	fi
 

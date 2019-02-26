@@ -45,8 +45,6 @@ $(NAME): $(OBJ)
 		echo "Creating fox_memory";	\
 		ar rc $(NAME) $(OBJ);		\
 	fi
-	@echo "Creating symlink in libfox/ root"
-	@cd ..; ln -s $(ROOT)/$(NAME)
 
 clean:
 	@echo "fox_memory: Deleting object files"
@@ -59,8 +57,6 @@ clean:
 fclean: clean
 	@echo "fox_memory: Deleting $(NAME)"
 	@rm -f $(NAME)
-	@echo "fox_memory: Deleting symlink"
-	@rm -f ../$(NAME)
 
 re:	fclean all
 

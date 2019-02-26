@@ -26,7 +26,7 @@ ssize_t fox_putint(int nb)
         if (write(1, &conv[i--], 1) == -1)
             return -1;
     while (i >= 0);
-    return len + neg && len;
+    return len + (neg && len);
 }
 
 ssize_t fox_eputint(int nb)
@@ -48,7 +48,7 @@ ssize_t fox_eputint(int nb)
         if (write(2, &conv[i--], 1) == -1)
             return -1;
     while (i >= 0);
-    return len + neg && len;
+    return len + (neg && len);
 }
 
 ssize_t fox_fputint(int fd, int nb)
@@ -70,5 +70,5 @@ ssize_t fox_fputint(int fd, int nb)
         if (write(fd, &conv[i--], 1) == -1)
             return -1;
     while (i >= 0);
-    return len + neg && len;
+    return len + (neg && len);
 }

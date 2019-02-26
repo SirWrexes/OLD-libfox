@@ -5,61 +5,85 @@
 ## lib Makefile
 ##
 
-NAME		=	libfox_io.a
-
 SHELL		=	/bin/sh
-
 CC			?=	gcc
 
+############
+NAME		=	libfox_io.a
+TESTS		=	tests_io
 ROOT		=	libfox_display
-SRCDIR		+=	src
-INCDIR		+=	include
+######
+PINC		+=	./include
+PDIR		+=	./src
+ #
+TINC		+=	./tests/include
+TDIR		+=	./tests/src
+######
+VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
+############
 
-VPATH		=	$(SRCDIR):$(INCDIR)
+############
+PSRC		+=	$(PDIR)/fox_putc.c
+PSRC		+=	$(PDIR)/fox_putint.c
+PSRC		+=	$(PDIR)/fox_puts.c
+PSRC		+=	$(PDIR)/libtools/fox_nbsize.c
+PSRC		+=	$(PDIR)/libtools/fox_strlen.c
+ #
+TSRC		+=	$(TDIR)/test_fox_strlen.c
+TSRC		+=	$(TDIR)/test_fox_nbsize.c
+TSRC		+=	$(TDIR)/test_fox_putc.c
+TSRC		+=	$(TDIR)/test_fox_puts.c
+TSRC		+=	$(TDIR)/test_fox_putint.c
+############
 
-SRC			+=	$(SRCDIR)/fox_putc.c
-SRC			+=	$(SRCDIR)/fox_putint.c
-SRC			+=	$(SRCDIR)/fox_puts.c
-SRC			+=	$(SRCDIR)/libtools/fox_nbsize.c
-SRC			+=	$(SRCDIR)/libtools/fox_strlen.c
-
-OBJ			=	$(SRC:.c=.o)
+OBJ			=	$(PSRC:.c=.o)
 
 CDEBUG		=	-g3
 
 #CFLAGS		+=	$(CDEBUG)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(INCDIR) -iquote../libfox_macro/include
+CFLAGS		+=	-iquote$(PINC)
 
-all: $(NAME)
+TFLAGS		+=	$(CFLAGS)
+TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=  --coverage -lcriterion
+TFLAGS		+= -D LIBFOX_IO_UT
+
+all: $(NAME) $(TESTS)
 
 $(NAME): $(OBJ)
 	@if [ -e $(NAME) ];				\
 	then							\
-		echo "Updating fox_io";		\
+		echo "Updating fox_io";	\
 		ar ru $(NAME) $(OBJ);		\
 	else							\
-		echo "Creating fox_io";		\
+		echo "Creating fox_io";	\
 		ar rc $(NAME) $(OBJ);		\
 	fi
-	@echo "Creating symlink in libfox/ root"
-	@cd ..; ln -s $(ROOT)/$(NAME)
+
+$(TESTS):
+	$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
+	-@./$(TESTS)
+	@gcovr -s
 
 clean:
 	@echo "fox_io: Deleting object files"
 	@rm -f $(OBJ)
 	@echo "fox_io: Deleting temp files"
-	@rm -f *~
+	@rm -f *~ **.gc*
 	@echo "fox_io: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
 	@echo "fox_io: Deleting $(NAME)"
 	@rm -f $(NAME)
-	@echo "fox_io: Deleting symlink"
-	@rm -f ../$(NAME)
+	@if [ -e $(TESTS) ];					\
+	then									\
+		echo "fox_io: Deleting $(TESTS)";	\
+		rm -f $(TESTS);						\
+	fi
 
 re:	fclean all
 
-.PHONY:all tests_run clean fclean re
+.PHONY:all clean fclean re

@@ -9,7 +9,7 @@ NAME		=	libfox_UT
 
 SHELL		=	/bin/sh
 
-CC			?=	gcc
+CC			=	gcc
 
 ROOT		=	libfox_tests
 TSRC		=	src
@@ -47,7 +47,7 @@ LDLIBS		=	-lcriterion
 all: $(NAME_IO) gcovr
 
 $(NAME_IO) :
-	$(CC) -o $(NAME_IO) $(SRC_IO) $(INCDIR) $(CFLAGS) $(LDLIBS)
+	$(CC) $(INCDIR) $(CFLAGS) $(LDLIBS) -o $(NAME_IO) $(SRC_IO)
 	@./$(NAME_IO)
 
 gcovr:
@@ -65,4 +65,4 @@ fclean: clean
 
 re:	fclean all
 
-.PHONY: libfox_UT gcovr all clean fclean re
+.PHONY: gcovr all clean fclean re

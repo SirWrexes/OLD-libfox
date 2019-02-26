@@ -11,7 +11,7 @@
 __attribute__ ((malloc, alloc_size(1, 2)))
 void *fox_calloc(size_t n, size_t size)
 {
-    void *ptr = malloc(n * size);
+    void *ptr = n && size ? malloc(n * size) : NULL;
 
     if (ptr == NULL)
         return NULL;

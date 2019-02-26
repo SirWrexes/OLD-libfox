@@ -25,9 +25,9 @@
 #   undef chunksize
 #   undef SIZE_SZ
 
-#   define PREV_INUSE 0x1
-#   define IS_MMAPPED 0x2
-#   define NON_MAIN_ARENA 0x4
+#   define PREV_INUSE 0x1u
+#   define IS_MMAPPED 0x2u
+#   define NON_MAIN_ARENA 0x4u
 #   define SIZE_BITS (PREV_INUSE | IS_MMAPPED | NON_MAIN_ARENA)
 #   define SIZE_SZ (sizeof (size_t))
 
@@ -49,13 +49,17 @@ typedef struct mchunkptr* mchunkptr_t;
 #   define chunksize_nomask(p) ((p)->mchunk_size)
 
 //  Get size, ignoring use bits
-#   define chunksize(p) ((size_t) chunksize_nomask(p) & (size_t) ~(SIZE_BITS))
+#   define chunksize(p) (chunksize_nomask(p) & ~(SIZE_BITS))
 
 //  Get the number of allocated bytes (without metadata) for a chunk
-#   define allocbytes_chunk(p) ((size_t) chunksize(p) - 2 * SIZE_SZ)
+#   define allocbytes_chunk(p) (chunksize(p) - 2 * SIZE_SZ)
 
 // Get the number of allocated bytes (without metadata) for a pointer
-#   define allocbytes_ptr(p) ((size_t) allocbytes_chunk(mem2chunk(p)))
+#   define allocbytes_ptr(p) (allocbytes_chunk(mem2chunk(p)))
 #endif
+
+#ifdef LIBFOX_UT
+#   define inline
+#endif //LIBFOX_UT
 
 #endif //LIBFOX_FOXMEMORY_H

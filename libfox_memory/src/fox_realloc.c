@@ -14,7 +14,6 @@ void *fox_realloc(void *ptr, size_t newsize)
     void *newptr = NULL;
     char *tmpdst = NULL;
     char *tmpsrc = (char *) ptr;
-    size_t oldmemsz = 0;
 
     if (ptr == NULL)
         return malloc(newsize);
@@ -22,11 +21,33 @@ void *fox_realloc(void *ptr, size_t newsize)
         free(ptr);
         return NULL;
     } else {
-        oldmemsz = fox_allocbytes(ptr);
         newptr = malloc(newsize);
         tmpdst = (char *) newptr;
-        for (size_t i = 0 ; i < oldmemsz && i < newsize ; i += 1)
+        for (size_t i = 0 ; i < newsize ; i += 1)
             tmpdst[i] = tmpsrc[i];
         return newptr;
     }
 }
+
+//__attribute__ ((alloc_size(2)))
+//void *fox_realloc(void *ptr, size_t newsize)
+//{
+//    void *newptr = NULL;
+//    char *tmpdst = NULL;
+//    char *tmpsrc = (char *) ptr;
+//    size_t oldmemsz = 0;
+//
+//    if (ptr == NULL)
+//        return malloc(newsize);
+//    else if (newsize == 0) {
+//        free(ptr);
+//        return NULL;
+//    } else {
+//        oldmemsz = fox_allocbytes(ptr);
+//        newptr = malloc(newsize);
+//        tmpdst = (char *) newptr;
+//        for (size_t i = 0 ; i < oldmemsz && i < newsize ; i += 1)
+//            tmpdst[i] = tmpsrc[i];
+//        return newptr;
+//    }
+//}

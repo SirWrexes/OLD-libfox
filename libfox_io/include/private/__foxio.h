@@ -26,9 +26,9 @@
 #   endif //LIBFOX_IO_MACRO
 #endif // LIBFOX_FOX_MACRO_H
 
-#ifdef LIBFOX_IO_UT
+#ifdef LIBFOX_UT
 #   define inline
-#endif //LIBFOX_IO_UT
+#endif //LIBFOX_UT
 
 size_t fox_strlen(char const *str)  __attribute__ ((pure));
 size_t fox_nbsize(int nb)           __attribute__ ((const));

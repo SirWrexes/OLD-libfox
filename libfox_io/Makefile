@@ -11,7 +11,6 @@ CC			?=	gcc
 ############
 NAME		=	libfox_io.a
 TESTS		=	tests_io
-ROOT		=	libfox_display
 ######
 PINC		+=	./include
 PDIR		+=	./src
@@ -38,17 +37,18 @@ TSRC		+=	$(TDIR)/test_fox_putint.c
 
 OBJ			=	$(PSRC:.c=.o)
 
+############
 CDEBUG		=	-g3
-
 #CFLAGS		+=	$(CDEBUG)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
 CFLAGS		+=	-iquote$(PINC)
-
+ #
 TFLAGS		+=	$(CFLAGS)
 TFLAGS		+=	-iquote$(TINC)
 TFLAGS		+=  --coverage -lcriterion
-TFLAGS		+= -D LIBFOX_IO_UT
+TFLAGS		+=	-D LIBFOX_UT
+############
 
 all: $(NAME) $(TESTS)
 
@@ -65,6 +65,7 @@ $(NAME): $(OBJ)
 $(TESTS):
 	$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
 	-@./$(TESTS)
+	@rm -f **test_*.gc*
 	@gcovr -s
 
 clean:

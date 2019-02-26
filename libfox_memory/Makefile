@@ -5,36 +5,56 @@
 ## lib Makefile
 ##
 
-NAME		=	libfox_memory.a
-
 SHELL		=	/bin/sh
-
 CC			?=	gcc
 
-ROOT		=	libfox_memory
-SRCDIR		+=	src
-INCDIR		+=	include
+############
+NAME		=	libfox_memory.a
+TESTS		=	tests_memory
+######
+PINC		+=	./include
+PDIR		+=	./src
+ #
+TINC		+=	./tests/include
+TDIR		+=	./tests/src
+######
+VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
+############
 
-VPATH		=	$(SRCDIR):$(INCDIR)
-
-SRC			+=	$(SRCDIR)/fox_allocbytes.c
-SRC			+=	$(SRCDIR)/fox_calloc.c
-SRC			+=	$(SRCDIR)/fox_memcpy.c
-SRC			+=	$(SRCDIR)/fox_memset.c
-SRC			+=	$(SRCDIR)/fox_realloc.c
-SRC			+=	$(SRCDIR)/cleanup/fox_autoclose.c
-SRC			+=	$(SRCDIR)/cleanup/fox_autofree.c
+############
+PSRC		+=	$(PDIR)/fox_allocbytes.c
+PSRC		+=	$(PDIR)/fox_calloc.c
+PSRC		+=	$(PDIR)/fox_memcpy.c
+PSRC		+=	$(PDIR)/fox_memset.c
+PSRC		+=	$(PDIR)/fox_realloc.c
+PSRC		+=	$(PDIR)/cleanup/fox_autoclose.c
+PSRC		+=	$(PDIR)/cleanup/fox_autofree.c
+ #
+TSRC		+=	$(TDIR)/test_fox_allocbytes.c
+TSRC		+=	$(TDIR)/test_fox_calloc.c
+TSRC		+=	$(TDIR)/test_fox_memcpy.c
+TSRC		+=	$(TDIR)/test_fox_memset.c
+TSRC		+=	$(TDIR)/test_fox_realloc.c
+TSRC		+=	$(TDIR)/test_fox_autofree.c
+TSRC		+=	$(TDIR)/test_fox_autoclose.c
+############
 
 OBJ			=	$(SRC:.c=.o)
 
+############
 CDEBUG		=	-g3
-
 #CFLAGS		+=	$(CDEBUG)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(INCDIR) -iquote../libfox_macro/include
+CFLAGS		+=	-iquote$(PINC)
+ #
+TFLAGS		+=	$(CFLAGS)
+TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=  --coverage -lcriterion
+TFLAGS		+=	-D LIBFOX_UT
+############
 
-all: $(NAME)
+all: $(NAME) $(TESTS)
 
 $(NAME): $(OBJ)
 	@if [ -e $(NAME) ];				\
@@ -46,18 +66,36 @@ $(NAME): $(OBJ)
 		ar rc $(NAME) $(OBJ);		\
 	fi
 
+$(TESTS):
+	$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
+	@echo; echo
+	@printf "\tfox_cleanup tests produce double free exceptions.\n"
+	@printf "\t\tIt's part of the testing process. They're intended to happen.\n"
+	@echo
+	@printf "\tfox_allocbytes produces undefined results.\n"
+	@printf "\t\tIts tests fail and you shouldn't use the function at all for now.\n"
+	@echo
+	-@./$(TESTS)
+	@rm -f **test_*.gc*
+	@gcovr -s
+
 clean:
 	@echo "fox_memory: Deleting object files"
 	@rm -f $(OBJ)
 	@echo "fox_memory: Deleting temp files"
-	@rm -f *~
+	@rm -f *~ **.gc*
 	@echo "fox_memory: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
 	@echo "fox_memory: Deleting $(NAME)"
 	@rm -f $(NAME)
+	@if [ -e $(TESTS) ];						\
+    then										\
+    	echo "fox_memory: Deleting $(TESTS)";	\
+    	rm -f $(TESTS);							\
+    fi
 
 re:	fclean all
 
-.PHONY:all tests_run clean fclean re
+.PHONY:all clean fclean re

@@ -7,6 +7,12 @@
 
 #include "private/__foxmemory.h"
 
+__attribute__ ((
+    deprecated(
+    "This functions needs a rework. "
+    "Currently gives undefined results"
+    )
+))
 __attribute__ ((pure))
 inline size_t fox_allocbytes(void *ptr)
 {

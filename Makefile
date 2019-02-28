@@ -15,10 +15,10 @@ re: 	io-re memory-re printf-re string-re tests
 
 io:
 	@make -C $(SRCDIR)/libfox_io
-	@cp -t libs		$(SRCDIR)/libfox_io/libfox_io.a
+	@cp -t .		$(SRCDIR)/libfox_io/libfox_io.a
 	@cp -t include  $(SRCDIR)/libfox_io/include/fox_io.h
 	@echo															| cat
-	@echo "Compiled lib is in ./libs directory" 					| cat
+	@echo "Compiled lib is in . directory" 							| cat
 	@echo "Be sure to add ./include to your include directories."	| cat
 	@echo															| cat
 io-tests:
@@ -32,7 +32,7 @@ io-clean:
 	@make -C $(SRCDIR)/libfox_io		clean
 io-fclean:
 	@make -C $(SRCDIR)/libfox_io		fclean
-	@rm -f libs/libfox_io.a
+	@rm -f ./libfox_io.a
 	@rm -f include/fox_io.h
 io-re:
 	@make -C $(SRCDIR)/libfox_io		re
@@ -40,10 +40,10 @@ io-re:
 
 memory:
 	@make -C $(SRCDIR)/libfox_memory
-	@cp -t libs		$(SRCDIR)/libfox_memory/libfox_memory.a
+	@cp -t .		$(SRCDIR)/libfox_memory/libfox_memory.a
 	@cp -t include  $(SRCDIR)/libfox_memory/include/fox_memory.h
 	@echo															| cat
-	@echo "Compiled lib is in ./libs directory" 					| cat
+	@echo "Compiled lib is in . directory" 							| cat
 	@echo "Be sure to add ./include to your include directories."	| cat
 	@echo															| cat
 memory-tests:
@@ -57,7 +57,7 @@ memory-clean:
 	@make -C $(SRCDIR)/libfox_memory	clean
 memory-fclean:
 	@make -C $(SRCDIR)/libfox_memory	fclean
-	@rm -f libs/libfox_memory.a
+	@rm -f ./libfox_memory.a
 	@rm -f include/fox_memory.h
 memory-re:
 	@make -C $(SRCDIR)/libfox_memory	re
@@ -65,10 +65,10 @@ memory-re:
 
 printf:
 	@make -C $(SRCDIR)/libfox_printf
-	@cp -t libs		$(SRCDIR)/libfox_printf/libfox_printf.a
+	@cp -t .		$(SRCDIR)/libfox_printf/libfox_printf.a
 	@cp -t include  $(SRCDIR)/libfox_printf/include/fox_printf.h
 	@echo															| cat
-	@echo "Compiled lib is in ./libs directory" 					| cat
+	@echo "Compiled lib is in . directory" 							| cat
 	@echo "Be sure to add ./include to your include directories."	| cat
 	@echo															| cat
 printf-tests:
@@ -77,7 +77,7 @@ printf-clean:
 	@make -C $(SRCDIR)/libfox_printf	clean
 printf-fclean:
 	@make -C $(SRCDIR)/libfox_printf	fclean
-	@rm -f libs/libfox_printf.a
+	@rm -f ./libfox_printf.a
 	@rm -f include/fox_printf.h
 printf-re:
 	@make -C $(SRCDIR)/libfox_printf	re
@@ -85,10 +85,10 @@ printf-re:
 
 string:
 	@make -C $(SRCDIR)/libfox_string
-	@cp -t libs		$(SRCDIR)/libfox_string/libfox_string.a
+	@cp -t .		$(SRCDIR)/libfox_string/libfox_string.a
 	@cp -t include  $(SRCDIR)/libfox_string/include/fox_string.h
 	@echo															| cat
-	@echo "Compiled lib is in ./libs directory" 					| cat
+	@echo "Compiled lib is in . directory" 							| cat
 	@echo "Be sure to add ./include to your include directories."	| cat
 	@echo															| cat
 string-tests:
@@ -102,7 +102,7 @@ string-clean:
 	@make -C $(SRCDIR)/libfox_string	clean
 string-fclean:
 	@make -C $(SRCDIR)/libfox_string	fclean
-	@rm -f libs/libfox_string.a
+	@rm -f ./libfox_string.a
 	@rm -f include/fox_string.h
 string-re:
 	@make -C $(SRCDIR)/libfox_string	re

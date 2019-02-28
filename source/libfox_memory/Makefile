@@ -2,15 +2,16 @@
 ## EPITECH PROJECT, 2019
 ## libfox_memory
 ## File description:
-## lib Makefile
+## Slave Makefile
 ##
 
 SHELL		=	/bin/sh
 CC			?=	gcc
 
 ############
-NAME		=	libfox_memory.a
-TESTS		=	tests_memory
+NAME		=	memory
+TARGET		=	libfox_$(NAME).a
+TESTS		=	tests_$(NAME)
 ######
 PINC		+=	./include
 PDIR		+=	./src
@@ -39,11 +40,9 @@ TSRC		+=	$(TDIR)/test_fox_autofree.c
 TSRC		+=	$(TDIR)/test_fox_autoclose.c
 ############
 
-OBJ			=	$(SRC:.c=.o)
+OBJ			=	$(PSRC:.c=.o)
 
 ############
-CDEBUG		=	-g3
-#CFLAGS		+=	$(CDEBUG)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
 CFLAGS		+=	-iquote$(PINC)
@@ -54,48 +53,49 @@ TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
 
-all: $(NAME)
+all: $(TARGET)
 
-$(NAME): $(OBJ)
-	@if [ -e $(NAME) ];				\
+$(TARGET): $(OBJ)
+	@if [ -e $(TARGET) ];			\
 	then							\
-		echo "Updating fox_memory";	\
-		ar ru $(NAME) $(OBJ);		\
+		echo "Updating $(NAME)";	\
+		ar ru $(TARGET) $(OBJ);		\
 	else							\
-		echo "Creating fox_memory";	\
-		ar rc $(NAME) $(OBJ);		\
+		echo "Creating $(NAME)";	\
+		ar rc $(TARGET) $(OBJ);		\
 	fi
 
 $(TESTS):
-	$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
-	-@./$(TESTS)
-	@echo																				| cat
+	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
+	@echo						| cat
+	@echo						| cat
+	@echo "$(NAME): unit tests"	| cat
 	@printf "\tfox_cleanup tests produce double free exceptions.\n"						| cat
 	@printf "\t\tIt's part of the testing process. They're intended to happen.\n"		| cat
 	@echo																				| cat
 	@printf "\tfox_allocbytes produces undefined results.\n"							| cat
 	@printf "\t\tIts tests fail and you shouldn't use the function at all for now.\n"	| cat
-	@echo																				| cat
+	-@./$(TESTS)
 	@rm -f **test_*.gc*
 	@gcovr -s
 
 clean:
-	@echo "fox_memory: Deleting object files"
+	@echo "$(NAME): Deleting object files"
 	@rm -f $(OBJ)
-	@echo "fox_memory: Deleting temp files"
+	@echo "$(NAME): Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "fox_memory: Deleting test binaries"
+	@echo "$(NAME): Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "fox_memory: Deleting $(NAME)"
-	@rm -f $(NAME)
-	@if [ -e $(TESTS) ];						\
-    then										\
-    	echo "fox_memory: Deleting $(TESTS)";	\
-    	rm -f $(TESTS);							\
-    fi
+	@echo "$(NAME): Deleting $(TARGET)"
+	@rm -f $(TARGET)
+	@if [ -e $(TESTS) ];					\
+	then									\
+		echo "$(NAME): Deleting $(TESTS)";	\
+		rm -f $(TESTS);						\
+	fi
 
 re:	fclean all
 
-.PHONY:all clean fclean re
+.PHONY:all $(NAME) clean fclean re

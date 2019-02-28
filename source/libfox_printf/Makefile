@@ -1,69 +1,97 @@
 ##
-## EPITECH PROJECT, 2018
+## EPITECH PROJECT, 2019
 ## libfox_printf
 ## File description:
-## lib Makefile
+## Slave Makefile
 ##
 
-NAME		=	libfox_printf.a
-
 SHELL		=	/bin/sh
-
 CC			?=	gcc
 
-SRCDIR		+=	src
-INCDIR		+=	include
+############
+NAME		=	printf
+TARGET		=	libfox_$(NAME).a
+TESTS		=	tests_$(NAME)
+######
+PINC		+=	./include
+PDIR		+=	./src
+ #
+TINC		+=	./tests/include
+TDIR		+=	./tests/src
+######
+VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
+############
 
-VPATH		=	$(SRCDIR):$(INCDIR)
+############
+PSRC		+=	$(PDIR)/fox_printf.c
+PSRC		+=	$(PDIR)/global_n.c
+PSRC		+=	$(PDIR)/va_args.c
+PSRC		+=	$(PDIR)/va_args_value.c
+PSRC		+=	$(PDIR)/libtools/fox_nbsize.c
+PSRC		+=	$(PDIR)/libtools/fox_strlen.c
+PSRC		+=	$(PDIR)/printers/integer/fox_putnbr.c
+PSRC		+=	$(PDIR)/printers/integer/printer_picker_integer.c
+PSRC		+=	$(PDIR)/printers/other/fox_putc.c
+PSRC		+=	$(PDIR)/printers/other/fox_puts.c
+PSRC		+=	$(PDIR)/printers/other/printer_picker_other.c
+PSRC		+=	$(PDIR)/printers/unsigned/fox_putunbr.c
+PSRC		+=	$(PDIR)/printers/unsigned/fox_putunbr_base.c
+PSRC		+=	$(PDIR)/printers/unsigned/printer_picker_unsigned.c
+ #
+TSRC		+=	$(TDIR)/
+############
 
-SRC			+=	$(SRCDIR)/fox_printf.c
-SRC			+=	$(SRCDIR)/global_n.c
-SRC			+=	$(SRCDIR)/va_args.c
-SRC			+=	$(SRCDIR)/va_args_value.c
-SRC			+=	$(SRCDIR)/libtools/fox_nbsize.c
-SRC			+=	$(SRCDIR)/libtools/fox_strlen.c
-SRC			+=	$(SRCDIR)/printers/integer/fox_putnbr.c
-SRC			+=	$(SRCDIR)/printers/integer/printer_picker_integer.c
-SRC			+=	$(SRCDIR)/printers/other/fox_putc.c
-SRC			+=	$(SRCDIR)/printers/other/fox_puts.c
-SRC			+=	$(SRCDIR)/printers/other/printer_picker_other.c
-SRC			+=	$(SRCDIR)/printers/unsigned/fox_putunbr.c
-SRC			+=	$(SRCDIR)/printers/unsigned/fox_putunbr_base.c
-SRC			+=	$(SRCDIR)/printers/unsigned/printer_picker_unsigned.c
+OBJ			=	$(PSRC:.c=.o)
 
-OBJ			=	$(SRC:.c=.o)
-
-CDEBUG		=	-g3
-
-#CFLAGS		+=	$(CDEBUG)
+############
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(INCDIR)
+CFLAGS		+=	-iquote$(PINC)
+ #
+TFLAGS		+=	$(CFLAGS)
+TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=  --coverage -lcriterion
+TFLAGS		+=	-D LIBFOX_UT
+############
 
-all:	$(NAME)
+all: $(TARGET)
 
-$(NAME):	$(OBJ)
-	@if [ -e $(NAME) ];				\
+$(TARGET): $(OBJ)
+	@if [ -e $(TARGET) ];			\
 	then							\
-		echo "Updating fox_printf";	\
-		ar ru $(NAME) $(OBJ);		\
+		echo "Updating $(NAME)";	\
+		ar ru $(TARGET) $(OBJ);		\
 	else							\
-		echo "Creating fox_printf";	\
-		ar rc $(NAME) $(OBJ);		\
+		echo "Creating $(NAME)";	\
+		ar rc $(TARGET) $(OBJ);		\
 	fi
 
+$(TESTS):
+	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
+	@echo						| cat
+	@echo						| cat
+	@echo "$(NAME): unit tests"	| cat
+	-@./$(TESTS)
+	@rm -f **test_*.gc*
+	@gcovr -s
+
 clean:
-	@echo "fox_printf: Deleting object files"
+	@echo "$(NAME): Deleting object files"
 	@rm -f $(OBJ)
-	@echo "fox_printf: Deleting temp files"
-	@rm -f *~
-	@echo "fox_printf: Deleting test binaries"
+	@echo "$(NAME): Deleting temp files"
+	@rm -f *~ **.gc*
+	@echo "$(NAME): Deleting test binaries"
 	@rm -f a.out
 
-fclean:clean
-	@echo "fox_printf: Deleting $(NAME)"
-	@rm -f $(NAME)
+fclean: clean
+	@echo "$(NAME): Deleting $(TARGET)"
+	@rm -f $(TARGET)
+	@if [ -e $(TESTS) ];					\
+	then									\
+		echo "$(NAME): Deleting $(TESTS)";	\
+		rm -f $(TESTS);						\
+	fi
 
 re:	fclean all
 
-.PHONY:all tests_run clean fclean re
+.PHONY:all $(NAME) clean fclean re

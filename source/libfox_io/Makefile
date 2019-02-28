@@ -2,15 +2,16 @@
 ## EPITECH PROJECT, 2019
 ## libfox_io
 ## File description:
-## lib Makefile
+## Slave Makefile
 ##
 
 SHELL		=	/bin/sh
 CC			?=	gcc
 
 ############
-NAME		=	libfox_io.a
-TESTS		=	tests_io
+NAME		=	io
+TARGET		=	libfox_$(NAME).a
+TESTS		=	tests_$(NAME)
 ######
 PINC		+=	./include
 PDIR		+=	./src
@@ -38,8 +39,6 @@ TSRC		+=	$(TDIR)/test_fox_strlen.c
 OBJ			=	$(PSRC:.c=.o)
 
 ############
-CDEBUG		=	-g3
-#CFLAGS		+=	$(CDEBUG)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
 CFLAGS		+=	-iquote$(PINC)
@@ -50,41 +49,44 @@ TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
 
-all: $(NAME)
+all: $(TARGET)
 
-$(NAME): $(OBJ)
-	@if [ -e $(NAME) ];				\
+$(TARGET): $(OBJ)
+	@if [ -e $(TARGET) ];			\
 	then							\
-		echo "Updating fox_io";		\
-		ar ru $(NAME) $(OBJ);		\
+		echo "Updating $(NAME)";	\
+		ar ru $(TARGET) $(OBJ);		\
 	else							\
-		echo "Creating fox_io";		\
-		ar rc $(NAME) $(OBJ);		\
+		echo "Creating $(NAME)";	\
+		ar rc $(TARGET) $(OBJ);		\
 	fi
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
+	@echo						| cat
+	@echo						| cat
+	@echo "$(NAME): unit tests"	| cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
 	@gcovr -s
 
 clean:
-	@echo "fox_io: Deleting object files"
+	@echo "$(NAME): Deleting object files"
 	@rm -f $(OBJ)
-	@echo "fox_io: Deleting temp files"
+	@echo "$(NAME): Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "fox_io: Deleting test binaries"
+	@echo "$(NAME): Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "fox_io: Deleting $(NAME)"
-	@rm -f $(NAME)
+	@echo "$(NAME): Deleting $(TARGET)"
+	@rm -f $(TARGET)
 	@if [ -e $(TESTS) ];					\
 	then									\
-		echo "fox_io: Deleting $(TESTS)";	\
+		echo "$(NAME): Deleting $(TESTS)";	\
 		rm -f $(TESTS);						\
 	fi
 
 re:	fclean all
 
-.PHONY:all clean fclean re
+.PHONY:all $(NAME) clean fclean re

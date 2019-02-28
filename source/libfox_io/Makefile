@@ -28,11 +28,11 @@ PSRC		+=	$(PDIR)/fox_puts.c
 PSRC		+=	$(PDIR)/libtools/fox_nbsize.c
 PSRC		+=	$(PDIR)/libtools/fox_strlen.c
  #
-TSRC		+=	$(TDIR)/test_fox_strlen.c
 TSRC		+=	$(TDIR)/test_fox_nbsize.c
 TSRC		+=	$(TDIR)/test_fox_putc.c
-TSRC		+=	$(TDIR)/test_fox_puts.c
 TSRC		+=	$(TDIR)/test_fox_putint.c
+TSRC		+=	$(TDIR)/test_fox_puts.c
+TSRC		+=	$(TDIR)/test_fox_strlen.c
 ############
 
 OBJ			=	$(PSRC:.c=.o)

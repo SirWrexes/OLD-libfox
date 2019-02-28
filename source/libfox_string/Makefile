@@ -23,8 +23,12 @@ VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
 
 ############
 PSRC		+=	$(PDIR)/fox_strcmp.c
+PSRC		+=	$(PDIR)/fox_strdup.c
+PSRC		+=	$(PDIR)/fox_strlen.c
  #
 TSRC		+=	$(TDIR)/test_fox_strcmp.c
+TSRC		+=	$(TDIR)/test_fox_strdup.c
+TSRC		+=	$(TDIR)/test_fox_strlen.c
 ############
 
 OBJ			=	$(PSRC:.c=.o)

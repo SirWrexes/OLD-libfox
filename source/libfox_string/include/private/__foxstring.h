@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <malloc.h>
 
 #if !(defined FOX_MACRO) && !(defined FOX_STRING_MACRO)
     #define FOX_STRING_MACRO
@@ -35,6 +36,7 @@
     typedef char *                      str_t;
 #endif //CCSTR_TYPE
 
+size_t fox_strlen(str3c_t str)      __A((pure));
 long fox_pow(long nb, size_t power) __A((const));
 
 #endif //LIBFOX_FOXSTRING_H

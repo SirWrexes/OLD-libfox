@@ -69,13 +69,13 @@ $(NAME): $(OBJ)
 $(TESTS):
 	$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
 	-@./$(TESTS)
-	@echo																			| cat
-	@echo "\tfox_cleanup tests produce double free exceptions.\n"					| cat
-	@echo "\t\tIt's part of the testing process. They're intended to happen.\n"		| cat
-	@echo																			| cat
-	@echo "\tfox_allocbytes produces undefined results.\n"							| cat
-	@echo "\t\tIts tests fail and you shouldn't use the function at all for now.\n"	| cat
-	@echo																			| cat
+	@echo																				| cat
+	@printf "\tfox_cleanup tests produce double free exceptions.\n"						| cat
+	@printf "\t\tIt's part of the testing process. They're intended to happen.\n"		| cat
+	@echo																				| cat
+	@printf "\tfox_allocbytes produces undefined results.\n"							| cat
+	@printf "\t\tIts tests fail and you shouldn't use the function at all for now.\n"	| cat
+	@echo																				| cat
 	@rm -f **test_*.gc*
 	@gcovr -s
 

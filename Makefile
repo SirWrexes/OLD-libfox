@@ -6,11 +6,11 @@
 SHELL		=	/bin/sh
 SRCDIR		=	./source
 
-all: 	io memory printf tests
-tests: 	io-tests memory-tests printf-tests
-clean: 	io-clean memory-clean printf-clean tests_run-clean
-fclean: io-fclean memory-fclean printf-fclean
-re: 	io-re memory-re printf-re
+all: 	io memory printf string tests
+tests: 	io-tests memory-tests printf-tests string-tests
+clean: 	io-clean memory-clean printf-clean string-clean
+fclean: io-fclean memory-fclean printf-fclean string-fclean
+re: 	io-re memory-re printf-re string-re tests
 .PHONY: all tests clean fclean re
 
 io:
@@ -92,7 +92,12 @@ string:
 	@echo "Be sure to add ./include to your include directories."	| cat
 	@echo															| cat
 string-tests:
-	@echo "No string test yet."
+	@if [ -e "$(SRCDIR)/libfox_string/tests_string" ];		\
+    then													\
+    	$(SRCDIR)/libfox_string/tests_string;				\
+    else													\
+    	make -C $(SRCDIR)/libfox_string tests_string;		\
+    fi
 string-clean:
 	@make -C $(SRCDIR)/libfox_string	clean
 string-fclean:

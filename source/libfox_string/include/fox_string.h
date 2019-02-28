@@ -26,4 +26,10 @@
 int fox_strcmp(str3c_t s1, str3c_t s2)             __A((nonnull, pure));
 char fox_strncmp(str3c_t s1, str3c_t s2, size_t n) __A((nonnull, pure));
 
+// Returns the number of characters in a string
+size_t fox_strlen(str3c_t str) __A((pure));
+
+// Returns a pointer to a newly created duplicate of src string
+str_t fox_strdup(str3c_t src) __A((malloc));
+
 #endif //LIBFOX_FOX_STRING_H

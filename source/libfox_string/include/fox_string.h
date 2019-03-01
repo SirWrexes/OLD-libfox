@@ -8,6 +8,7 @@
 #ifndef LIBFOX_FOX_STRING_H
 #define LIBFOX_FOX_STRING_H
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #if !(defined FOX_MACRO) && !(defined __A)
@@ -21,6 +22,9 @@
     typedef char const *                str2c_t;
     typedef char *                      str_t;
 #endif //CCSTR_TYPE
+
+// Returns true if a string is numeric, returns false otherwise
+bool fox_isnum(str3c_t str);
 
 // Check if s1 is the same as s2 [up to n character]
 int fox_strcmp(str3c_t s1, str3c_t s2)             __A((nonnull, pure));

@@ -22,12 +22,16 @@
     typedef char *                      str_t;
 #endif //CCSTR_TYPE
 
-// Check if s1 is the same as s2 [up to n character]
+// Returns the number of characters in a string
+size_t fox_strlen(str3c_t str) __A((pure));
+
+// Check if s1 is the same as s2 [up to n characters]
 int fox_strcmp(str3c_t s1, str3c_t s2)             __A((nonnull, pure));
 char fox_strncmp(str3c_t s1, str3c_t s2, size_t n) __A((nonnull, pure));
 
-// Returns the number of characters in a string
-size_t fox_strlen(str3c_t str) __A((pure));
+// Copy a string into another [up to n characters]
+str_t fox_strcpy(str_t dst, str3c_t src)    __A((nonnull));
+str_t fox_strncpy(str_t dst, str3c_t src)   __A((nonnull));
 
 // Returns a pointer to a newly created duplicate of src string
 str_t fox_strdup(str3c_t src) __A((malloc));

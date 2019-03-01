@@ -24,14 +24,20 @@
 #endif //CCSTR_TYPE
 
 // Returns true if a string is numeric, returns false otherwise
-bool fox_isnum(str3c_t str);
+bool fox_isnum(str3c_t str) __A((nonnull, pure));
+
+// Convert a string into an int
+int fox_atoi(str3c_t str) __A((pure));
+
+// Returns the number of characters in a string
+size_t fox_strlen(str3c_t str) __A((pure));
 
 // Check if s1 is the same as s2 [up to n character]
 int fox_strcmp(str3c_t s1, str3c_t s2)             __A((nonnull, pure));
 char fox_strncmp(str3c_t s1, str3c_t s2, size_t n) __A((nonnull, pure));
 
-// Returns the number of characters in a string
-size_t fox_strlen(str3c_t str) __A((pure));
+// Revert a string and return its pointer
+str_t fox_revstr(str_t str) __A((nonnull));
 
 // Returns a pointer to a newly created duplicate of src string
 str_t fox_strdup(str3c_t src) __A((malloc));

@@ -26,6 +26,7 @@
     #define IS_EOL(c) ((c) == '\n' || (c) == '\0')
     #define IS_SIGN(c) ((c) == '+' || (c) == '-')
     #define CHAR_TOUPPER(c)  ((c) >= 'a' && (c) <= 'z' ? (c) - 32 : (c))
+    #define CTOI(c) (int) ((c) - '0')
 #endif
 
 #ifndef CCSTR_TYPE
@@ -37,6 +38,7 @@
 #endif //CCSTR_TYPE
 
 size_t fox_strlen(str3c_t str)      __A((pure));
+str_t fox_revstr(str_t str)         __A((nonnull));
 long fox_pow(long nb, size_t power) __A((const));
 
 #endif //LIBFOX_FOXSTRING_H

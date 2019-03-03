@@ -1,30 +1,30 @@
 /*
 ** EPITECH PROJECT, 2018
-** libmy
+** libfox UT
 ** File description:
-** Unit tests for my strrev
+** revstr
 */
 
 #include <criterion/criterion.h>
-#include "my.h"
+#include "fox_string.h"
 
-Test(my_revstr, empty_string)
+Test(revstr, empty_string)
 {
     char *str = "";
 
-    cr_expect_str_eq(my_revstr(str), "");
+    cr_expect_str_eq(fox_revstr(str), "");
 }
 
-Test(my_revstr, string_with_only_one_char)
+Test(revstr, string_with_only_one_char)
 {
     char *str = "a";
 
-    cr_expect_str_eq(my_revstr(str), "a");
+    cr_expect_str_eq(fox_revstr(str), "a");
 }
 
-Test(my_revstr, normal_string)
+Test(revstr, normal_string)
 {
     char *str = strdup("aeiou");
 
-    cr_expect_str_eq(my_revstr(str), "uoiea");
+    cr_expect_str_eq(fox_revstr(str), "uoiea");
 }

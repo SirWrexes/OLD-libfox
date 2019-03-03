@@ -70,12 +70,9 @@ $(TESTS):
 	@echo						| cat
 	@echo						| cat
 	@echo "$(NAME): unit tests"	| cat
-	@printf "\tfox_cleanup tests produce double free exceptions.\n"						| cat
-	@printf "\t\tIt's part of the testing process. They're intended to happen.\n"		| cat
-	@echo																				| cat
 	@printf "\tfox_allocbytes produces undefined results.\n"							| cat
-	@printf "\t\tIts tests fail and you shouldn't use the function at all for now.\n"	| cat
-	-@./$(TESTS)
+	@printf "\tIts tests may fail and you shouldn't use the function at all for now.\n"	| cat
+	-@./$(TESTS) 2>&1 | grep -v "double free" >&2
 	@rm -f **test_*.gc*
 	@gcovr -s
 

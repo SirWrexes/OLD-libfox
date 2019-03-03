@@ -44,7 +44,7 @@
     #define LIBFOX_MACRO_DEF
 
     //Shorter way of writing __attribute__
-    #define __A(attributes) __attribute__((attributes))
+    #define __A(attributes) __attribute__(attributes)
 
     //Digit ascii value to numeric value
     #define CTOI(c) ((int) ((c) - '0'))

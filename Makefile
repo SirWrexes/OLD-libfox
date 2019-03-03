@@ -17,9 +17,9 @@ re: 	io-re memory-re printf-re string-re tests
 
 
 
-	############################
-	##      input/output      ##
-	############################
+############################
+##      input/output      ##
+############################
 io:
 	@make --silent -C $(SRCDIR)/libfox_io
 	@cp -t .		$(SRCDIR)/libfox_io/libfox_io.a
@@ -42,9 +42,9 @@ io-re:
 .PHONY: io io-tests io-clean io-fclean io-re
 
 
-	############################
-	##         memory         ##
-	############################
+############################
+##         memory         ##
+############################
 memory:
 	@make --silent -C $(SRCDIR)/libfox_memory
 	@cp -t .		$(SRCDIR)/libfox_memory/libfox_memory.a
@@ -67,9 +67,9 @@ memory-re:
 .PHONY: memory memory-tests memory-clean memory-fclean memory-re
 
 
-	############################
-	##          pintf         ##
-	############################
+############################
+##          pintf         ##
+############################
 printf:
 	@make --silent -C $(SRCDIR)/libfox_printf
 	@cp -t .		$(SRCDIR)/libfox_printf/libfox_printf.a
@@ -87,9 +87,9 @@ printf-re:
 .PHONY: printf printf-tests printf-clean printf-fclean printf-re
 
 
-	############################
-	##         string         ##
-	############################
+############################
+##         string         ##
+############################
 string:
 	@make --silent -C $(SRCDIR)/libfox_string
 	@cp -t .		$(SRCDIR)/libfox_string/libfox_string.a

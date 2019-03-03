@@ -96,11 +96,11 @@ string:
 	@cp -t include  $(SRCDIR)/libfox_string/include/fox_string.h
 string-tests:
 	@if [ -e "$(SRCDIR)/libfox_string/tests_string" ];			\
-    then														\
-    	$(SRCDIR)/libfox_string/tests_string;					\
-    else														\
-    	make --silent -C $(SRCDIR)/libfox_string tests_string;	\
-    fi
+	then														\
+		$(SRCDIR)/libfox_string/tests_string;					\
+	else														\
+		make --silent -C $(SRCDIR)/libfox_string tests_string;	\
+	fi
 string-clean:
 	@make --silent -C $(SRCDIR)/libfox_string	clean
 string-fclean:

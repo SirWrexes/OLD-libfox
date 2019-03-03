@@ -21,8 +21,8 @@
         typedef char const * const          str3c_t;
         typedef char const *                str2c_t;
         typedef char *                      str_t;
-        #endif //CCSTR_TYPE
-    #endif // FOX_MACRO
+    #endif //CCSTR_TYPE
+#endif // FOX_MACRO
 
 typedef enum {
     FC_PLUS     = 1u << 0u,

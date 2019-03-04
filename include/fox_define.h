@@ -37,6 +37,7 @@
     #undef IS_OP
     #undef ABS
     #undef MAX
+    #undef RET_NULL
 #endif // LIBFOX_MACRO_UNDEF
 
 //Then we can actually start to define them.
@@ -77,7 +78,7 @@
     #define IS_ALPHANUM(c) (IS_ALPHA(c) || IS_NUM(c))
 
     //Check if a char is punctuation
-    #define IS_PUNCT(c)  \
+    #define IS_PUNCT(c)     \
     (                       \
         ((c) == '\'')       \
         || ((c) == '\"')    \
@@ -101,6 +102,10 @@
 
     //Get the biggest of two numbers
     #define MAX(x, y) ((x) > (y) ? (x) : (y))
+
+    //Execute a non-void function then return null no matter what
+    //-- Useful when you want to log an error and return null in 1 line
+    #define RET_NULL(func) ((func) ? (void *)0 : (void*)0)
 #endif // LIBFOX_MACRO_DEF
 
 #ifndef CCSTR_TYPE

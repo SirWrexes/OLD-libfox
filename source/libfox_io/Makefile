@@ -26,14 +26,14 @@ VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
 PSRC		+=	$(PDIR)/fox_putc.c
 PSRC		+=	$(PDIR)/fox_putint.c
 PSRC		+=	$(PDIR)/fox_puts.c
-PSRC		+=	$(PDIR)/libtools/fox_nbsize.c
-PSRC		+=	$(PDIR)/libtools/fox_strlen.c
+PSRC		+=	$(PDIR)/libtools/foxio_nbsize.c
+PSRC		+=	$(PDIR)/libtools/foxio_strlen.c
  #
-TSRC		+=	$(TDIR)/test_fox_nbsize.c
 TSRC		+=	$(TDIR)/test_fox_putc.c
 TSRC		+=	$(TDIR)/test_fox_putint.c
 TSRC		+=	$(TDIR)/test_fox_puts.c
-TSRC		+=	$(TDIR)/test_fox_strlen.c
+TSRC		+=	$(TDIR)/test_foxio_nbsize.c
+TSRC		+=	$(TDIR)/test_foxio_strlen.c
 ############
 
 OBJ			=	$(PSRC:.c=.o)

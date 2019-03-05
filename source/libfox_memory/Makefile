@@ -53,17 +53,8 @@ TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
 
-all: $(TARGET)
-
-$(TARGET): $(OBJ)
-	@if [ -e $(TARGET) ];			\
-	then							\
-		echo "Updating $(NAME)";	\
-		ar ru $(TARGET) $(OBJ);		\
-	else							\
-		echo "Creating $(NAME)";	\
-		ar rc $(TARGET) $(OBJ);		\
-	fi
+.DEFAULT_GOAL := $(TARGET)
+$(TARGET): $(TARGET)($(OBJ))
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
@@ -98,4 +89,4 @@ fclean: clean
 
 re:	fclean all
 
-.PHONY:all $(NAME) clean fclean re
+.PHONY:all clean fclean re

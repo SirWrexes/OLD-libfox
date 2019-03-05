@@ -7,13 +7,13 @@ SHELL		=	/bin/sh
 SRCDIR		=	./source
 
 
-
-all: 	io memory printf string tests
-tests: 	io-tests memory-tests printf-tests string-tests
-clean: 	io-clean memory-clean printf-clean string-clean
-fclean: io-fclean memory-fclean printf-fclean string-fclean
-re: 	io-re memory-re printf-re string-re tests
-.PHONY: all tests clean fclean re
+.DEFAULT_GOAL := all
+all:	io memory printf string tests
+tests:	io-tests memory-tests printf-tests string-tests
+clean:	io-clean memory-clean printf-clean string-clean
+fclean:	io-fclean memory-fclean printf-fclean string-fclean
+re:		io-re memory-re printf-re string-re tests
+.PHONY:	all tests clean fclean re
 
 
 

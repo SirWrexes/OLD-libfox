@@ -23,6 +23,7 @@
     #define LIBFOX_MACRO_UNDEF
     #undef __a
     #undef __transparent
+    #undef __cleanup
     #undef CTOI
     #undef ITOC
     #undef CHAR_TOUPPER
@@ -50,6 +51,9 @@
 
 //  See https://gcc.gnu.org/onlinedocs/gcc-3.3/gcc/Type-Attributes.html
     #define __trasnparent __a((__transparent_union__))
+
+//  Shorter way of writing __attribute__((cleanup(function))
+    #define __cleanup(janitor) __a((cleanup(janitor)))
 
 //  Digit ascii value to numeric value
     #define CTOI(c) ((int) ((c) - '0'))

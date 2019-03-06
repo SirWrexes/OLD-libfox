@@ -1,4 +1,9 @@
 # Modular Makefile example
+This folder contains a basic CMakeLists.txt template for Clion users like me.
+It also contains my gitignore which is basically GitHub's with a few additions,
+like CMake/CLion files that are not necessary, as the lib is compiled via Makefile.
+
+Speaking of which, let's concentrate on the Makefile this folder contains.
 This Makefile is made in a way that to build necessary modules, link them
 to your project, clean libfox temp files \[and archives\] along with yours...
 all you need to do is uncomment lines corresponding to the modules you want.

@@ -8,12 +8,12 @@
 #define FOXGRAPH_CONSTRUCTOR
 
 #include <malloc.h>
-#include "private/__foxgraph.h"
-#include "private/__vtgraph.h"
+#include "private/p_foxgraph.h"
+#include "private/p_vtgraph.h"
 
 static void *g_abort(graph_t this, str3c_t errstr)
 {
-    fox_eputs("Graph:");
+    fox_eputs("Graph: ");
     fox_eputs(errstr);
     fox_eputs("\n");
     if (this == NULL)
@@ -42,6 +42,7 @@ extern graph_t graph_t_create(size_t size, str3c_t name)
     if (this->name == NULL)
         return g_abort(this, "Name assignation failed.");
     this->vt = &vt;
+    this->type = MT_GRAPH;
     return this;
 }
 

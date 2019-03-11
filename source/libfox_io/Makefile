@@ -18,11 +18,16 @@ PDIR		+=	./src
  #
 TINC		+=	./tests/include
 TDIR		+=	./tests/src
+ #
+TEMPDIR		=	./temp
 ######
-VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
+VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC):$(TEMPDIR)
 ############
 
 ############
+PHDR		+=	$(PINC)/fox_io.h
+PHDR		+=	$(PINC)/private/__foxio.h
+ #
 PSRC		+=	$(PDIR)/fox_putc.c
 PSRC		+=	$(PDIR)/fox_putint.c
 PSRC		+=	$(PDIR)/fox_puts.c
@@ -36,7 +41,9 @@ TSRC		+=	$(TDIR)/test_foxio_nbsize.c
 TSRC		+=	$(TDIR)/test_foxio_strlen.c
 ############
 
-OBJ			=	$(PSRC:.c=.o)
+OBJ			=	$(PSRC:%.c=%.o)
+DEP			=	$(OBJ:.o=.d)
+-include $(DEP)
 
 ############
 CFLAGS		+=	-Wall -Wextra
@@ -50,7 +57,19 @@ TFLAGS		+=	-D LIBFOX_UT
 ############
 
 .DEFAULT_GOAL := $(TARGET)
-$(TARGET): $(TARGET)($(OBJ))
+$(TARGET): $(OBJ)
+	@if [ -e $@ ];			\
+	then					\
+		echo "Updating $@";	\
+		ar ru $@ $<;		\
+	else					\
+		echo "Creating $@";	\
+		ar rc $@ $<;		\
+	fi
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo "[OK]: $@"
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
@@ -78,6 +97,6 @@ fclean: clean
 		rm -f $(TESTS);						\
 	fi
 
-re:	fclean all
+re:	fclean $(TARGET)
 
 .PHONY:all clean fclean re

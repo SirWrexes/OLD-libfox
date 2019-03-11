@@ -8,14 +8,37 @@ SRCDIR		=	./source
 
 
 .DEFAULT_GOAL := all
-all:	io memory printf string tests
-tests:	io-tests memory-tests printf-tests string-tests
-clean:	io-clean memory-clean printf-clean string-clean
-fclean:	io-fclean memory-fclean printf-fclean string-fclean
-re:		io-re memory-re printf-re string-re tests
+all:	graph io memory printf string tests
+tests:	graph-tests io-tests memory-tests printf-tests string-tests
+clean:	graph-clean io-clean memory-clean printf-clean string-clean
+fclean:	graph-fclean io-fclean memory-fclean printf-fclean string-fclean
+re:		graph-re io-re memory-re printf-re string-re tests
 .PHONY:	all tests clean fclean re
 
 
+############################
+##         Graph          ##
+############################
+graph:
+	@make --silent -C $(SRCDIR)/libfox_graph
+	@cp -t .		$(SRCDIR)/libfox_graph/libfox_graph.a
+	@cp -t include  $(SRCDIR)/libfox_graph/include/fox_graph.h
+graph-tests:
+	@if [ -e "$(SRCDIR)/libfox_graph/tests_graph" ];			\
+	then														\
+		$(SRCDIR)/libfox_graph/tests_graph;						\
+	else														\
+		make --silent -C $(SRCDIR)/libfox_graph tests_graph;	\
+	fi
+graph-clean:
+	@make --silent -C $(SRCDIR)/libfox_graph clean
+graph-fclean:
+	@make --silent -C $(SRCDIR)/libfox_graph fclean
+	@rm -f ./libfox_graph.a
+	@rm -f include/fox_graph.h
+graph-re:
+	@make --silent -C $(SRCDIR)/libfox_graph re
+.PHONY: graph graph-tests graph-clean graph-fclean graph-re
 
 ############################
 ##      input/output      ##

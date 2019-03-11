@@ -5,7 +5,7 @@
 ** Choose the adequate printer depending on arg info
 */
 
-#include "private/__foxprintf.h"
+#include "private/p_foxprintf.h"
 
 inline __attribute__ ((nonnull))
 void print_other(farg_t const * const arg)

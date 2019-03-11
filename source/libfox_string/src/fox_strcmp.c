@@ -5,7 +5,7 @@
 ** strcmp
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 __A((nonnull, pure))
 int fox_strcmp(str3c_t s1, str3c_t s2)

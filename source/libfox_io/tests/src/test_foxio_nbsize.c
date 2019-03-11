@@ -5,7 +5,7 @@
 ** fox_nbsize
 */
 
-#include "private/__foxio.h"
+#include "private/p_foxio.h"
 #include <criterion/criterion.h>
 
 Test(nbsize, regular_usage)

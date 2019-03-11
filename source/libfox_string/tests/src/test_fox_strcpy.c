@@ -6,7 +6,7 @@
 */
 
 #include <criterion/criterion.h>
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 #include "fox_string.h"
 
 Test(strcpy, copy_string_in_epty_array)

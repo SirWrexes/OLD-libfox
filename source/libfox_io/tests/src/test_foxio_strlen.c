@@ -5,7 +5,7 @@
 ** fox_strlen
 */
 
-#include "private/__foxio.h"
+#include "private/p_foxio.h"
 #include <criterion/criterion.h>
 
 Test(strlen, 1_char)

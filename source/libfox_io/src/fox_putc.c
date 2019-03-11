@@ -5,7 +5,7 @@
 ** Write a single char
 */
 
-#include "private/__foxio.h"
+#include "private/p_foxio.h"
 
 inline ssize_t fox_putc(char c)
 {

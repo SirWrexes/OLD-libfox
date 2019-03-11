@@ -5,7 +5,7 @@
 ** Signed decimal number printer
 */
 
-#include "private/__foxprintf.h"
+#include "private/p_foxprintf.h"
 
 void fox_putint(int nbr)
 {

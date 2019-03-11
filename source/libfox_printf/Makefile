@@ -8,6 +8,7 @@
 SHELL		=	/bin/sh
 CC			?=	gcc
 
+include ../.modules
 ############
 NAME		=	printf
 TARGET		=	libfox_$(NAME).a
@@ -27,62 +28,78 @@ PSRC		+=	$(PDIR)/fox_printf.c
 PSRC		+=	$(PDIR)/global_n.c
 PSRC		+=	$(PDIR)/va_args.c
 PSRC		+=	$(PDIR)/va_args_value.c
-PSRC		+=	$(PDIR)/libtools/foxpf_nbsize.c
-PSRC		+=	$(PDIR)/libtools/foxpf_strlen.c
-PSRC		+=	$(PDIR)/printers/integer/fox_putnbr.c
+PSRC		+=	$(PDIR)/printers/integer/fpf_putnbr.c
 PSRC		+=	$(PDIR)/printers/integer/printer_picker_integer.c
-PSRC		+=	$(PDIR)/printers/other/fox_putc.c
-PSRC		+=	$(PDIR)/printers/other/fox_puts.c
+PSRC		+=	$(PDIR)/printers/other/fpf_putc.c
+PSRC		+=	$(PDIR)/printers/other/fpf_puts.c
 PSRC		+=	$(PDIR)/printers/other/printer_picker_other.c
-PSRC		+=	$(PDIR)/printers/unsigned/fox_putunbr.c
-PSRC		+=	$(PDIR)/printers/unsigned/fox_putunbr_base.c
+PSRC		+=	$(PDIR)/printers/unsigned/fpf_putunbr.c
+PSRC		+=	$(PDIR)/printers/unsigned/fpf_putunbr_base.c
 PSRC		+=	$(PDIR)/printers/unsigned/printer_picker_unsigned.c
+PSRC		+=	$(DIR_MATH)/src/fox_nbsize.c
+PSRC		+=	$(DIR_STRING)/src/fox_strlen.c
  #
 TSRC		+=	$(TDIR)/
 ############
 
-OBJ			=	$(PSRC:.c=.o)
+############
+OBJ			=	$(PSRC:%.c=%.o)
+DEP			=	$(OBJ:.o=.d)
+-include $(DEP)
+############
 
 ############
+CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(PINC)
  #
 TFLAGS		+=	$(CFLAGS)
-TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
 
 .DEFAULT_GOAL := $(TARGET)
-$(TARGET): $(TARGET)($(OBJ))
+$(TARGET): $(OBJ)
+	@if [ -e $@ ];			\
+	then					\
+		echo "Updating $@";	\
+		ar ru $@ $<;		\
+	else					\
+		echo "Creating $@";	\
+		ar rc $@ $<;		\
+	fi
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo "[$(NAME) | $(CC)] OK → $@"
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
-	@echo						| cat
-	@echo						| cat
-	@echo "$(NAME): unit tests"	| cat
+	@echo							| cat
+	@echo							| cat
+	@echo "[$(NAME)]: unit tests"	| cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
 	@gcovr -s
 
 clean:
-	@echo "$(NAME): Deleting object files"
+	@echo "[$(NAME)]: Deleting object files"
 	@rm -f $(OBJ)
-	@echo "$(NAME): Deleting temp files"
+	@echo "[$(NAME)]: Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "$(NAME): Deleting test binaries"
+	@echo "[$(NAME)]: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "$(NAME): Deleting $(TARGET)"
+	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
-	@if [ -e $(TESTS) ];					\
-	then									\
-		echo "$(NAME): Deleting $(TESTS)";	\
-		rm -f $(TESTS);						\
+	@if [ -e $(TESTS) ];						\
+	then										\
+		echo "[$(NAME)]: Deleting $(TESTS)";	\
+		rm -f $(TESTS);							\
 	fi
 
-re:	fclean all
+re:	fclean $(TARGET)
 
 .PHONY:all $(NAME) clean fclean re

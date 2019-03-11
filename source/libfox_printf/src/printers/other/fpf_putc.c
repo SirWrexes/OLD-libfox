@@ -5,7 +5,7 @@
 ** Writre a single character
 */
 
-#include "private/__foxprintf.h"
+#include "private/p_foxprintf.h"
 
 inline void fox_putc(char c)
 {

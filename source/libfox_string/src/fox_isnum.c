@@ -5,7 +5,7 @@
 ** my_isnum
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 __attribute__((nonnull, pure))
 bool fox_isnum(str3c_t str)

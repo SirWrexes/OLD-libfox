@@ -5,8 +5,8 @@
 ** Main source
 */
 
-#include "private/__il_forxprintf.h"
-#include "private/__foxprintf.h"
+#include "private/p_il_forxprintf.h"
+#include "private/p_foxprintf.h"
 
 static __attribute__ ((nonnull, hot))
 ssize_t print_arg(farg_t const * const arg)

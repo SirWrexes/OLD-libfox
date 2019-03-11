@@ -8,7 +8,7 @@
 #ifndef LIBFOX_PRINTF_IL_VA_ARGS_H
 #define LIBFOX_PRINTF_IL_VA_ARGS_H
 
-#include "private/__datastruct.h"
+#include "private/p_datastruct.h"
 
 __A((const))
 static inline cspec_t _convspec_(char cs)

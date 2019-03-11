@@ -5,8 +5,8 @@
 ** Choose the adequate printer depending on arg info
 */
 
-#include "private/__foxprintf.h"
-#include "private/__il_printerpicker_unsigned.h"
+#include "private/p_foxprintf.h"
+#include "private/p_il_printerpicker_unsigned.h"
 
 static __attribute__ ((nonnull))
 void print_bin(farg_t const * const arg)

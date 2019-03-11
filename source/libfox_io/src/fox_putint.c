@@ -5,7 +5,7 @@
 ** Write an int
 */
 
-#include "private/__foxio.h"
+#include "private/p_foxio.h"
 
 ssize_t fox_putint(int nb)
 {

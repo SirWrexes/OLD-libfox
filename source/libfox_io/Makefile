@@ -8,6 +8,7 @@
 SHELL		=	/bin/sh
 CC			?=	gcc
 
+include ../.modules
 ############
 NAME		=	io
 TARGET		=	libfox_$(NAME).a
@@ -31,8 +32,8 @@ PHDR		+=	$(PINC)/private/__foxio.h
 PSRC		+=	$(PDIR)/fox_putc.c
 PSRC		+=	$(PDIR)/fox_putint.c
 PSRC		+=	$(PDIR)/fox_puts.c
-PSRC		+=	$(PDIR)/libtools/foxio_nbsize.c
-PSRC		+=	$(PDIR)/libtools/foxio_strlen.c
+PSRC		+=	../libfox_math/src/fox_nbsize.c
+PSRC		+=	../libfox_string/src/fox_strlen.c
  #
 TSRC		+=	$(TDIR)/test_fox_putc.c
 TSRC		+=	$(TDIR)/test_fox_putint.c
@@ -41,17 +42,19 @@ TSRC		+=	$(TDIR)/test_foxio_nbsize.c
 TSRC		+=	$(TDIR)/test_foxio_strlen.c
 ############
 
+############
 OBJ			=	$(PSRC:%.c=%.o)
 DEP			=	$(OBJ:.o=.d)
 -include $(DEP)
+############
 
 ############
+CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(PINC)
  #
 TFLAGS		+=	$(CFLAGS)
-TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
@@ -69,32 +72,32 @@ $(TARGET): $(OBJ)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo "[OK]: $@"
+	@echo "[$(NAME) | $(CC)] OK → $@"
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
-	@echo						| cat
-	@echo						| cat
-	@echo "$(NAME): unit tests"	| cat
+	@echo							| cat
+	@echo							| cat
+	@echo "[$(NAME)]: unit tests"	| cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
 	@gcovr -s
 
 clean:
-	@echo "$(NAME): Deleting object files"
+	@echo "[$(NAME)]: Deleting object files"
 	@rm -f $(OBJ)
-	@echo "$(NAME): Deleting temp files"
+	@echo "[$(NAME)]: Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "$(NAME): Deleting test binaries"
+	@echo "[$(NAME)]: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "$(NAME): Deleting $(TARGET)"
+	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
-	@if [ -e $(TESTS) ];					\
-	then									\
-		echo "$(NAME): Deleting $(TESTS)";	\
-		rm -f $(TESTS);						\
+	@if [ -e $(TESTS) ];						\
+	then										\
+		echo "[$(NAME)]: Deleting $(TESTS)";	\
+		rm -f $(TESTS);							\
 	fi
 
 re:	fclean $(TARGET)

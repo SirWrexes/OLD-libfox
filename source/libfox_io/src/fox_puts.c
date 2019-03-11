@@ -5,7 +5,7 @@
 ** Write a string
 */
 
-#include "private/__foxio.h"
+#include "private/p_foxio.h"
 
 extern inline ssize_t fox_puts(char const * const str)
 {

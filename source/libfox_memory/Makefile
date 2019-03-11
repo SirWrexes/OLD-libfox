@@ -8,6 +8,7 @@
 SHELL		=	/bin/sh
 CC			?=	gcc
 
+include ../.modules
 ############
 NAME		=	memory
 TARGET		=	libfox_$(NAME).a
@@ -40,27 +41,43 @@ TSRC		+=	$(TDIR)/test_fox_autofree.c
 TSRC		+=	$(TDIR)/test_fox_autoclose.c
 ############
 
-OBJ			=	$(PSRC:.c=.o)
+############
+OBJ			=	$(PSRC:%.c=%.o)
+DEP			=	$(OBJ:.o=.d)
+-include $(DEP)
+############
 
 ############
+CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(PINC)
  #
 TFLAGS		+=	$(CFLAGS)
-TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
 
 .DEFAULT_GOAL := $(TARGET)
-$(TARGET): $(TARGET)($(OBJ))
+$(TARGET): $(OBJ)
+	@if [ -e $@ ];			\
+	then					\
+		echo "Updating $@";	\
+		ar ru $@ $<;		\
+	else					\
+		echo "Creating $@";	\
+		ar rc $@ $<;		\
+	fi
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo "[$(NAME) | $(CC)] OK → $@"
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
-	@echo						| cat
-	@echo						| cat
-	@echo "$(NAME): unit tests"	| cat
+	@echo							| cat
+	@echo							| cat
+	@echo "[$(NAME)]: unit tests"	| cat
 	@printf "\tfox_cleanup tests produce double free exceptions.\n"						| cat
 	@printf "\t\tIt's part of the testing process. They're intended to happen.\n"		| cat
 	@echo																				| cat
@@ -71,22 +88,22 @@ $(TESTS):
 	@gcovr -s
 
 clean:
-	@echo "$(NAME): Deleting object files"
+	@echo "[$(NAME)]: Deleting object files"
 	@rm -f $(OBJ)
-	@echo "$(NAME): Deleting temp files"
+	@echo "[$(NAME)]: Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "$(NAME): Deleting test binaries"
+	@echo "[$(NAME)]: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "$(NAME): Deleting $(TARGET)"
+	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
-	@if [ -e $(TESTS) ];					\
-	then									\
-		echo "$(NAME): Deleting $(TESTS)";	\
-		rm -f $(TESTS);						\
+	@if [ -e $(TESTS) ];						\
+	then										\
+		echo "[$(NAME)]: Deleting $(TESTS)";	\
+		rm -f $(TESTS);							\
 	fi
 
-re:	fclean all
+re:	fclean $(TARGET)
 
 .PHONY:all clean fclean re

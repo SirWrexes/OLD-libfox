@@ -8,7 +8,7 @@
 #ifndef LIBFOX_PRINTF_INLINES_H
 #define LIBFOX_PRINTF_INLINES_H
 
-#include "private/__datastruct.h"
+#include "private/p_datastruct.h"
 
 __A((cold))
 static inline size_t _get_acmax_(char const * const fstr)

@@ -5,7 +5,7 @@
 ** Power calculcation
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 __A((const))
 long fox_pow(long nb, size_t power)

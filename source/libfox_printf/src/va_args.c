@@ -5,8 +5,8 @@
 ** libfox_printf : args
 */
 
-#include "private/__foxprintf.h"
-#include "private/__il_va_args.h"
+#include "private/p_foxprintf.h"
+#include "private/p_il_va_args.h"
 
 static __attribute__ ((nonnull))
 void get_argvalue(farg_t *farg, va_list ap)

@@ -5,10 +5,10 @@
 ** Write a string the normal way
 */
 
-#include "private/__foxprintf.h"
+#include "private/p_foxprintf.h"
 
 __attribute__ ((always_inline))
-inline void fox_puts(char const * const str)
+inline void fox_puts(str3c_t str)
 {
     size_t len = 0;
 
@@ -21,7 +21,7 @@ inline void fox_puts(char const * const str)
 }
 
 __attribute__ ((always_inline))
-inline void fox_puts2(char const * const str)
+inline void fox_puts2(str3c_t str)
 {
     size_t len = 0;
 

@@ -13,8 +13,8 @@
 #include <stdarg.h>
 #include <stdbool.h>
 #include <sys/types.h>
-#include "__datastruct.h"
-#include "__preprocessor.h"
+#include "p_datastruct.h"
+#include "p_preprocessor.h"
 
 bool fpf_getargs(
     size_t acmax,

@@ -5,7 +5,7 @@
 ** Write a number in its hexadecimal value
 */
 
-#include "private/__foxprintf.h"
+#include "private/p_foxprintf.h"
 
 __attribute__ ((nonnull))
 void fox_putuint_base(uint nbr, char const * const base)

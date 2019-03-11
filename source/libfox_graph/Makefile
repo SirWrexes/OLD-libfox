@@ -8,6 +8,7 @@
 SHELL		=	/bin/sh
 CC			?=	gcc
 
+include ../.modules
 ############
 NAME		=	graph
 TARGET		=	libfox_$(NAME).a
@@ -29,6 +30,8 @@ PSRC		+=	$(PDIR)/alist/alist_create.c
 PSRC		+=	$(PDIR)/alist/alist_destroy.c
 PSRC		+=	$(PDIR)/graph/graph_create.c
 PSRC		+=	$(PDIR)/graph/graph_destroy.c
+PSRC		+=	$(DIR_IO)/src/fox_puts.c
+PSRC		+=	$(DIR_STRING)/src/fox_strdup.c
  #
 TSRC		+=
 ############
@@ -40,12 +43,12 @@ DEP			=	$(OBJ:.o=.d)
 ############
 
 ############
+CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(PINC)
  #
 TFLAGS		+=	$(CFLAGS)
-TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
 ############
@@ -63,32 +66,32 @@ $(TARGET): $(OBJ)
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo "[OK]: $@"
+	@echo "[$(NAME) | $(CC)] OK → $@"
 
 $(TESTS):
 	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
-	@echo						| cat
-	@echo						| cat
-	@echo "$(NAME): unit tests"	| cat
+	@echo							| cat
+	@echo							| cat
+	@echo "[$(NAME)]: unit tests"	| cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
 	@gcovr -s
 
 clean:
-	@echo "$(NAME): Deleting object files"
+	@echo "[$(NAME)]: Deleting object files"
 	@rm -f $(OBJ)
-	@echo "$(NAME): Deleting temp files"
+	@echo "[$(NAME)]: Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "$(NAME): Deleting test binaries"
+	@echo "[$(NAME)]: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "$(NAME): Deleting $(TARGET)"
+	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
-	@if [ -e $(TESTS) ];					\
-	then									\
-		echo "$(NAME): Deleting $(TESTS)";	\
-		rm -f $(TESTS);						\
+	@if [ -e $(TESTS) ];						\
+	then										\
+		echo "[$(NAME)]: Deleting $(TESTS)";	\
+		rm -f $(TESTS);							\
 	fi
 
 re:	fclean $(TARGET)

@@ -44,8 +44,8 @@
     #undef DESTROY
 #endif
 
-#define NEW(type, ...)     type##_create(__VA_ARGS__)
-#define DESTROY(type, ptr) type##_destroy((ptr))
+#define NEW(type, ...)      type##_create(__VA_ARGS__)
+#define DESTROY(type, ptr)  type##_destroy((ptr))
 #define MFAIL (-1)
 
 /*
@@ -64,16 +64,22 @@
 */
 
 typedef enum pseudo_polymorph_type_e {
-    ID  , // aitem_t->i
-    PT  , // aitem_t->item
-    XX  , // For specific functions
-} ptype_t;
+    ID = -1 , // aitem_t->i
+    PT = -2 , // aitem_t->item
+    XX = -3 , // For specific functions
+
+    // --- //
+
+    MT_GRAPH   ,
+    MT_LIST    ,
+    MT_ITEM    ,
+} morph_t;
 
 typedef struct pseudo_polymorph_s {
-    ptype_t type;
+    morph_t type;
     union {
         void   *_pt;
-        ssize_t _id;
+        size_t  _id;
     } __transparent;
 } pmorph_t;
 
@@ -89,16 +95,17 @@ typedef struct alist_s *alist_t;
 typedef struct graph_s *graph_t;
 
 struct aitem_s {
-    size_t i;
+    morph_t type;
     void   *iptr;
-    /* As the index (i) may have different values for a single item (iptr)
+    /*
+    *  As the index (i) may have different values for a single item (iptr)
     *  depending on its presence in multiple adjacency lists, I would
-    *  recommend making your item a structure containing a unique ID that
+    *  recommend making your item a structure contain a unique ID that
     *  could help differentiate it from other iptr. It may also not be
     *  necessary. It's up to you and the needs and your project.
     *  Happy graphing !
-    **/
-
+    */
+    size_t  i;
     aitem_t next;
 };
 
@@ -112,6 +119,7 @@ struct aitem_s {
 // while not actually adding it again
 
 struct alist_s {
+    morph_t type;
     size_t i;
     ssize_t size;
     aitem_t head;
@@ -157,6 +165,7 @@ struct alist_s {
 */
 
 struct graph_s {
+    morph_t type;
     char    *name;  // Can be NULL
     size_t   size;
     alist_t *graph;
@@ -213,7 +222,7 @@ struct graph_s {
         // If list is any of the follow combinations, flushes every list:
         //   - MOPRH(PT, NULL)
         //   - MOPRH(XX, <anything>)
-        //   - MOPRH(ID, <negative index>)
+        //   - MORPH(ID, <something bigger than graph size>)
         void (*flush)(ME, pmorph_t list);
         #undef ME
     } *vt;
@@ -224,10 +233,26 @@ struct graph_s {
 ****************************************************************
 */
 
+/* The following functions return NULL in case of failure. */
+
+// Creates a new graph and retruns its pointer.
+// ├ Size : number of rows it graph_t->graph[]
+// │ └ Has to be at least 1
+// └ Name : Self explanatory.
+//   └ Can be NULL
 extern graph_t graph_t_create(size_t size, str3c_t name);
-extern alist_t alist_t_create(void *item, size_t i);
+
+// Creates a new adjacency list and retruns its pointer.
+// ├ Item : iptr for list's head item
+// │ └ Can be NULL. If so, first added item will be its head.
+extern alist_t alist_t_create(void *item);
+
+// Creates a new graph and retruns its pointer.
+// └ Item : iptr for the item.
+extern aitem_t aitem_t_create(void *item);
 
 extern void graph_t_destroy(graph_t *graphptr);
 extern void alist_t_destroy(alist_t *alistptr);
+extern void aitem_t_destroy(aitem_t *aitemptr);
 
 #endif //LIBFOX_FOX_GRAPH_H

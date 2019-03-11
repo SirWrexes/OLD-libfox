@@ -12,7 +12,7 @@
 #ifndef LIBFOX_VTALIST_H
 #define LIBFOX_VTALIST_H
 
-#include "private/__foxgraph.h"
+#include "private/p_foxgraph.h"
 #define ME alist_t me
 
 static inline ssize_t alist_additem(ME, void *iptr)

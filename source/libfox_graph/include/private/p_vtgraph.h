@@ -12,7 +12,7 @@
 #ifndef LIBFOX_VTABLES_H
 #define LIBFOX_VTABLES_H
 
-#include "private/__foxgraph.h"
+#include "private/p_foxgraph.h"
 #define ME graph_t me
 
 static inline ssize_t graph_addlist(ME, void *item)
@@ -25,9 +25,10 @@ static inline ssize_t graph_addlist(ME, void *item)
     for (i = 0; me->graph[i] != NULL && i < me->size; i += 1);
     if (i == me->size)
         RETURN(MFAIL, fox_eputs("add_list(): Graph is full\n"));
-    list = NEW(alist_t, item, i);
+    list = NEW(alist_t, item);
     if (list == NULL)
         RETURN(MFAIL, fox_eputs("add_list(): Abort\n"));
+    list->i = i;
     me->graph[i] = list;
     return i;
 }
@@ -117,7 +118,7 @@ static inline void graph_flush(ME, pmorph_t list)
 
     if (list.type == XX
     || (list.type == PT && list._pt == NULL)
-    || (list.type == ID && list._id < 0))
+    || (list.type == ID && list._id > me->size))
         for (size_t i = 0; i < me->size; i += 1)
             me->graph[i]->vt->flush(me->graph[i]);
     tmp = me->vt->fetch(me, list);

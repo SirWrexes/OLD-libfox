@@ -60,7 +60,7 @@ Test(alist, vt_add_one_to_empty)
 {
     GRAPH_AD(alist_t) test = NEW(alist_t, NULL);
 
-    cr_assert_not_null(test);
+    cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->size, 0, ".size = %zu", test->size);
     cr_expect_eq(test->vt->add_item(test, "non"), 0);
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -78,7 +78,7 @@ Test(alist, vt_add_one_to_non_empty)
 {
     GRAPH_AD(alist_t) test = NEW(alist_t, "peut-etre");
 
-    cr_assert_not_null(test);
+    cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
     cr_expect_eq(test->vt->add_item(test, "je ne sais pas"), 1);
     cr_expect_eq(test->size, 2, ".size = %zu", test->size);
@@ -124,7 +124,7 @@ Test(alist, vt_contains_pt)
     GRAPH_AD(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
     GRAPH_AD(aitem_t) item = NEW(aitem_t, test);
 
-    cr_assert_not_null(test);
+    cr_assert_not_null(test, "%s", strerror(errno));
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");

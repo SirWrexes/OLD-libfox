@@ -1,0 +1,13 @@
+DIR_GRAPH	:=	../libfox_graph
+DIR_IO		:=	../libfox_io
+DIR_MATH	:=	../libfox_math
+DIR_MEMORY	:=	../libfox_memory
+DIR_PRINTF	:=	../libfox_printf
+DIR_STRING	:=	../libfox_string
+MODULES		:=	$(DIR_GRAPH)	\
+				$(DIR_IO)		\
+				$(DIR_MATH)		\
+				$(DIR_MEMORY)	\
+				$(DIR_PRINTF)	\
+				$(DIR_STRING)
+INCLUDES	:=	$(foreach mod,$(MODULES),-iquote $(mod)/include)

@@ -26,7 +26,12 @@ graph:
 	@$(CP) .		$(SRCDIR)/libfox_graph/libfox_graph.a
 	@$(CP) include  $(SRCDIR)/libfox_graph/include/fox_graph.h
 graph-tests:
-	@echo "No graph test yet."
+	@if [ -e "$(SRCDIR)/libfox_graph/tests_graph" ];	\
+   	then												\
+   		$(SRCDIR)/libfox_graph/tests_graph;				\
+   	else												\
+   		$(MAKE) $(SRCDIR)/libfox_graph tests_graph;		\
+   	fi
 graph-clean:
 	@$(MAKE) $(SRCDIR)/libfox_graph clean
 graph-fclean:

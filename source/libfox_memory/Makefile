@@ -8,7 +8,6 @@
 SHELL		=	/bin/sh
 CC			?=	gcc
 
-include ../.modules
 ############
 NAME		=	memory
 TARGET		=	libfox_$(NAME).a
@@ -44,10 +43,12 @@ TSRC		+=	$(TDIR)/test_fox_autoclose.c
 ############
 OBJ			=	$(PSRC:%.c=%.o)
 DEP			=	$(OBJ:.o=.d)
+.PRECIOUS	=	$(DEP)
 -include $(DEP)
 ############
 
 ############
+include ../.includes
 CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
@@ -69,12 +70,13 @@ $(TARGET): $(OBJ)
 		ar rc $@ $<;		\
 	fi
 
+%.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
 	@echo "[$(NAME) | $(CC)] OK → $@"
 
 $(TESTS):
-	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
+	@$(CC) -o $(TESTS) $(TFLAGS) $(PSRC) $(TSRC)
 	@echo							| cat
 	@echo							| cat
 	@echo "[$(NAME)]: unit tests"	| cat
@@ -96,6 +98,8 @@ clean:
 	@rm -f a.out
 
 fclean: clean
+	@echo "[$(NAME)]: Deleting dependency files"
+	@rm -f $(DEP)
 	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
 	@if [ -e $(TESTS) ];						\
@@ -106,4 +110,4 @@ fclean: clean
 
 re:	fclean $(TARGET)
 
-.PHONY:all clean fclean re
+.PHONY:all clean fclean re $(TESTS)

@@ -24,6 +24,8 @@ extern graph_t graph_t_create(size_t size, str3c_t name)
 {
     graph_t this = malloc(sizeof(*this));
 
+    if (size < 1)
+        return g_abort(this, "Invalid size.");
     if (this == NULL)
         return g_abort(this, "Creation failed.");
     this->graph = malloc(size * sizeof(*this->graph));

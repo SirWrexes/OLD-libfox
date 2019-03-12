@@ -106,7 +106,7 @@ static inline void graph_remove(ME, pmorph_t thing)
         if (thing.type == ID
         ?   thing._id == tmp->i
         :   thing._pt == tmp || thing._pt == tmp->head)
-            DESTROY(alist_t, &me->graph[tmp->i]);
+            DESTROY(alist_t, me->graph[tmp->i]);
         else
             tmp->vt->remove(tmp, thing);
     }

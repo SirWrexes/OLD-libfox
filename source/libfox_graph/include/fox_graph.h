@@ -36,60 +36,78 @@
     || defined(ME)      \
     || defined(NEW)     \
     || defined(DESTROY) \
-    || defined(MFAIL)
+    || defined(MFAIL)   \
+    || defined(GRAPH_AD)
     #undef MORPH
     #undef ME
     #undef NEW
     #undef MFAIL
     #undef DESTROY
+    #undef GRAPH_AD
 #endif
 
+/*
+****************************************************************
+****************************************************************
+*/
+
+// OOP style macro for creating graph elements.
 #define NEW(type, ...)      type##_create(__VA_ARGS__)
-#define DESTROY(type, ptr)  type##_destroy((ptr))
+
+// We got a constructor so why not a destructor ?
+#define DESTROY(type, ptr)  type##_destroy(&(ptr))
+
+// Use this to create elements that'll auto-destroy
+// when leaving the function's scope.
+#define GRAPH_AD(type)      __attribute__((cleanup(type##_destroy))) type
+
+// Error value for boolean Methods
 #define MFAIL (-1)
+
+/*
+****************************************************************
+****************************************************************
+*/
 
 /*
 ** Pseudo-polymorphism
 ** Allows for reducing the number of functions used to manipulate the graph
 ** and its lists. Functions using pseudo-polymorphic items as arguments can
-** be called in two ways :
+** be called in two ways, always using MORPH marco :
 **
-** Consider this function : void func(pitem_t pi);
-** You can either do
-** func(MORPH(ID, 12) implying desired item's i equals 12
-** -- OR
-** func(MORPH(PT, iptr) where iptr would be the pointer stored in void* item
-**
-** Providing an iptr when ID is given or vice versa gives undefined behaviour.
+** void func(pmorph_t thing, ...):
+**   - func(MORPH(ID, <thing's index>), ...)
+**   - func(MORPH(PT, <thing's pointer>), ...)
 */
 
+#define MORPH(type, item) (pmorph_t) {(type), {(size_t) (item)}}
+
 typedef enum pseudo_polymorph_type_e {
-    ID = -1 , // aitem_t->i
-    PT = -2 , // aitem_t->item
-    XX = -3 , // For specific functions
+    ID  , // aitem_t->i
+    PT  , // aitem_t->item
+    XX  , // For specific functions
 
     // --- //
 
-    MT_GRAPH   ,
-    MT_LIST    ,
-    MT_ITEM    ,
+    MT_GRAPH = 'g'  ,
+    MT_LIST  = 'l'  ,
+    MT_ITEM  = 'i'  ,
 } morph_t;
 
 typedef struct pseudo_polymorph_s {
     morph_t type;
     union {
-        void   *_pt;
-        size_t  _id;
+        size_t _id;
+        void *_pt;
     } __transparent;
 } pmorph_t;
-
-#define MORPH(type, item) ((pmorph_t) {type, {item}})
 
 /*
 ****************************************************************
 ****************************************************************
 */
 
+// Remember : These are pointers. To access members, use `->`, not `.` !
 typedef struct aitem_s *aitem_t;
 typedef struct alist_s *alist_t;
 typedef struct graph_s *graph_t;
@@ -100,9 +118,9 @@ struct aitem_s {
     /*
     *  As the index (i) may have different values for a single item (iptr)
     *  depending on its presence in multiple adjacency lists, I would
-    *  recommend making your item a structure contain a unique ID that
+    *  recommend making your item a structure containing a unique ID that
     *  could help differentiate it from other iptr. It may also not be
-    *  necessary. It's up to you and the needs and your project.
+    *  necessary. It's up to you and the needs of your project.
     *  Happy graphing !
     */
     size_t  i;
@@ -114,9 +132,9 @@ struct aitem_s {
 ****************************************************************
 */
 
-// For the following add_* methods, item to add being already
-// in the container you want to add it to counts as a success
-// while not actually adding it again
+// For the following add_* methods, adding an item that's already
+// in the graph/list you're using it from counts as a success,
+// while not duplicating the thing's presence.
 
 struct alist_s {
     morph_t type;
@@ -138,7 +156,7 @@ struct alist_s {
         //   - aitem->iptr
         bool (*contains)(ME, pmorph_t thing);
 
-        // If its in the list, returns a pointer to the corresponding item
+        // If its in the list, returns a pointer to the corresponding aitem
         // Else, returns NULL
         // Possible thing values
         //   - aitem index
@@ -173,7 +191,7 @@ struct graph_s {
     const struct vtgraph_s {
         #define ME graph_t me
         // Creates a list and adds it to the graph.
-        // Returns new list's index or -1 in case of failure.
+        // Returns new list's index or MFAIL in case of failure.
         ssize_t (*add_list)(ME, void *item);
 
         // Adds an item to a list.
@@ -186,7 +204,7 @@ struct graph_s {
         ssize_t (*add_item)(ME, pmorph_t thing, void *item);
 
         // Returns true if the graph contains given thing.
-        // If thing.type isn't ID or PT, returns MFAIL.
+        // If thing.type isn't ID or PT, returns false.
         // Possible thing values:
         //   - alist index
         //   - alist pointer
@@ -195,7 +213,7 @@ struct graph_s {
         bool (*contains)(ME, pmorph_t thing);
 
         // Gives the return value of list->contains(item).
-        // If list isn't in the graph, returns MFAIL.
+        // If list isn't in the graph, returns false.
         bool (*list_contains)(ME, pmorph_t list, pmorph_t item);
 
         // If its in the graph, returns a pointer to the corresponding list.
@@ -243,8 +261,8 @@ struct graph_s {
 extern graph_t graph_t_create(size_t size, str3c_t name);
 
 // Creates a new adjacency list and retruns its pointer.
-// ├ Item : iptr for list's head item
-// │ └ Can be NULL. If so, first added item will be its head.
+// └ Item : iptr for list's head item
+//   └ Can be NULL. If so, first added item will be its head.
 extern alist_t alist_t_create(void *item);
 
 // Creates a new graph and retruns its pointer.

@@ -19,7 +19,7 @@ static void *l_abort(alist_t this, str3c_t errstr)
     if (this == NULL)
         return NULL;
     for (aitem_t i = this->head; i != NULL; i = i->next)
-        DESTROY(aitem_t, &i);
+        DESTROY(aitem_t, i);
     return NULL;
 }
 
@@ -40,6 +40,7 @@ extern alist_t alist_t_create(void *item)
     }
     this->last = this->head;
     this->i = 0;
+    this->vt = &vt;
     this->type = MT_LIST;
     return this;
 }

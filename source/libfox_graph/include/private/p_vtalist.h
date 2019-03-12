@@ -24,18 +24,21 @@ static inline ssize_t alist_additem(ME, void *iptr)
     tmp = NEW(aitem_t, iptr);
     if (tmp == NULL)
         return MFAIL;
-    me->i += 1;
-    tmp->i = me->last->i + 1;
+    me->size += 1;
+    tmp->i = (me->head == NULL) ? 0 : me->last->i + 1;
+    me->head = me->head ? : tmp;
     tmp->next = NULL;
-    me->last->next = tmp;
+    if (me->last != NULL)
+        me->last->next = tmp;
     me->last = tmp;
     return me->last->i;
 }
 
 static inline bool alist_contains(ME, pmorph_t thing)
 {
-    if (thing.type != PT && thing.type != ID)
-        return MFAIL;
+    if ((thing.type != PT && thing.type != ID)
+    ||  (thing.type == PT && thing._pt == NULL))
+        return false;
     for (aitem_t i = me->head; i != NULL; i = i->next)
         if (thing.type == ID
         ?   thing._id == i->i
@@ -66,7 +69,7 @@ static inline void alist_remove(ME, pmorph_t thing)
     if (thing.type == ID
     ?   thing._id == me->head->i
     :   thing._pt == me->head || thing._pt == me->head->iptr)
-        DESTROY(alist_t, &me);
+        DESTROY(alist_t, me);
     for (; i != NULL; i = i->next) {
         if (thing.type == PT
         ?   thing._pt == i || thing._pt == i->iptr
@@ -78,7 +81,7 @@ static inline void alist_remove(ME, pmorph_t thing)
         return;
     tmp->next = i->next;
     me->size -= 1;
-    DESTROY(aitem_t, &i);
+    DESTROY(aitem_t, i);
 }
 
 static inline void alist_flush(ME)
@@ -88,12 +91,12 @@ static inline void alist_flush(ME)
 
     while (i != NULL) {
         tmp = i->next;
-        DESTROY(aitem_t, &i);
+        DESTROY(aitem_t, i);
         i = tmp;
     }
 }
 
-const struct vtalist_s alist_vt = {
+const struct vtalist_s vt = {
     alist_additem   ,
     alist_contains  ,
     alist_fetch     ,

@@ -16,12 +16,7 @@ static void *g_abort(graph_t this, str3c_t errstr)
     fox_eputs("Graph: ");
     fox_eputs(errstr);
     fox_eputs("\n");
-    if (this == NULL)
-        return NULL;
-    if (this->name != NULL)
-        free(this->name);
-    if (this->graph != NULL)
-        free(this->graph);
+    DESTROY(graph_t, this);
     return NULL;
 }
 

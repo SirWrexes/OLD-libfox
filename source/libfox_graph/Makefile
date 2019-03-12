@@ -35,6 +35,7 @@ PSRC		+=	$(DIR_STRING)/src/fox_strlen.c
  #
 TSRC		+=	$(TDIR)/test_aitem.c
 TSRC		+=	$(TDIR)/test_alist.c
+TSRC		+=	$(TDIR)/test_graph.c
 TSRC		+=	$(DIR_IO)/$(TDIR)/test_fox_puts.c
 TSRC		+=	$(DIR_STRING)/$(TDIR)/test_fox_strdup.c
 TSRC		+=	$(DIR_STRING)/$(TDIR)/test_fox_strlen.c
@@ -57,6 +58,8 @@ TFLAGS		+=	$(CFLAGS)
 TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
+ #
+TRFLAGS		+=	--always-succeed --timeout 5
 ############
 
 .DEFAULT_GOAL := $(TARGET)
@@ -80,7 +83,7 @@ $(TESTS):
 	@echo							| cat
 	@echo							| cat
 	@echo "[$(NAME)]: unit tests"	| cat
-	-@./$(TESTS)
+	@./$(TESTS) $(TRFLAGS)
 	@rm -f **test_*.gc*
 	@gcovr -spb
 

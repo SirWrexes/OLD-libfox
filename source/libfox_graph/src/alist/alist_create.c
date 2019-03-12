@@ -16,10 +16,7 @@ static void *l_abort(alist_t this, str3c_t errstr)
     fox_eputs("AList: ");
     fox_eputs(errstr);
     fox_eputs("\n");
-    if (this == NULL)
-        return NULL;
-    for (aitem_t i = this->head; i != NULL; i = i->next)
-        DESTROY(aitem_t, i);
+    DESTROY(alist_t, this);
     return NULL;
 }
 

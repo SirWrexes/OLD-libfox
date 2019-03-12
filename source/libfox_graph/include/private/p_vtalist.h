@@ -13,7 +13,25 @@
 #define LIBFOX_VTALIST_H
 
 #include "private/p_foxgraph.h"
+
+#undef ME
 #define ME alist_t me
+
+#undef UNALLOWED_THING
+#define UNALLOWED_THING(thing)                  \
+(                                               \
+    ((thing).type != PT && (thing).type != ID)  \
+    ||                                          \
+    ((thing).type == PT && (thing)._pt == NULL) \
+)
+
+#undef MATCH
+#define MATCH(thing, x)                                 \
+(                                                       \
+    (thing).type == ID                                  \
+    ? (thing)._id == (x)->i                             \
+    : (thing)._pt == (x) || (thing)._pt == (x)->iptr    \
+)
 
 static inline ssize_t alist_additem(ME, void *iptr)
 {
@@ -36,49 +54,42 @@ static inline ssize_t alist_additem(ME, void *iptr)
 
 static inline bool alist_contains(ME, pmorph_t thing)
 {
-    if ((thing.type != PT && thing.type != ID)
-    ||  (thing.type == PT && thing._pt == NULL))
+    if (UNALLOWED_THING(thing))
         return false;
     for (aitem_t i = me->head; i != NULL; i = i->next)
-        if (thing.type == ID
-        ?   thing._id == i->i
-        :   thing._pt == i || thing._pt == i->iptr)
+        if (MATCH(thing, i))
             return true;
     return false;
 }
 
 static inline aitem_t alist_fetch(ME, pmorph_t thing)
 {
-    if (thing.type != PT && thing.type != ID)
-        return NULL;
+    if (UNALLOWED_THING(thing))
+        return  NULL;
     for (aitem_t i = me->head; i != NULL; i = i->next)
-        if (thing.type == ID
-        ?   thing._id == i->i
-        :   thing._pt == i || thing._pt == i->iptr)
+        if (MATCH(thing, i))
             return i;
     return NULL;
 }
 
 static inline void alist_remove(ME, pmorph_t thing)
 {
-    aitem_t i = me->head->next;
     aitem_t tmp = me->head;
+    aitem_t i = tmp != NULL ? tmp->next : NULL;
 
-    if (thing.type != PT && thing.type != ID)
+    if (UNALLOWED_THING(thing))
         return;
-    if (thing.type == ID
-    ?   thing._id == me->head->i
-    :   thing._pt == me->head || thing._pt == me->head->iptr)
+    if (MATCH(thing, me->head))
         DESTROY(alist_t, me);
     for (; i != NULL; i = i->next) {
-        if (thing.type == PT
-        ?   thing._pt == i || thing._pt == i->iptr
-        :   thing._id == i->i)
+        if (MATCH(thing, i))
             break;
         tmp = tmp->next;
     }
     if (i == NULL)
         return;
+    if (i == me->last)
+        me->last = me->vt->fetch(me, MORPH(ID, i->i - 1));
     tmp->next = i->next;
     me->size -= 1;
     DESTROY(aitem_t, i);
@@ -86,14 +97,8 @@ static inline void alist_remove(ME, pmorph_t thing)
 
 static inline void alist_flush(ME)
 {
-    aitem_t i = me->head->next;
-    aitem_t tmp;
-
-    while (i != NULL) {
-        tmp = i->next;
-        DESTROY(aitem_t, i);
-        i = tmp;
-    }
+    while (me->last != me->head)
+        me->vt->remove(me, MORPH(ID, me->last->i));
 }
 
 const struct vtalist_s vt = {

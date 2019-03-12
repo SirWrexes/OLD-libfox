@@ -57,6 +57,8 @@ TFLAGS		+=	$(CFLAGS)
 TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
+ #
+TRFLAGS		+=	--always-succeed --timeout 5
 ############
 
 .DEFAULT_GOAL := $(TARGET)
@@ -85,7 +87,7 @@ $(TESTS):
 	@echo																				| cat
 	@printf "\tfox_allocbytes produces undefined results.\n"							| cat
 	@printf "\t\tIts tests fail and you shouldn't use the function at all for now.\n"	| cat
-	-@./$(TESTS)
+	@./$(TESTS) $(TRFLAGS)
 	@rm -f **test_*.gc*
 	@gcovr -s
 

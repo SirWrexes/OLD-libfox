@@ -55,6 +55,8 @@ TFLAGS		+=	$(CFLAGS)
 TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
+ #
+TRFLAGS		+=	--always-succeed --timeout 5
 ############
 
 .DEFAULT_GOAL := $(TARGET)

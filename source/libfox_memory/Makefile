@@ -89,7 +89,7 @@ $(TESTS):
 	@printf "\t\tIts tests fail and you shouldn't use the function at all for now.\n"	| cat
 	@./$(TESTS) $(TRFLAGS)
 	@rm -f **test_*.gc*
-	@gcovr -s
+	@gcovr -sb
 
 clean:
 	@echo "[$(NAME)]: Deleting object files"

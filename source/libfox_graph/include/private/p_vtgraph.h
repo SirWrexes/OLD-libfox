@@ -15,12 +15,20 @@
 #include "private/p_foxgraph.h"
 #define ME graph_t me
 
+#undef UNALLOWED_THING
+#define UNALLOWED_THING(thing)                  \
+(                                               \
+    ((thing).type != PT && (thing).type != ID)  \
+    ||                                          \
+    ((thing).type == PT && (thing)._pt == NULL) \
+)
+
 static inline ssize_t graph_addlist(ME, void *item)
 {
     size_t i;
     alist_t list = me->vt->fetch(me, MORPH(PT, item));
 
-    if (list != NULL)
+    if (list != NULL && list->head->iptr == item)
         return list->i;
     for (i = 0; me->graph[i] != NULL && i < me->size; i += 1);
     if (i == me->size)
@@ -37,7 +45,7 @@ static inline ssize_t graph_additem(ME, pmorph_t list, void *item)
 {
     alist_t tmp = NULL;
 
-    if (list.type != ID && list.type != PT)
+    if (UNALLOWED_THING(list))
         return MFAIL;
     tmp = me->vt->fetch(me, list);
     if (tmp == NULL)
@@ -45,20 +53,35 @@ static inline ssize_t graph_additem(ME, pmorph_t list, void *item)
     return tmp->vt->add_item(tmp, item);
 }
 
+__a((pure))
+static inline bool g_contains_match(ME, pmorph_t thing, size_t i)
+{
+    switch (thing.type) {
+    default :
+    case ID :
+        return (me->graph[i] != NULL ? thing._id == me->graph[i]->i : false);
+    case PT :
+        return (
+            (
+                me->graph[i] != NULL
+                ? thing._pt == me->graph[i]
+                : false
+            ) || (
+                me->graph[i]->head != NULL
+                ?  thing._pt == me->graph[i]->head
+                || thing._pt == me->graph[i]->head->iptr
+                : false
+            )
+        );
+    }
+}
+
 static inline bool graph_contains(ME, pmorph_t thing)
 {
-    if (thing.type != ID && thing.type != PT)
+    if (UNALLOWED_THING(thing))
         return MFAIL;
     for (size_t i = 0; i < me->size; i += 1)
-        if (thing.type == ID
-        ?   thing._id == me->graph[i]->i
-        :   thing._pt == me->graph[i])
-            return true;
-    if (thing.type != PT)
-        return false;
-    for (size_t i = 0; i < me->size; i += 1)
-        if (thing._pt == me->graph[i]->head
-        ||  thing._pt == me->graph[i]->head->iptr)
+        if (g_contains_match(me, thing, i))
             return true;
     return false;
 }
@@ -77,18 +100,10 @@ static inline bool graph_listcontains(ME, pmorph_t list, pmorph_t item)
 
 static inline alist_t graph_fetch(ME, pmorph_t thing)
 {
-    if (thing.type != ID && thing.type != PT)
+    if (UNALLOWED_THING(thing))
         return NULL;
     for (size_t i = 0; i < me->size; i += 1)
-        if (thing.type == ID
-        ? thing._id == me->graph[i]->i
-        : thing._pt == me->graph[i])
-            return me->graph[i];
-    if (thing.type != PT)
-        return NULL;
-    for (size_t i = 0; i < me->size; i += 1)
-        if (thing._pt == me->graph[i]->head
-        ||  me->graph[i]->vt->contains(me->graph[i], thing))
+        if (g_contains_match(me, thing, i))
             return me->graph[i];
     return NULL;
 }
@@ -97,7 +112,7 @@ static inline void graph_remove(ME, pmorph_t thing)
 {
     alist_t tmp = NULL;
 
-    if (thing.type != ID && thing.type != PT)
+    if (UNALLOWED_THING(thing))
         return;
     while (true) {
         tmp = me->vt->fetch(me, thing);

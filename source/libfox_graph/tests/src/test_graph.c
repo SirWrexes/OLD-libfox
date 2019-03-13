@@ -12,10 +12,17 @@
 #include <string.h>
 #include "private/p_foxgraph.h"
 
-Test(graph, destrooy_unnamed)
+static void reset_errno(void)
+{
+    errno = 0;
+}
+
+TestSuite(graph, .init = reset_errno);
+
+Test(graph, create_unnamed)
 {
     str3c_t name = NULL;
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, name);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, name);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_GRAPH, ".type = %d", test->type);
@@ -26,10 +33,10 @@ Test(graph, destrooy_unnamed)
         cr_expect_null(test->graph[i], ".graph[%zu] = %p", i, test->graph[i]);
 }
 
-Test(graph, destroy_named)
+Test(graph, create_named)
 {
     str3c_t name = "t ki dan le sport";
-    GRAPH_AD(graph_t) test = NEW(graph_t, 3, name);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 3, name);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_GRAPH, ".type = %d", test->type);
@@ -39,6 +46,20 @@ Test(graph, destroy_named)
     cr_assert_not_null(test->graph, ".graph = %p", test->graph);
     for (size_t i = 0; i < test->size; i += 1)
         cr_expect_null(test->graph[i], ".graph[%zu] = %p", i, test->graph[i]);
+}
+
+Test(graph, create_invalid_size)
+{
+    FOXGRAPH(graph_t) test = NEW(graph_t, 0, NULL);
+
+    cr_assert_null(test, "test = %p", test);
+}
+
+Test(graph, destroy)
+{
+    FOXGRAPH(graph_t) test = NEW(graph_t, 2, "sauce");
+
+    cr_assert_not_null(test, "%s", strerror(errno));
 }
 
 Test(graph, destroy_null_graph_t)
@@ -56,58 +77,90 @@ Test(graph, destroy_null_grapharray)
     DESTROY(graph_t, test);
 }
 
-Test(graph, vt_add_list)
+Test(graph, vt_add_list_to_empty)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    cr_assert_neq(test->vt->add_list(test, test), MFAIL, "%s", strerror(errno));
+    cr_expect_eq(test->graph[0]->head->iptr, test,
+        ".graph[0]-->iptr = %p, test = %p", test->graph[0]->head->iptr, test);
 }
 
-Test(graph, vt_add_item)
+Test(graph, vt_add_list_to_non_empty)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    cr_assert_neq(test->vt->add_list(test, test),
+        MFAIL, "%s", strerror(errno));
+    cr_assert_neq(test->vt->add_list(test, &test),
+        MFAIL, "%s", strerror(errno));
+    cr_expect_eq(test->graph[0]->head->iptr, test,
+        ".graph[0]-->iptr = %p, test = %p", test->graph[0]->head->iptr, test);
+    cr_expect_eq(test->graph[1]->head->iptr, &test,
+        ".graph[1]-->iptr = %p, test = %p", test->graph[1]->head->iptr, test);
+}
+
+Test(graph, vt_add_list_to_full)
+{
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+
+    cr_assert_not_null(test, "%s", strerror(errno));
+    cr_assert_neq(test->vt->add_list(test, test), MFAIL, "%s", strerror(errno));
+    cr_expect_eq(test->graph[0]->head->iptr, test,
+        ".graph[0]-->iptr = %p, test = %p", test->graph[0]->head->iptr, test);
+    cr_expect_eq(test->vt->add_list(test, &test), MFAIL);
+}
+
+Test(graph, vt_add_item_duplicate)
+{
+    ssize_t id = 0;
+    FOXGRAPH(graph_t) test = NEW(graph_t, 2, NULL);
+
+    cr_assert_not_null(test, "%s", strerror(errno));
+    id = test->vt->add_list(test, test);
+    cr_expect_eq(test->vt->add_list(test, test), id);
 }
 
 Test(graph, vt_contains)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }
 
 Test(graph, vt_graph_contains)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }
 
 Test(graph, vt_list_contains)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }
 
 Test(graph, vt_fetch)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }
 
 Test(graph, vt_remove)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }
 
 Test(graph, vt_flush)
 {
-    GRAPH_AD(graph_t) test = NEW(graph_t, 1, NULL);
+    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }

@@ -12,10 +12,17 @@
 #include <string.h>
 #include "private/p_foxgraph.h"
 
+static void reset_errno(void)
+{
+    errno = 0;
+}
+
+TestSuite(aitem, .init = reset_errno);
+
 Test(aitem_create, create_string)
 {
     char *str = "sauce";
-    GRAPH_AD(aitem_t) test = NEW(aitem_t, str);
+    FOXGRAPH(aitem_t) test = NEW(aitem_t, str);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_ITEM, ".type = %d", test->type);
@@ -33,7 +40,7 @@ Test(aitem, create_structure)
 {
     struct dummy dumdum = {.str = "durp", .n = 12};
     struct dummy *mudmud = NULL;
-    GRAPH_AD(aitem_t) test = NEW(aitem_t, &dumdum);
+    FOXGRAPH(aitem_t) test = NEW(aitem_t, &dumdum);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_ITEM, ".type = %d", test->type);
@@ -61,8 +68,8 @@ Test(aitem, destroy, .signal = SIGSEGV)
 Test(aitem, destroy_in_list, .signal = SIGSEGV)
 {
     aitem_t test = NEW(aitem_t, "hurp");
-    GRAPH_AD(aitem_t) test2 = NEW(aitem_t, "durp");
-    GRAPH_AD(aitem_t) test3 = NEW(aitem_t, "burp");
+    FOXGRAPH(aitem_t) test2 = NEW(aitem_t, "durp");
+    FOXGRAPH(aitem_t) test3 = NEW(aitem_t, "burp");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_assert_not_null(test2, "&test2 = %p", test2);

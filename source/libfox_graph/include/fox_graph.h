@@ -37,13 +37,13 @@
     || defined(NEW)     \
     || defined(DESTROY) \
     || defined(MFAIL)   \
-    || defined(GRAPH_AD)
+    || defined(FOXGRAPH)
     #undef MORPH
     #undef ME
     #undef NEW
     #undef MFAIL
     #undef DESTROY
-    #undef GRAPH_AD
+    #undef FOXGRAPH
 #endif
 
 /*
@@ -59,7 +59,7 @@
 
 // Use this to create elements that'll auto-destroy
 // when leaving the function's scope.
-#define GRAPH_AD(type)      __attribute__((cleanup(type##_destroy))) type
+#define FOXGRAPH(type)      __attribute__((cleanup(type##_destroy))) type
 
 // Error value for boolean Methods
 #define MFAIL (-1)
@@ -190,7 +190,7 @@ struct graph_s {
 
     const struct vtgraph_s {
         #define ME graph_t me
-        // Creates a list and adds it to the graph.
+        // Creates a list with item as head and adds it to the graph.
         // Returns new list's index or MFAIL in case of failure.
         ssize_t (*add_list)(ME, void *item);
 

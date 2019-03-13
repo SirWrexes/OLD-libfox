@@ -82,7 +82,7 @@ $(TESTS):
 	@echo "[$(NAME)]: unit tests"	| cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
-	@gcovr -s
+	@gcovr -sb
 
 clean:
 	@echo "[$(NAME)]: Deleting object files"

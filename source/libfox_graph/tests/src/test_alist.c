@@ -12,9 +12,16 @@
 #include <string.h>
 #include "private/p_foxgraph.h"
 
+static void reset_errno(void)
+{
+    errno = 0;
+}
+
+TestSuite(alist, .init = reset_errno);
+
 Test(alist, create_empty)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, NULL);
+    FOXGRAPH(alist_t) test = NEW(alist_t, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_LIST, ".type = %d", test->type);
@@ -27,7 +34,7 @@ Test(alist, create_empty)
 
 Test(alist, create_non_empty)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "euuuuuuuuuuh");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "euuuuuuuuuuh");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_LIST, ".type = %d", test->type);
@@ -58,7 +65,7 @@ Test(alist, destroy, .signal = SIGABRT)
 
 Test(alist, vt_add_one_to_empty)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, NULL);
+    FOXGRAPH(alist_t) test = NEW(alist_t, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->size, 0, ".size = %zu", test->size);
@@ -76,7 +83,7 @@ Test(alist, vt_add_one_to_empty)
 
 Test(alist, vt_add_one_to_non_empty)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "peut-etre");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "peut-etre");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -98,7 +105,7 @@ Test(alist, vt_add_one_to_non_empty)
 
 Test(alist, add_duplicate)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, &test);
+    FOXGRAPH(alist_t) test = NEW(alist_t, &test);
 
     cr_assert_not_null(test);
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -108,7 +115,7 @@ Test(alist, add_duplicate)
 
 Test(alist, vt_contains_id)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");
@@ -121,8 +128,8 @@ Test(alist, vt_contains_id)
 
 Test(alist, vt_contains_pt)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
-    GRAPH_AD(aitem_t) item = NEW(aitem_t, test);
+    FOXGRAPH(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
+    FOXGRAPH(aitem_t) item = NEW(aitem_t, test);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");
@@ -136,7 +143,7 @@ Test(alist, vt_contains_pt)
 
 Test(alist, vt_contains_mfail)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Je sens quelque-chose...");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Je sens quelque-chose...");
 
     cr_assert_not_null(test);
     cr_expect_not(test->vt->contains(test, MORPH(PT, NULL)));
@@ -148,7 +155,7 @@ Test(alist, vt_fetch_id)
 {
     ssize_t id = 0;
     aitem_t fetch = NULL;
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Ooh");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Ooh");
 
     cr_assert_not_null(test);
     id = test->vt->add_item(test, "Eeh");
@@ -166,7 +173,7 @@ Test(alist, vt_fetch_pt)
     ssize_t id = 0;
     aitem_t fetch1 = NULL;
     aitem_t fetch2 = NULL;
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Ooh");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Ooh");
 
     cr_assert_not_null(test);
     id = test->vt->add_item(test, "Ah-ah");
@@ -180,7 +187,7 @@ Test(alist, vt_fetch_iptr)
 {
     ssize_t item = 0;
     aitem_t fetch = NULL;
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Ting tang");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Ting tang");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, &item);
@@ -191,7 +198,7 @@ Test(alist, vt_fetch_iptr)
 
 Test(alist, vt_fetch_mfail)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Walla walla bang bang");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Walla walla bang bang");
 
     cr_assert_not_null(test);
     cr_expect_null(test->vt->fetch(test, MORPH(PT, NULL)));
@@ -201,7 +208,7 @@ Test(alist, vt_fetch_mfail)
 
 Test(alist, vt_remove_id)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Can't touch this");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Can't touch this");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, &test);
@@ -214,7 +221,7 @@ Test(alist, vt_remove_id)
 
 Test(alist, vt_remove_pt)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Cant touch this");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Cant touch this");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, test);
@@ -227,7 +234,7 @@ Test(alist, vt_remove_pt)
 
 Test(alist, vt_remove_iptr)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Cant touch this");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Cant touch this");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, test);
@@ -240,7 +247,7 @@ Test(alist, vt_remove_iptr)
 
 Test(alist, vt_remove_mfail)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "Cant touch this");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "Cant touch this");
 
     cr_assert_not_null(test);
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -254,7 +261,7 @@ Test(alist, vt_remove_mfail)
 
 Test(alist, vt_flush)
 {
-    GRAPH_AD(alist_t) test = NEW(alist_t, "STOP !");
+    FOXGRAPH(alist_t) test = NEW(alist_t, "STOP !");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, "Hammer time !");

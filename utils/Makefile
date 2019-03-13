@@ -1,6 +1,6 @@
 ##
-## EPITECH PROJECT, 2019
-## Lemin
+## <COMPANY>, <YEAR>
+## <PROJECT>
 ## File description:
 ## Main Makefile
 ##
@@ -8,7 +8,7 @@
 #
 # Fundamentals
 ##############################
-PROJECT		=	lem_in
+PROJECT		=
 TESTBIN		=	tests_run
 SHELL		=	/bin/sh
 MAKE		=	make --silent

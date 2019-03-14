@@ -52,7 +52,7 @@
     // Shorter ways of writing attributes
     // For more information about these, check GNU GCC's docs
     #define __a(attributes)     __attribute__(attributes)
-    #define __tranparent        __a((__transparent_union__))
+    #define __transparent        __a((__transparent_union__))
     #define __unused            __a((unused))
     #define __cleanup(janitor)  __a((cleanup(janitor)))
 

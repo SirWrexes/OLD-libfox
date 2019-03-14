@@ -28,7 +28,7 @@ static inline ssize_t graph_addlist(ME, void *item)
     size_t i;
     alist_t list = me->vt->fetch(me, MORPH(PT, item));
 
-    if (list != NULL && list->head->iptr == item)
+    if (list != NULL && list->head != NULL && list->head->iptr == item)
         return list->i;
     for (i = 0; me->graph[i] != NULL && i < me->size; i += 1);
     if (i == me->size)
@@ -67,7 +67,7 @@ static inline bool g_contains_match(ME, pmorph_t thing, size_t i)
                 ? thing._pt == me->graph[i]
                 : false
             ) || (
-                me->graph[i]->head != NULL
+                me->graph[i] != NULL && me->graph[i]->head != NULL
                 ?  thing._pt == me->graph[i]->head
                 || thing._pt == me->graph[i]->head->iptr
                 : false
@@ -79,7 +79,7 @@ static inline bool g_contains_match(ME, pmorph_t thing, size_t i)
 static inline bool graph_contains(ME, pmorph_t thing)
 {
     if (UNALLOWED_THING(thing))
-        return MFAIL;
+        return false;
     for (size_t i = 0; i < me->size; i += 1)
         if (g_contains_match(me, thing, i))
             return true;

@@ -10,27 +10,7 @@
 
 #include <sys/types.h>
 #include <stdbool.h>
-
-#ifndef FOX_MACRO
-    #ifndef FOX_GRAPH_MACRO
-        #define FOX_GRAPH_MACRO
-        #undef __a
-        #undef __transparent
-        #undef RETURN
-
-        #define __a(__) __attribute__ (__)
-        #define __transparent __a((__transparent_union__))
-        #define RETURN(value, funcs...) return (0 ? : ((funcs), (value)))
-    #endif // FOX_GRAPH_MACRO
-
-    #ifndef CCSTR_TYPE
-        #define CCSTR_TYPE
-        typedef char const * const * const  str4c_t;
-        typedef char const * const          str3c_t;
-        typedef char const *                str2c_t;
-        typedef char *                      str_t;
-    #endif //CCSTR_TYPE
-#endif // FOX_MACRO
+#include "fox_define.h"
 
 #if defined(MORPH)      \
     || defined(ME)      \
@@ -59,7 +39,7 @@
 
 // Use this to create elements that'll auto-destroy
 // when leaving the function's scope.
-#define FOXGRAPH(type)      __attribute__((cleanup(type##_destroy))) type
+#define FOXGRAPH(type)      __cleanup(type##_destroy) type
 
 // Error value for boolean Methods
 #define MFAIL (-1)
@@ -199,7 +179,7 @@ struct graph_s {
         // Possible thing values
         //   - alist index
         //   - alist pointer
-        //   - aitem pointer (adds to list cntaining aitem)
+        //   - aitem pointer (adds to first list containing aitem)
         //   - aitem->iptr (adds to first list containing iptr)
         ssize_t (*add_item)(ME, pmorph_t thing, void *item);
 
@@ -212,7 +192,7 @@ struct graph_s {
         //   - aitem->iptr
         bool (*contains)(ME, pmorph_t thing);
 
-        // Gives the return value of list->contains(item).
+        // Gives the return value of alist->contains(item).
         // If list isn't in the graph, returns false.
         bool (*list_contains)(ME, pmorph_t list, pmorph_t item);
 

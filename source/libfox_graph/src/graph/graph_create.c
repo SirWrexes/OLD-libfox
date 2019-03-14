@@ -38,7 +38,8 @@ extern graph_t graph_t_create(size_t size, str3c_t name)
         this->name = fox_strdup(name);
         if (this->name == NULL)
             return g_abort(this, "Name assignation failed.");
-    }
+    } else
+        this->name = NULL;
     this->vt = &vt;
     this->type = MT_GRAPH;
     return this;

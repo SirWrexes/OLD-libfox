@@ -64,10 +64,10 @@ $(TARGET): $(OBJ)
 	@if [ -e $@ ];			\
 	then					\
 		echo "Updating $@";	\
-		ar ru $@ $<;		\
+		ar ru $@ $^;		\
 	else					\
 		echo "Creating $@";	\
-		ar rc $@ $<;		\
+		ar rc $@ $^;		\
 	fi
 
 %.o: CFLAGS += -MT $@ -MMD

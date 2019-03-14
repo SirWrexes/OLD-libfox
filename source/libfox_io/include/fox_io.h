@@ -69,8 +69,8 @@ size_t fox_putullong_base(ullong_t nbr, str3c_t base)          __a((nonnull));
 size_t fox_eputullong_base(ullong_t nbr, str2c_t base)         __a((nonnull));
 size_t fox_fputullong_base(int fd, ullong_t nbr, str2c_t base) __a((nonnull));
 
-__attribute__ ((nonnull, format(printf, 2,3)))
-ssize_t fox_fprintf(int fd, str3c_t fstr, ...);
+__a((nonnull, format(printf, 2,3)))
+ssize_t fox_fprintf(int fd, str3c_t fstr, ...); // fPrintf replica
 
 #undef fox_printf
 #undef fox_eprintf

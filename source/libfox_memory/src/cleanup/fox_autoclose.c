@@ -5,7 +5,7 @@
 ** Autoclose a file descriptor or pointer
 */
 
-#include "private/__foxmemory.h"
+#include "private/p_foxmemory.h"
 
 __attribute__ ((nonnull))
 void fox_autoclose_fd(int *fd)

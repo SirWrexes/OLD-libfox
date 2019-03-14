@@ -5,7 +5,7 @@
 ** No description
 */
 
-#include "private/__foxmemory.h"
+#include "private/p_foxmemory.h"
 #include "fox_memory.h"
 
 __attribute__ ((alloc_size(2)))

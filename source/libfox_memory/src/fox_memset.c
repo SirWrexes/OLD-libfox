@@ -5,7 +5,7 @@
 ** Set pointed memory to given data
 */
 
-#include "private/__foxmemory.h"
+#include "private/p_foxmemory.h"
 
 __attribute__ ((nonnull, returns_nonnull))
 void *fox_memset(void *ptr, size_t n, char data)

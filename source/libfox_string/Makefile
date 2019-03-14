@@ -38,57 +38,71 @@ TSRC		+=	$(TDIR)/test_fox_strdup.c
 TSRC		+=	$(TDIR)/test_fox_strlen.c
 ############
 
-OBJ			=	$(PSRC:.c=.o)
+############
+OBJ			=	$(PSRC:%.c=%.o)
+DEP			=	$(OBJ:.o=.d)
+.PRECIOUS	=	$(DEP)
+-include $(DEP)
+############
 
 ############
+include ../.includes
+CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
 CFLAGS		+=	-Wall -Wextra
 CFLAGS		+=	-Werror
-CFLAGS		+=	-iquote$(PINC)
  #
 TFLAGS		+=	$(CFLAGS)
-TFLAGS		+=	-iquote$(TINC)
+TFLAGS		+=	-iquote $(TINC)
 TFLAGS		+=  --coverage -lcriterion
 TFLAGS		+=	-D LIBFOX_UT
+ #
+TRFLAGS		+=	--always-succeed --timeout 5
 ############
 
-all: $(TARGET)
-
+.DEFAULT_GOAL := $(TARGET)
 $(TARGET): $(OBJ)
-	@if [ -e $(TARGET) ];			\
-	then							\
-		echo "Updating $(NAME)";	\
-		ar ru $(TARGET) $(OBJ);		\
-	else							\
-		echo "Creating $(NAME)";	\
-		ar rc $(TARGET) $(OBJ);		\
+	@if [ -e $@ ];			\
+	then					\
+		echo "Updating $@";	\
+		ar ru $@ $<;		\
+	else					\
+		echo "Creating $@";	\
+		ar rc $@ $<;		\
 	fi
 
+%.o: CFLAGS += -MT $@ -MMD
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo "[$(NAME) | $(CC)] OK → $@"
+
 $(TESTS):
-	@$(CC) -o $(TESTS) $(TFLAGS) $(TLIB) $(PSRC) $(TSRC)
-	@echo						| cat
-	@echo						| cat
-	@echo "$(NAME): unit tests"	| cat
+	@$(CC) -o $(TESTS) $(TFLAGS) $(PSRC) $(TSRC)
+	@echo							| cat
+	@echo							| cat
+	@echo "[$(NAME)]: unit tests"	| cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
-	@gcovr -s
+	@gcovr -sb
 
 clean:
-	@echo "$(NAME): Deleting object files"
+	@echo "[$(NAME)]: Deleting object files"
 	@rm -f $(OBJ)
-	@echo "$(NAME): Deleting temp files"
+	@echo "[$(NAME)]: Deleting temp files"
 	@rm -f *~ **.gc*
-	@echo "$(NAME): Deleting test binaries"
+	@echo "[$(NAME)]: Deleting test binaries"
 	@rm -f a.out
 
 fclean: clean
-	@echo "$(NAME): Deleting $(TARGET)"
+	@echo "[$(NAME)]: Deleting dependency files"
+	@rm -f $(DEP)
+	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
-	@if [ -e $(TESTS) ];					\
-	then									\
-		echo "$(NAME): Deleting $(TESTS)";	\
-		rm -f $(TESTS);						\
+	@if [ -e $(TESTS) ];						\
+	then										\
+		echo "[$(NAME)]: Deleting $(TESTS)";	\
+		rm -f $(TESTS);							\
 	fi
 
-re:	fclean all
+re:	fclean $(TARGET)
 
-.PHONY:all clean fclean re
+.PHONY:all clean fclean re $(TESTS)

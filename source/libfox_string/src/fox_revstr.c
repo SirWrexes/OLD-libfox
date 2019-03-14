@@ -5,7 +5,7 @@
 ** Revert a string and return its pointer
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 __attribute__((nonnull))
 char *fox_revstr(char *str)

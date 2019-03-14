@@ -7,7 +7,7 @@
 
 #include <criterion/criterion.h>
 #include "fox_string.h"
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 Test(isnum, empty_string)
 {

@@ -5,7 +5,7 @@
 ** Allocate a pointer to n memebers of size and memset it to 0
 */
 
-#include "private/__foxmemory.h"
+#include "private/p_foxmemory.h"
 #include "fox_memory.h"
 
 __attribute__ ((malloc, alloc_size(1, 2)))

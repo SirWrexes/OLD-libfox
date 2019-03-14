@@ -5,7 +5,7 @@
 ** Returns the number of characters in a string
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 static __A((pure))
 size_t get_len(str3c_t str)

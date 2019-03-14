@@ -5,7 +5,7 @@
 ** Convert a string to an int
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 __attribute__((pure))
 int getnb(str_t str)

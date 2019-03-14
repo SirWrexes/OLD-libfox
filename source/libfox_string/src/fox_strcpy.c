@@ -5,7 +5,7 @@
 ** Copy a string into another [up to n characters]
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 __A((nonnull))
 str_t fox_strcpy(str_t dst, str3c_t src)

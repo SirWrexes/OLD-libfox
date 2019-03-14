@@ -7,7 +7,7 @@
 
 #include "private/p_foxstring.h"
 
-static __A((pure))
+static __a((pure))
 size_t get_len(str3c_t str)
 {
     size_t len;
@@ -32,7 +32,7 @@ size_t get_len(str3c_t str)
     }
 }
 
-__A((pure))
+__a((pure))
 size_t fox_strlen(str3c_t str)
 {
     if (str == NULL)

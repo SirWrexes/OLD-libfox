@@ -7,7 +7,7 @@
 
 #include "private/p_foxmemory.h"
 
-__attribute__ ((nonnull))
+extern inline __a((nonnull))
 void fox_autoclose_fd(int *fd)
 {
     if (*fd < 0)
@@ -16,6 +16,7 @@ void fox_autoclose_fd(int *fd)
     *fd = -1;
 }
 
+extern inline __a((nonnull))
 void fox_autoclose_fp(FILE **fp)
 {
     if (*fp == NULL)

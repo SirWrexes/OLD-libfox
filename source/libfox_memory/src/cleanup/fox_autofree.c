@@ -7,7 +7,8 @@
 
 #include "private/p_foxmemory.h"
 
-inline void fox_autofree(void *ptr)
+extern inline __a((nonnull))
+void fox_autofree(void *ptr)
 {
     if (*(void **)ptr == NULL)
         return;

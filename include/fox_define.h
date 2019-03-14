@@ -22,6 +22,7 @@
 #ifndef LIBFOX_MACRO_UNDEF
     #define LIBFOX_MACRO_UNDEF
     #undef __a
+    #undef __cleanup
     #undef __transparent
     #undef __unused
     #undef CTOI
@@ -49,9 +50,10 @@
     #define LIBFOX_MACRO_DEF
 
     // Shorter ways of writing attributes
-    #define __a(attributes) __attribute__(attributes)
-    #define __tranparent    __a((__transparent_union__))
-    #define __unused        __a((unused))
+    #define __a(attributes)     __attribute__(attributes)
+    #define __cleanup(janitor)  __a((cleanup((janitor))))
+    #define __tranparent        __a((__transparent_union__))
+    #define __unused            __a((unused))
 
     // Digit ascii value to numeric value
     #define CTOI(c) ((int) ((c) - '0'))

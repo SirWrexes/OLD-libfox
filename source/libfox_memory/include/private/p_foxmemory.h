@@ -10,6 +10,7 @@
 
 #include <malloc.h>
 #include <unistd.h>
+#include "fox_memory.h"
 
 #ifndef LIBFOX_CHUNKSIZE
     #define LIBFOX_CHUNKSIZE

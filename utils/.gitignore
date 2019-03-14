@@ -4,6 +4,7 @@
 ### C ###
 # Prerequisites
 *.d
+
 # IDE stuff
 CMake*
 cmake*
@@ -63,9 +64,7 @@ dkms.conf
 
 # Project related files
 _subject/
-lem_in
-gmin.pl
-input
+.foxinit
 
 # Temporary files
 *.old

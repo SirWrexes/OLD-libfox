@@ -10,22 +10,14 @@
 
 #include <unistd.h>
 #include <stdbool.h>
-
-#ifndef FOX_MACRO
-    #undef ITOC
-    #undef ABS
-    #define ITOC(i) ((char) ((i) + '0'))
-    #define ABS(x) ((x) >= 0 ? (x) : -(x))
-    #ifndef __A
-        #define __A(x) __attribute__(x)
-    #endif
-#endif // FOX_MACRO
+#include "fox_io.h"
 
 #ifdef LIBFOX_UT
     #define inline
 #endif //LIBFOX_UT
 
-size_t fox_strlen(char const *str) __A((pure));
-size_t fox_nbsize(int nb)          __A((const));
+size_t fox_strlen(char const *str) __a((pure));
+size_t fox_nbsize(int nb)          __a((const));
+size_t fox_unbsize(ullong_t nb)    __a((const));
 
 #endif //LIBFOX_FOXDISPLAY_H

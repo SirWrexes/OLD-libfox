@@ -25,12 +25,23 @@ VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC):$(TEMPDIR)
 ############
 
 ############
-PHDR		+=	$(PINC)/fox_io.h
-PHDR		+=	$(PINC)/private/__foxio.h
- #
+PSRC		+=	$(PDIR)/fox_printf.c
 PSRC		+=	$(PDIR)/fox_putc.c
 PSRC		+=	$(PDIR)/fox_putint.c
+PSRC		+=	$(PDIR)/fox_putllong.c
+PSRC		+=	$(PDIR)/fox_putnpc.c
+PSRC		+=	$(PDIR)/fox_putnps.c
 PSRC		+=	$(PDIR)/fox_puts.c
+PSRC		+=	$(PDIR)/fox_putuint.c
+PSRC		+=	$(PDIR)/fox_putuint_base.c
+PSRC		+=	$(PDIR)/fox_putullong.c
+PSRC		+=	$(PDIR)/fox_putullong_base.c
+PSRC		+=	$(PDIR)/fox_printf/global_n.c
+PSRC		+=	$(PDIR)/fox_printf/printer_picker_integer.c
+PSRC		+=	$(PDIR)/fox_printf/printer_picker_other.c
+PSRC		+=	$(PDIR)/fox_printf/printer_picker_unsigned.c
+PSRC		+=	$(PDIR)/fox_printf/va_args.c
+PSRC		+=	$(PDIR)/fox_printf/va_args_value.c
 PSRC		+=	../libfox_math/src/fox_nbsize.c
 PSRC		+=	../libfox_string/src/fox_strlen.c
  #

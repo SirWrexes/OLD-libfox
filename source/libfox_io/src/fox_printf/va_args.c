@@ -5,8 +5,8 @@
 ** libfox_printf : args
 */
 
-#include "private/p_foxprintf.h"
-#include "private/p_il_va_args.h"
+#include "private/fox_printf/p_foxprintf.h"
+#include "private/fox_printf/p_il_va_args.h"
 
 static __attribute__ ((nonnull))
 void get_argvalue(farg_t *farg, va_list ap)
@@ -41,14 +41,13 @@ ssize_t get_arginfo(farg_t *farg, char const * const fstr)
 }
 
 __attribute__ ((nonnull, cold, leaf))
-bool fpf_getargs(
-    size_t acmax, farg_t fargs[acmax], char const * const fstr, va_list ap)
+bool fpf_getargs(size_t acmax, farg_t fargs[acmax], str3c_t fstr, va_list ap)
 {
     ssize_t i = 0;
     size_t argi = 0;
 
     while (fstr[i] != '\0') {
-        for ( ; fstr[i] && fstr[i] != '%' ; i += 1);
+        for (; fstr[i] && fstr[i] != '%'; i += 1);
         if (fstr[i] == '\0' || fstr[i + 1] == '\0')
             break;
         i += get_arginfo(&fargs[argi], fstr + i) ?: -(i + 1);

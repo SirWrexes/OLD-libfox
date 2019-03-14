@@ -5,7 +5,7 @@
 ** A whole lot of switches and stuff.
 */
 
-#include "private/p_foxprintf.h"
+#include "private/fox_printf/p_foxprintf.h"
 
 inline __attribute__ ((nonnull))
 void get_argvalue_int(farg_t *farg, va_list ap)

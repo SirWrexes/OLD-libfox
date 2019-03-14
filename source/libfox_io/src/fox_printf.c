@@ -5,32 +5,33 @@
 ** Main source
 */
 
-#include "private/p_il_forxprintf.h"
-#include "private/p_foxprintf.h"
+#include "private/fox_printf/p_foxprintf.h"
+#include "private/fox_printf/p_get_acmax.h"
 
-static __attribute__ ((nonnull, hot))
-ssize_t print_arg(farg_t const * const arg)
+static __a((nonnull, hot))
+ssize_t print_arg(int fd, farg_t const * const arg)
 {
     if (arg->convspec == CS_INT)
-        print_integer(arg);
+        N_ADD(print_integer(fd, arg));
     else if (arg->convspec >= CS_UINT && arg->convspec <= CS_HEXU)
-        print_unsigned(arg);
+        N_ADD(print_unsigned(fd, arg));
     else
-        print_other(arg);
+        N_ADD(print_other(fd, arg));
     return arg->flength;
 }
 
-static __attribute__ ((nonnull, hot))
-size_t print_segment(char const * const fstr)
+static __a((nonnull, hot))
+ssize_t print_segment(int fd, str3c_t fstr)
 {
     size_t seglen;
+    ssize_t n;
 
     for (seglen = 0 ; fstr[seglen] && fstr[seglen] != '%' ; seglen += 1);
-    N_ADD(write(1, fstr, seglen));
-    return seglen;
+    n = write(fd, fstr, seglen);
+    return N_ADD(n > 0 ? n : 0);
 }
 
-static __attribute__ ((cold))
+static __a((cold))
 void fpf_init(size_t acmax, farg_t formatargs[acmax])
 {
     N_RST;
@@ -44,8 +45,8 @@ void fpf_init(size_t acmax, farg_t formatargs[acmax])
     formatargs[acmax - 1].convspec = CS_SENTINEL;
 }
 
-__attribute__ ((nonnull, format(printf, 1,2)))
-ssize_t fox_printf(char const * const fstr, ...)
+extern __a((nonnull, format(printf, 2,3)))
+ssize_t fox_fprintf(int fd, char const * const fstr, ...)
 {
     va_list ap;
     size_t i = 0;
@@ -55,15 +56,13 @@ ssize_t fox_printf(char const * const fstr, ...)
 
     va_start(ap, fstr);
     fpf_init(acmax, formatargs);
-    if (fpf_getargs(acmax, formatargs, fstr, ap)) {
-        write(2, "Arg list creation failure.\n", 28);
-        return -1;
-    }
+    if (fpf_getargs(acmax, formatargs, fstr, ap))
+        RETURN(-1, fox_eputs("Arg list creation failure.\n"));
     while (fstr[i] != '\0') {
-        i += print_segment(fstr + i);
+        i += print_segment(fd, fstr + i);
         if (fstr[i] == '\0')
             break;
-        i += print_arg(&formatargs[j++]);
+        i += print_arg(fd, &formatargs[j++]);
     }
     return N_GET;
 }

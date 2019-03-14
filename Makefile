@@ -3,20 +3,20 @@
 ## Master Makefile
 ##
 
-SHELL	=	/bin/sh
-MAKE	= 	make --silent -C
-RM	=	rm -f
-CP	=	cp -t
-SRCDIR	=	./source
+SHELL  =	/bin/sh
+MAKE   = 	make --silent -C
+RM     =	rm -f
+CP     =	cp -t
+SRCDIR =	./source
 
 
 .DEFAULT_GOAL := all
-all:	graph io memory printf string tests
-tests:	graph-tests io-tests memory-tests printf-tests string-tests
-clean:	graph-clean io-clean memory-clean printf-clean string-clean
-fclean:	graph-fclean io-fclean memory-fclean printf-fclean string-fclean
-re:	graph-re io-re memory-re printf-re string-re tests
-.PHONY:	all tests clean fclean re
+all:    graph io memory string tests
+tests:  graph-tests io-tests memory-tests string-tests
+clean:  graph-clean io-clean memory-clean string-clean
+fclean: graph-fclean io-fclean memory-fclean string-fclean
+re:     graph-re io-re memory-re string-re tests
+.PHONY: all tests clean fclean re
 
 ############################
 ##         Graph          ##
@@ -90,26 +90,6 @@ memory-fclean:
 memory-re:
 	@$(MAKE) $(SRCDIR)/libfox_memory	re
 .PHONY: memory memory-tests memory-clean memory-fclean memory-re
-
-
-############################
-##          pintf         ##
-############################
-printf:
-	@$(MAKE) $(SRCDIR)/libfox_printf
-	@$(CP) .		$(SRCDIR)/libfox_printf/libfox_printf.a
-	@$(CP) include  $(SRCDIR)/libfox_printf/include/fox_printf.h
-printf-tests:
-	@echo "No printf test yet."
-printf-clean:
-	@$(MAKE) $(SRCDIR)/libfox_printf	clean
-printf-fclean:
-	@$(MAKE) $(SRCDIR)/libfox_printf	fclean
-	@$(RM) ./libfox_printf.a
-	@$(RM) include/fox_printf.h
-printf-re:
-	@$(MAKE) $(SRCDIR)/libfox_printf	re
-.PHONY: printf printf-tests printf-clean printf-fclean printf-re
 
 
 ############################

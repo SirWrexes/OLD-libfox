@@ -9,20 +9,7 @@
 #define LIBFOX_DATASTRUCT_H
 
 #include <sys/types.h>
-
-#ifndef FOX_MACRO
-    #ifndef __A
-        #define __A(x) __attribute__(x)
-    #endif // __A
-
-    #ifndef CCSTR_TYPE
-        #define CCSTR_TYPE
-        typedef char const * const * const  str4c_t;
-        typedef char const * const          str3c_t;
-        typedef char const *                str2c_t;
-        typedef char *                      str_t;
-    #endif //CCSTR_TYPE
-#endif // FOX_MACRO
+#include "fox_define.h"
 
 typedef enum {
     FC_PLUS     = 1u << 0u,
@@ -58,8 +45,6 @@ typedef enum {
     CS_SENTINEL ,   // To mark the end of the arg array
 } cspec_t;
 
-typedef          long long llong_t;
-typedef unsigned long long ullong_t;
 typedef union {
     char        c   ;
     u_char      uc  ;

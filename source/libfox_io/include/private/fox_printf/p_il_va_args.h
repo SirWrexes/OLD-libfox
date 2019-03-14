@@ -1,16 +1,16 @@
 /*
 ** EPITECH PROJECT, 2018
 ** libfox-printf
-** File description:
+** File description:__A
 ** No description
 */
 
 #ifndef LIBFOX_PRINTF_IL_VA_ARGS_H
 #define LIBFOX_PRINTF_IL_VA_ARGS_H
 
-#include "private/p_datastruct.h"
+#include "p_datastruct.h"
 
-__A((const))
+__a((const))
 static inline cspec_t _convspec_(char cs)
 {
     switch (cs) {
@@ -32,7 +32,7 @@ static inline cspec_t _convspec_(char cs)
     }
 }
 
-__A((const))
+__a((const))
 static inline lnmod_t __lenmodif_(char lm1, char lm2)
 {
     if (lm1 == lm2) {
@@ -51,8 +51,5 @@ static inline lnmod_t __lenmodif_(char lm1, char lm2)
     default : return LM_NONE;
     }
 }
-
-#undef EQ3
-#define EQ3(x, y, z) ((x) == (y) && (y) == (z))
 
 #endif //LIBFOX_PRINTF_IL_VA_ARGS_H

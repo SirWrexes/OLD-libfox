@@ -59,13 +59,11 @@ FOXINC		=	$(FOXDIR)/include
 LFOX_GRAPH	=	graph
 LFOX_IO		=	io
 LFOX_MEMORY	=	memory
-LFOX_PRINTF	=	printf
 LFOX_STRING	=	string
 #
 FOX_COVRG	+=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_GRAPH)/*.gc*
 FOX_COVRG	+=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_IO)/*.gc*
 FOX_COVRG	+=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_MEMORY)/*.gc*
-FOX_COVRG	+=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_PRINTF)/*.gc*
 FOX_COVRG	+=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_STRING)/*.gc*
 #
 FOXMODULES	:=	$(foreach mod,$(USEDMODULES),-l $(LFOXPREFIX)$(mod))

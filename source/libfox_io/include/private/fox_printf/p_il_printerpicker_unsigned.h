@@ -10,11 +10,11 @@
 
 #include "p_datastruct.h"
 
-__A((const))
-static inline char const *_hex_base_(cspec_t cs)
+__a((const))
+static inline str2c_t _hex_base_(cspec_t cs)
 {
-    static char const * const uppercase = "0123456789ABCDEF";
-    static char const * const lowercase = "0123456789abcdef";
+    static str3c_t uppercase = "0123456789ABCDEF";
+    static str3c_t lowercase = "0123456789abcdef";
 
     if (cs == CS_HEXU)
         return uppercase;

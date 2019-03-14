@@ -7,7 +7,7 @@
 
 #include "private/p_foxstring.h"
 
-__A((nonnull, pure))
+__a((nonnull, pure))
 int fox_strcmp(str3c_t s1, str3c_t s2)
 {
     size_t i = 0;
@@ -18,7 +18,7 @@ int fox_strcmp(str3c_t s1, str3c_t s2)
     return s1[i] - s2[i] < 0 ? -1 : 1;
 }
 
-__A((nonnull, pure))
+__a((nonnull, pure))
 char fox_strncmp(str3c_t s1, str3c_t s2, size_t n)
 {
     size_t i = 0;

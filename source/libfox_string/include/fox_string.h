@@ -10,19 +10,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
-
-#ifndef FOX_MACRO
-    #ifndef __a
-        #define __a(x) __attribute__(x)
-    #endif // __a
-    #ifndef CCSTR_TYPE
-        #define CCSTR_TYPE
-        typedef char const * const * const  str4c_t;
-        typedef char const * const          str3c_t;
-        typedef char const *                str2c_t;
-        typedef char *                      str_t;
-    #endif //CCSTR_TYPE
-#endif
+#include "fox_define.h"
 
 // Returns true if a string is numeric, returns false otherwise
 bool fox_isnum(str3c_t str) __a((nonnull, pure));

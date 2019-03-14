@@ -13,8 +13,8 @@
 ** unless they depend on another macro's previous
 ** definition and follow this template  :
 **
-**     //What purpose the macro serves
-**     # define NAME (instruction)
+**     // What purpose the macro serves
+**     #define NAME (instruction)
 */
 
 // First we need to make sure their
@@ -45,15 +45,16 @@
     #undef RETURN
 #endif // LIBFOX_MACRO_UNDEF
 
-// Then we can actually start to define them.
+// Then we can actually start defining them.
 #ifndef LIBFOX_MACRO_DEF
     #define LIBFOX_MACRO_DEF
 
     // Shorter ways of writing attributes
+    // For more information about these, check GNU GCC's docs
     #define __a(attributes)     __attribute__(attributes)
-    #define __cleanup(janitor)  __a((cleanup((janitor))))
     #define __tranparent        __a((__transparent_union__))
     #define __unused            __a((unused))
+    #define __cleanup(janitor)  __a((cleanup(janitor)))
 
     // Digit ascii value to numeric value
     #define CTOI(c) ((int) ((c) - '0'))
@@ -117,8 +118,8 @@
     // Check if 3 values are equal
     #define EQ3(x, y, z) ((x) == (y) && (y) == (z))
 
-    // Execute a non-void function then return null no matter what
-    // -- Useful when you want to log an error and return null in 1 line
+    // One-liner to return value and execute any function(s)
+    // -- I.G. returning a specific value while printing an error string
     #define RETURN(value, funcs...) return (0 ? : (funcs, value))
 #endif // LIBFOX_MACRO_DEF
 

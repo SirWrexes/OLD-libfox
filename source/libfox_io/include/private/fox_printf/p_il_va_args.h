@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2018
 ** libfox-printf
-** File description:__A
-** No description
+** File description:
+** Inlines for printf va_args
 */
 
 #ifndef LIBFOX_PRINTF_IL_VA_ARGS_H

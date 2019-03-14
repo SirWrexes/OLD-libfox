@@ -151,8 +151,10 @@ syncsubs:
 	    echo "This file ensures git submodules are initialized and synced just once." >> ./.git/.foxinit; \
 	    echo "You can delete it if you want/need and know what you're doing."         >> ./.git/.foxinit; \
 	fi
+	@echo "[Git]: Checking out master on submodule(s)."
+	@git submodule --quiet foreach git checkout master
 	@echo "[Git]: Pulling latest commits from submodule(s)."
-	@git pull --recurse-submodules
+	@git submodule --quiet foreach git pull
 
 
 .PHONY: $(LFOX)

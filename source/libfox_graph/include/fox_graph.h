@@ -116,6 +116,11 @@ struct aitem_s {
 // in the graph/list you're using it from counts as a success,
 // while not duplicating the thing's presence.
 
+// contains() and fetch() act exactly the same way except
+//   - contains returns a boolean value
+//   - fetch returns the item you're looking for
+// The algorithm still is 100% identical
+
 struct alist_s {
     morph_t type;
     size_t i;
@@ -162,6 +167,16 @@ struct alist_s {
 ****************************************************************
 */
 
+// For the following add_* methods, adding an item or list that's already
+// in the graph/list you're using it from counts as a success,
+// while not duplicating the thing's presence.
+
+// contains() and fetch() act exactly the same way except
+//   - contains returns a boolean value
+//   - fetch returns the item you're looking for
+// The algorithm still is 100% identical.
+// Same goes for list_contains
+
 struct graph_s {
     morph_t type;
     char    *name;  // Can be NULL
@@ -194,6 +209,13 @@ struct graph_s {
 
         // Gives the return value of alist->contains(item).
         // If list isn't in the graph, returns false.
+        // Possible list | item values:
+        //   - alist index   | aitem index
+        //   - alist pointer | aitem pointer
+        //   - aitem pointer | aitem->iptr
+        //   - aitem->iptr   |
+        // Using an aitem pointer/aitem->iptr for list will search
+        // in the first list containing those (see fetch/contains)
         bool (*list_contains)(ME, pmorph_t list, pmorph_t item);
 
         // If its in the graph, returns a pointer to the corresponding list.

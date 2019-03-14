@@ -90,7 +90,7 @@ static inline bool graph_listcontains(ME, pmorph_t list, pmorph_t item)
 {
     alist_t tmp = NULL;
 
-    if (list.type != ID && list.type != PT)
+    if (UNALLOWED_THING(list))
         return false;
     tmp = me->vt->fetch(me, list);
     if (tmp == NULL)

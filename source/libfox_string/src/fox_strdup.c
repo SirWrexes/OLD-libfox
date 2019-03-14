@@ -5,7 +5,7 @@
 ** Returns a pointer to a newly created duplicate of src string
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 str_t fox_strdup(str3c_t src)
 {

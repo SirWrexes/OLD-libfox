@@ -5,7 +5,7 @@
 ** Convert a string to a long
 */
 
-#include "private/__foxstring.h"
+#include "private/p_foxstring.h"
 
 static char const base[36] = {
     '0', '1', '2', '3', '4',

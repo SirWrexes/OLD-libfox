@@ -5,7 +5,7 @@
 ** Automaticaly free any pointer
 */
 
-#include "private/__foxmemory.h"
+#include "private/p_foxmemory.h"
 
 inline void fox_autofree(void *ptr)
 {

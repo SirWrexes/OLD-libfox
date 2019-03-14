@@ -23,6 +23,7 @@
     #define LIBFOX_MACRO_UNDEF
     #undef __a
     #undef __transparent
+    #undef __unused
     #undef __cleanup
     #undef CTOI
     #undef ITOC
@@ -39,53 +40,55 @@
     #undef IS_OP
     #undef ABS
     #undef MAX
-    #undef RET_NULL
+    #undef EQ3
+    #undef RETURN
 #endif // LIBFOX_MACRO_UNDEF
 
-// Then we can actually start to define them.
+// Then we can actually start defining them.
 #ifndef LIBFOX_MACRO_DEF
     #define LIBFOX_MACRO_DEF
 
-//  Shorter way of writing __attribute__
-    #define __a(attributes) __attribute__(attributes)
+    // Shorter ways of writing attributes
+    // For more information about these, check GNU GCC's docs
+    #define __a(attributes)     __attribute__(attributes)
+    #define __tranparent        __a((__transparent_union__))
+    #define __unused            __a((unused))
+    #define __cleanup(janitor)  __a((cleanup(janitor)))
 
-//  See https://gcc.gnu.org/onlinedocs/gcc-3.3/gcc/Type-Attributes.html
-    #define __trasnparent __a((__transparent_union__))
-
-//  Shorter way of writing __attribute__((cleanup(function))
-    #define __cleanup(janitor) __a((cleanup(janitor)))
-
-//  Digit ascii value to numeric value
+    // Digit ascii value to numeric value
     #define CTOI(c) ((int) ((c) - '0'))
 
-//  Numeric value to ascii char value
+    // Numeric value to ascii char value
     #define ITOC(i) ((char) ((i) + '0'))
 
-//  If an alphabetical character is lowercase, make it uppercase
+    // True if c is a printable ASCII char
+    #define CHAR_PRINTABLE(c) ((c) >= 32 && (c) <= 176)
+
+    // If an alphabetical character is lowercase, make it uppercase
     #define CHAR_TOUPPER(c)  ((c) >= 'a' && (c) <= 'z' ? (c) - 32 : (c))
 
-//  If an alphabetical character is uppercase, make it lowercase
+    // If an alphabetical character is uppercase, make it lowercase
     #define CHAR_TOLOWER(c)  ((c) >= 'A' && (c) <= 'Z' ? (c) - 32 : (c))
 
-//  Check if a char is an end of line (linebreak OR null char)
+    // Check if a char is an end of line (linebreak OR null char)
     #define IS_EOL(c) ((c) == '\n' || (c) == '\0')
 
-//  Check if a char is strictly lowercase alphabetical
+    // Check if a char is strictly lowercase alphabetical
     #define IS_ALPHALO(c) ((c) >= 'a' && (c) <= 'z')
 
-//  Check if a char is strictly uppercase alphabetical
+    // Check if a char is strictly uppercase alphabetical
     #define IS_ALPHAUP(c) ((c) >= 'A' && (c) <= 'Z')
 
-//  Check if a char is strictly alphabetical
+    // Check if a char is strictly alphabetical
     #define IS_ALPHA(c) (IS_ALPHALO(c) || IS_ALPHAUP(c))
 
-//  Check if a char is strictly numeric
+    // Check if a char is strictly numeric
     #define IS_NUM(c) ((c) >= '0' && (c) <= '9')
 
-//  Check if a char is strictly alphanumeric
+    // Check if a char is strictly alphanumeric
     #define IS_ALPHANUM(c) (IS_ALPHA(c) || IS_NUM(c))
 
-//  Check if a char is punctuation
+    // Check if a char is punctuation
     #define IS_PUNCT(c)     \
     (                       \
         ((c) == '\'')       \
@@ -102,18 +105,21 @@
         || ((c) == '/')     \
     )                       \
 
-//  Check if a char is a sign (+ OR -)
+    // Check if a char is a sign (+ OR -)
     #define IS_SIGN(c) ((c) == '+' || (c) == '-')
 
-//  Get the absolute value of a number
+    // Get the absolute value of a number
     #define ABS(x) ((x) >= 0 ? (x) : -(x))
 
-//  Get the biggest of two numbers
+    // Get the biggest of two numbers
     #define MAX(x, y) ((x) > (y) ? (x) : (y))
 
-//  Execute a non-void function then return null no matter what
-//  -- Useful when you want to log an error and return null in 1 line
-    #define RET_NULL(func) ((func) ? (void *)0 : (void*)0)
+    // Check if 3 values are equal
+    #define EQ3(x, y, z) ((x) == (y) && (y) == (z))
+
+    // One-liner to return value and execute any function(s)
+    // -- I.G. returning a specific value while printing an error string
+    #define RETURN(value, funcs...) return (0 ? : (funcs, value))
 #endif // LIBFOX_MACRO_DEF
 
 #ifndef CCSTR_TYPE
@@ -123,5 +129,11 @@
     typedef char const *                str2c_t;
     typedef char *                      str_t;
 #endif // CCSTR_TYPE
+
+#ifndef LLONG_TYPE
+    #define LLONG_TYPE
+    typedef          long long llong_t;
+    typedef unsigned long long ullong_t;
+#endif // LLONG_TYPE
 
 #endif // FOX_MACRO

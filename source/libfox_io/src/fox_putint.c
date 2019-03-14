@@ -9,7 +9,7 @@
 
 ssize_t fox_fputint(int fd, int nb)
 {
-    char conv[fox_nbsize(nb)];
+    char conv[fox_intsize(nb)];
     bool neg = nb < 0;
     size_t len = 0;
     ssize_t i  = 0;

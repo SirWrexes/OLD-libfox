@@ -17,7 +17,7 @@
 #endif //LIBFOX_UT
 
 size_t fox_strlen(char const *str) __a((pure));
-size_t fox_nbsize(int nb)          __a((const));
-size_t fox_unbsize(ullong_t nb)    __a((const));
+size_t fox_intsize(int nb)          __a((const));
+size_t fox_uintsize(uint nb)        __a((const));
 
 #endif //LIBFOX_FOXDISPLAY_H

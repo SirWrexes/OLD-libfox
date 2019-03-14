@@ -21,7 +21,7 @@
 // name isn't already defined elsewhere
 #ifndef LIBFOX_MACRO_UNDEF
     #define LIBFOX_MACRO_UNDEF
-    #undef __A
+    #undef __a
     #undef CTOI
     #undef ITOC
     #undef CHAR_TOUPPER
@@ -37,7 +37,7 @@
     #undef IS_OP
     #undef ABS
     #undef MAX
-    #undef RET_NULL
+    #undef RETURN
 #endif // LIBFOX_MACRO_UNDEF
 
 //Then we can actually start to define them.
@@ -45,7 +45,7 @@
     #define LIBFOX_MACRO_DEF
 
     //Shorter way of writing __attribute__
-    #define __A(attributes) __attribute__(attributes)
+    #define __a(attributes) __attribute__(attributes)
 
     //Digit ascii value to numeric value
     #define CTOI(c) ((int) ((c) - '0'))
@@ -105,7 +105,7 @@
 
     //Execute a non-void function then return null no matter what
     //-- Useful when you want to log an error and return null in 1 line
-    #define RET_NULL(func) ((func) ? (void *)0 : (void*)0)
+    #define RETURN(value, funcs...) return (0 ? : (funcs, value))
 #endif // LIBFOX_MACRO_DEF
 
 #ifndef CCSTR_TYPE

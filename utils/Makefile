@@ -1,6 +1,6 @@
 ##
-## EPITECH PROJECT, 2019
-## Lemin
+## <COMPANY>, <YEAR>
+## <PROJECT>
 ## File description:
 ## Main Makefile
 ##
@@ -8,7 +8,7 @@
 #
 # Fundamentals
 ##############################
-PROJECT		=	lem_in
+PROJECT		=
 TESTBIN		=	tests_run
 SHELL		=	/bin/sh
 MAKE		=	make --silent
@@ -133,12 +133,17 @@ DEP		:=	$(OBJ:.o=.d)
 
 .DEFAULT_GOAL := all
 .PHONY: all
-all: $(LFOX) $(PROJECT)
+all: syncsubs $(LFOX) $(PROJECT)
 
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
 	@echo "[$(PROJECT) | $(CC)] OK → $@"
+
+.PHONY: syncsubs
+syncsubs:
+	git submodule update --init -f
+	git submodule sync --recursive
 
 .PHONY: $(LFOX)
 $(LFOX):

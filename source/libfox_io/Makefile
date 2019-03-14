@@ -42,7 +42,7 @@ TSRC		+=	$(TDIR)/test_foxio_strlen.c
 ############
 
 ############
-OBJ			=	$(PSRC:%.c=%.o)
+OBJ			=	$(PSRC:.c=.o)
 DEP			=	$(OBJ:.o=.d)
 .PRECIOUS	=	$(DEP)
 -include $(DEP)
@@ -67,10 +67,10 @@ $(TARGET): $(OBJ)
 	@if [ -e $@ ];			\
 	then					\
 		echo "Updating $@";	\
-		ar ru $@ $<;		\
+		ar ru $@ $^;		\
 	else					\
 		echo "Creating $@";	\
-		ar rc $@ $<;		\
+		ar rc $@ $^;		\
 	fi
 
 %.o: CFLAGS += -MT $@ -MMD

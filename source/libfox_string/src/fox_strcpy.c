@@ -7,7 +7,7 @@
 
 #include "private/p_foxstring.h"
 
-__A((nonnull))
+__a((nonnull))
 str_t fox_strcpy(str_t dst, str3c_t src)
 {
     size_t i;
@@ -21,7 +21,7 @@ str_t fox_strcpy(str_t dst, str3c_t src)
     return dst;
 }
 
-__A((nonnull))
+__a((nonnull))
 str_t fox_strncpy(str_t dst, str3c_t src, size_t n)
 {
     size_t i;

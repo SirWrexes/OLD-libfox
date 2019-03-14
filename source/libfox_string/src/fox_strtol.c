@@ -26,13 +26,13 @@ enum {
     KEY_COUNT
 };
 
-__A((const))
+__a((const))
 static bool is_base36(char c)
 {
     return IS_ALPHANUM(c);
 }
 
-static __A((nonnull, pure))
+static __a((nonnull, pure))
 long getlong(str3c_t str, char **endptr, size_t i[KEY_COUNT])
 {
     long ret = 0;
@@ -75,7 +75,7 @@ static bool get_base_and_sign(str3c_t str, size_t base, size_t i[KEY_COUNT])
     return false;
 }
 
-__A((nonnull(1), pure))
+__a((nonnull(1), pure))
 long fox_strtol(str3c_t str, char **endptr, size_t base)
 {
     size_t i[KEY_COUNT] = {0};

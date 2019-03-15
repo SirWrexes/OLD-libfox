@@ -5,9 +5,10 @@
 ** fox_putint
 */
 
-#include "fox_io.h"
+#include <string.h>
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+#include "fox_io.h"
 
 Test(putint, regular_usage, .init = cr_redirect_stdout)
 {

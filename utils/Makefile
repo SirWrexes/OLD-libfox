@@ -41,7 +41,7 @@ VPATH       =	$(PSRC):$(TSRC)
 # Uncomment lines corresponding
 # to modules used in the project
 
-USEDMODULES +=	$(LFOX_GRAPH)
+#USEDMODULES +=	$(LFOX_GRAPH)
 #USEDMODULES +=	$(LFOX_IO)
 #USEDMODULES +=	$(LFOX_MEMORY)
 #USEDMODULES +=	$(LFOX_STRING)
@@ -147,9 +147,9 @@ all: syncsubs $(LFOX) $(PROJECT)
 syncsubs:
 	@if ! [ -e ./.git/.foxinit ];                                                                   \
 	then                                                                                            \
-	    echo    "[Git]: Updating and initializing submodule(s).";               | cat               \
+	    echo    "[Git]: Updating and initializing submodule(s)."                | cat;              \
 	    git     submodule --quiet update --init --recursive -f;                                     \
-	    echo    "[Git]: Synchronizing submodule(s).";                           | cat               \
+	    echo    "[Git]: Synchronizing submodule(s)."                            | cat;              \
 	    git     submodule --quiet sync --recursive;                                                 \
 	    echo -n "This file ensures git submodules are initialized"              >> ./.git/.foxinit; \
 	    echo    "and synced just once."                                         >> ./.git/.foxinit; \

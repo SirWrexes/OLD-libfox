@@ -62,11 +62,13 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# Project related files
+# Epitech folder architexture restrictions
 _subject/
-.foxinit
 
 # Temporary files
 *.old
+
+# Libfox init-confirm
+.foxinit
 
 # End of https://www.gitignore.io/api/c

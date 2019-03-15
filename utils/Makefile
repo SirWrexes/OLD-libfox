@@ -44,7 +44,6 @@ VPATH       =	$(PSRC):$(TSRC)
 USEDMODULES +=	$(LFOX_GRAPH)
 #USEDMODULES +=	$(LFOX_IO)
 #USEDMODULES +=	$(LFOX_MEMORY)
-#USEDMODULES +=	$(LFOX_PRINTF)
 #USEDMODULES +=	$(LFOX_STRING)
 
 # I wasted way to much sleep time
@@ -74,7 +73,6 @@ FOXMODULES  :=	$(foreach mod,$(USEDMODULES),-l $(LFOXPREFIX)$(mod))
 #
 INCLUDES    +=	-iquote $(FOXINC)
 LDFLAGS     +=	-L $(FOXDIR)
-#
 ##############################
 
 
@@ -93,10 +91,10 @@ GCCFLAGS    +=	-Wall -Wextra
 GCCFLAGS    +=	-Werror
 CLANGFLAGS  +=	-Weverything
 ifeq ($(CC), clang)
-    $(info --- $(PROJECT): Using CLANG compiler)
+    $(info --- $(PROJECT) Makefile config: Using CLANG compiler)
     CFLAGS += $(CLANGFLAGS)
 else
-    $(info --- $(PROJECT): Using DEFAULT compiler : $(CC))
+    $(info --- $(PROJECT) Makefile config: Using DEFAULT compiler [$(CC)])
     CFLAGS += $(GCCFLAGS)
 endif
 #
@@ -117,12 +115,15 @@ WRAPPERS    +=	$(WR_MALLOC)
 TRUNFLAGS   +=	-S
 TRUNFLAGS   +=	--timeout 5
 TRUNFLAGS   +=	--always-succeed
+#
+GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(TDIR))
+GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 ##############################
 
 #
 # Sources
 ##############################
-MAIN        :=	$(PSRC)/lemin.c
+MAIN        :=
 SRC         +=
 #
 TESTS       +=
@@ -169,32 +170,37 @@ $(PROJECT): LDLIBS := $(LDLIBS) $(FOXMODULES)
 $(PROJECT): $(OBJ)
 $(PROJECT): $(MAIN:.c=.o)
 	@echo  "[$(PROJECT)]: Linking with follwing options (ordered):"             | cat
+	@echo  "[$(PROJECT)]: CC      = $(CC)                                       | cat
 	@echo  "[$(PROJECT)]: OBJECTS = $^"                                         | cat
 	@echo  "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                                  | cat
 	@echo  "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                                 | cat
 	@echo  "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                                  | cat
 	@$(CC) -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-	@echo  "[$(PROJECT) | linking] OK"
+	@echo  "[$(PROJECT) | linking] OK"                                          | cat
 
 $(PROJECT)_gdb: SRC    += $(MAIN)
 $(PROJECT)_gdb: CFLAGS += -g
 $(PROJECT)_gdb:
-	@echo  "[$(PROJECT)]: Linking with options (ordered):"                      | cat
+	@echo  "[$(PROJECT)]: Linking with follwing options (ordered):"             | cat
+	@echo  "[$(PROJECT)]: CC      = $(CC)                                       | cat
 	@echo  "[$(PROJECT)]: SOURCES = $(SRC)"                                     | cat
 	@echo  "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                                  | cat
 	@echo  "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                                 | cat
 	@echo  "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                                  | cat
-	$(CC) -o $(PROJECT) $(SRC) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC)  -o $(PROJECT) $(SRC) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	@echo  "[$(PROJECT) | linking] OK"                                          | cat
 
 $(PROJECT)_valgrind: CFLAGS += -g3
 $(PROJECT)_valgrind: $(OBJ)
 $(PROJECT)_valgrind: $(MAIN:.c=.o)
-	@echo  "[$(PROJECT)]: Linking with options (ordered):"                      | cat
+	@echo  "[$(PROJECT)]: Linking with follwing options (ordered):"             | cat
+	@echo  "[$(PROJECT)]: CC      = $(CC)                                       | cat
 	@echo  "[$(PROJECT)]: OBJECTS = $^"                                         | cat
 	@echo  "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                                  | cat
 	@echo  "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                                 | cat
 	@echo  "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                                  | cat
-	$(CC) -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC)  -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	@echo  "[$(PROJECT) | linking] OK"                                          | cat
 
 $(TESTBIN): DEFINE  += $(TDEFINE)
 $(TESTBIN): SRC     += $(TESTS)
@@ -205,7 +211,14 @@ $(TESTBIN): $(LFOX)
 	@echo         "[$(PROJECT)]: Testing lib$(LFOX)"                            | cat
 	@$(MAKE)      $(FOXDIR) tests
 	@echo         "[$(PROJECT)]: Testing project"                               | cat
+	@echo         "[$(PROJECT)]: Linking with follwing options (ordered):"      | cat
+	@echo         "[$(PROJECT)]: CC      = $(CC)                                | cat
+	@echo         "[$(PROJECT)]: OBJECTS = $^"                                  | cat
+	@echo         "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                           | cat
+	@echo         "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                          | cat
+	@echo         "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                           | cat
 	@$(CC)        $(CFLAGS) -o $(TESTBIN) $(SRC) $(LDFLAGS) $(LDLIBS)
+	@echo         "[$(PROJECT) | linking] OK"                                   | cat
 	@./$(TESTBIN) $(TRUNFLAGS)
 	@echo         "[$(PROJECT)]: Fetching lib$(LFOX) coverage files"            | cat
 	@-$(CP)       $(PDIR) $(FOX_COVRG) 2>/dev/null

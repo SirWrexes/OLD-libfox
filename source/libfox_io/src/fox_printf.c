@@ -28,7 +28,8 @@ ssize_t print_segment(int fd, str3c_t fstr)
 
     for (seglen = 0 ; fstr[seglen] && fstr[seglen] != '%' ; seglen += 1);
     n = write(fd, fstr, seglen);
-    return N_ADD(n > 0 ? n : 0);
+    N_ADD(n > 0 ? n : 0);
+    return n;
 }
 
 static __a((cold))

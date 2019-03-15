@@ -65,6 +65,10 @@ void get_argvalue_other(farg_t *farg, va_list ap)
     case CS_LEN :
         farg->lenmodif = LM_ULONG;
         break;
+    case CS_CHAR :
+        get_argvalue_int(farg, ap);
+        farg->lenmodif = LM_CHAR;
+        break;
     case CS_PERC :
         farg->argvalue.c = '%';
         farg->convspec = CS_CHAR;

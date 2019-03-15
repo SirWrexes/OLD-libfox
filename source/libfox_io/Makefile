@@ -13,13 +13,14 @@ NAME		=	io
 TARGET		=	libfox_$(NAME).a
 TESTS		=	tests_$(NAME)
 ######
-PINC		+=	./include
-PDIR		+=	./src
+ROOT		:=	.
+PINC		:=	$(ROOT)/include
+PDIR		:=	$(ROOT)/src
  #
-TINC		+=	./tests/include
-TDIR		+=	./tests/src
+TROOT		:=	$(ROOT)/tests
+TINC		+=	$(TROOT)/include
+TDIR		+=	$(TROOT)/src
  #
-TEMPDIR		=	./temp
 ######
 VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC):$(TEMPDIR)
 ############
@@ -42,14 +43,14 @@ PSRC		+=	$(PDIR)/fox_printf/printer_picker_other.c
 PSRC		+=	$(PDIR)/fox_printf/printer_picker_unsigned.c
 PSRC		+=	$(PDIR)/fox_printf/va_args.c
 PSRC		+=	$(PDIR)/fox_printf/va_args_value.c
-PSRC		+=	../libfox_math/src/fox_nbsize.c
-PSRC		+=	../libfox_string/src/fox_strlen.c
+PSRC		+=	$(DIR_MATH)/$(PDIR)/fox_nbsize.c
+PSRC		+=	$(DIR_STRING)/$(PDIR)/fox_strlen.c
  #
 TSRC		+=	$(TDIR)/test_fox_putc.c
 TSRC		+=	$(TDIR)/test_fox_putint.c
 TSRC		+=	$(TDIR)/test_fox_puts.c
-TSRC		+=	$(TDIR)/test_foxio_nbsize.c
-TSRC		+=	$(TDIR)/test_foxio_strlen.c
+TSRC		+=	$(DIR_MATH)/$(TDIR)/test_fox_nbsize.c
+TSRC		+=	$(DIR_STRING)/$(TDIR)/test_fox_strlen.c
 ############
 
 ############

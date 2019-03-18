@@ -49,6 +49,7 @@ PSRC		+=	$(DIR_STRING)/$(PDIR)/fox_strlen.c
 TSRC		+=	$(TDIR)/test_fox_putc.c
 TSRC		+=	$(TDIR)/test_fox_putint.c
 TSRC		+=	$(TDIR)/test_fox_puts.c
+TSRC        +=	$(TDIR)/fox_printf/test_global_n.c
 TSRC		+=	$(DIR_MATH)/$(TDIR)/test_fox_nbsize.c
 TSRC		+=	$(DIR_STRING)/$(TDIR)/test_fox_strlen.c
 ############

@@ -403,38 +403,52 @@ Test(graph, vt_list_contains_alist_iptr)
 
 Test(graph, vt_list_contains_aitem_id)
 {
-    alist_t l;
-    aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    ssize_t i = -1;
+    alist_t list;
+    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
-    l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
-    i = l->vt->fetch(l, MORPH(ID, l->vt->add_item(l, l)));
-    cr_expect(test->vt->list_contains(test, MORPH(PT, i), MORPH(ID, i->i)));
+    i = test->vt->add_list(test, &test);
+    list = test->vt->fetch(test, MORPH(ID, i));
+    cr_assert_not_null(list, "list = %p", list);
+    i = test->vt->add_item(test, MORPH(ID, i), &list);
+    cr_assert_not_null(list->head, ".head = %p", list->head);
+    cr_expect(
+        test->vt->list_contains(test, MORPH(PT, list->head), MORPH(ID, i)));
 }
 
 Test(graph, vt_list_contains_aitem_aitem)
 {
-    alist_t l;
-    aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    ssize_t i = -1;
+    alist_t list;
+    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
-    l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
-    i = l->vt->fetch(l, MORPH(ID, l->vt->add_item(l, l)));
-    cr_expect(test->vt->list_contains(test, MORPH(PT, i), MORPH(PT, i)));
+    i = test->vt->add_list(test, &test);
+    list = test->vt->fetch(test, MORPH(ID, i));
+    cr_assert_not_null(list, "list = %p", list);
+    i = test->vt->add_item(test, MORPH(ID, i), &list);
+    cr_assert_not_null(list->head, ".head = %p", list->head);
+    cr_expect(
+        test->vt->list_contains(
+            test, MORPH(PT, list->head), MORPH(PT, list->last)));
 }
 
 Test(graph, vt_list_contains_aitem_iptr)
 {
-    alist_t l;
-    aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    ssize_t i = -1;
+    alist_t list;
+    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
-    l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
-    i = l->vt->fetch(l, MORPH(ID, l->vt->add_item(l, l)));
-    cr_expect(test->vt->list_contains(test, MORPH(PT, i), MORPH(PT, i->iptr)));
+    i = test->vt->add_list(test, &test);
+    list = test->vt->fetch(test, MORPH(ID, i));
+    cr_assert_not_null(list, "list = %p", list);
+    i = test->vt->add_item(test, MORPH(ID, i), &list);
+    cr_assert_not_null(list->head, ".head = %p", list->head);
+    cr_expect(
+        test->vt->list_contains(
+            test, MORPH(PT, list->head), MORPH(PT, list->last->iptr)));
 }
 
 Test(graph, vt_list_contains_iptr_id)
@@ -481,13 +495,38 @@ Test(graph, vt_list_contains_mfail)
     FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    cr_expect_not(
+        test->vt->list_contains(test, MORPH(XX, 23), MORPH(XX, 23)));
+    cr_expect_not(
+        test->vt->list_contains(test, MORPH(PT, NULL), MORPH(XX, 23)));
+    cr_expect_not(
+        test->vt->list_contains(test, MORPH(ID, 987), MORPH(XX, 23)));
+    test->vt->add_list(test, test);
+    cr_expect_not(
+        test->vt->list_contains(test, MORPH(ID, 0), MORPH(XX, 23)));
+    cr_expect_not(
+        test->vt->list_contains(test, MORPH(ID, 0), MORPH(PT, NULL)));
+    cr_expect_not(
+        test->vt->list_contains(test, MORPH(ID, 0), MORPH(ID, 999)));
 }
 
 Test(graph, vt_fetch)
 {
+    alist_t list = NULL;
     FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    list = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, &test)));
+    cr_expect_not_null(list);
+    cr_expect_eq(list->i, 0, ".i = %zu", list->i);
+    cr_expect_eq(list, test->graph[0],
+        "list = %p, .graph[0] = %p", list, test->graph[0]);
+    cr_expect_eq(list->head, list->last,
+        ".head = %p, .last = %p", list->head, list->last);
+    cr_expect_eq(list->head->iptr, &test,
+        ".head.iptr = %p, &test = %p", list->head->iptr, &test);
+    cr_expect_eq(list, test->vt->fetch(test, MORPH(PT, &test)));
+    cr_expect_eq(list, test->vt->fetch(test, MORPH(PT, list)));
 }
 
 Test(graph, vt_remove)

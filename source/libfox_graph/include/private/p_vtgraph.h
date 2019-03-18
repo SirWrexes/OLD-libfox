@@ -94,7 +94,7 @@ static inline bool graph_listcontains(ME, pmorph_t list, pmorph_t item)
         return false;
     tmp = me->vt->fetch(me, list);
     if (tmp == NULL)
-        return MFAIL;
+        return false;
     return tmp->vt->contains(tmp, item);
 }
 

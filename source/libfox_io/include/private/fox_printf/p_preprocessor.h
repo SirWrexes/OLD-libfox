@@ -13,6 +13,6 @@
 #undef  N_RST
 #define N_GET       n_printed_bytes(0)
 #define N_ADD(x)    n_printed_bytes((x))
-#define N_RST       n_printed_bytes(0 - n_printed_bytes(0))
+#define N_RST       n_printed_bytes(0 - N_GET)
 
 #endif //LIBFOX_PREPROCESSOR_H

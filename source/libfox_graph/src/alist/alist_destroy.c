@@ -16,7 +16,7 @@ extern void alist_t_destroy(alist_t *alistptr)
         return;
     for (aitem_t i = (*alistptr)->head; i != NULL; i = stock) {
         stock = i->next;
-        DESTROY(aitem_t, i);
+        FGDESTROY(aitem_t, i);
     }
     *alistptr = NULL;
 }

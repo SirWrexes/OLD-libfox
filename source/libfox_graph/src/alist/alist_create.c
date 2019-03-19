@@ -16,7 +16,7 @@ static void *l_abort(alist_t this, str3c_t errstr)
     fox_eputs("AList: ");
     fox_eputs(errstr);
     fox_eputs("\n");
-    DESTROY(alist_t, this);
+    FGDESTROY(alist_t, this);
     return NULL;
 }
 
@@ -27,7 +27,7 @@ extern alist_t alist_t_create(void *item)
     if (this == NULL)
         return l_abort(this, "Creation failed.");
     if (item != NULL) {
-        this->head = NEW(aitem_t, item);
+        this->head = FGNEW(aitem_t, item);
         if (this->head == NULL)
             return l_abort(this, "Item creation failed.");
         this->size = 1;

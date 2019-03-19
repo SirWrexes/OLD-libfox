@@ -21,7 +21,7 @@ TestSuite(alist, .init = reset_errno);
 
 Test(alist, create_empty)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, NULL);
+    FGVAR(alist_t, test, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_LIST, ".type = %d", test->type);
@@ -34,7 +34,7 @@ Test(alist, create_empty)
 
 Test(alist, create_non_empty)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "euuuuuuuuuuh");
+    FGVAR(alist_t, test, "euuuuuuuuuuh");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_LIST, ".type = %d", test->type);
@@ -54,18 +54,18 @@ Test(alist, create_non_empty)
 Test(alist, destroy, .signal = SIGABRT)
 {
     aitem_t item = NULL;
-    alist_t test = NEW(alist_t, "oui");
+    alist_t test = FGNEW(alist_t, "oui");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     item = test->head;
-    DESTROY(alist_t, test);
+    FGDESTROY(alist_t, test);
     cr_expect_null(test);
     free(item);
 }
 
 Test(alist, vt_add_one_to_empty)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, NULL);
+    FGVAR(alist_t, test, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->size, 0, ".size = %zu", test->size);
@@ -83,7 +83,7 @@ Test(alist, vt_add_one_to_empty)
 
 Test(alist, vt_add_one_to_non_empty)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "peut-etre");
+    FGVAR(alist_t, test, "peut-etre");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -105,7 +105,7 @@ Test(alist, vt_add_one_to_non_empty)
 
 Test(alist, add_duplicate)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, &test);
+    FGVAR(alist_t, test, &test);
 
     cr_assert_not_null(test);
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -115,7 +115,7 @@ Test(alist, add_duplicate)
 
 Test(alist, vt_contains_id)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
+    FGVAR(alist_t, test, "peux-tu répéter la question ?");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");
@@ -128,8 +128,8 @@ Test(alist, vt_contains_id)
 
 Test(alist, vt_contains_pt)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "peux-tu répéter la question ?");
-    FOXGRAPH(aitem_t) item = NEW(aitem_t, test);
+    FGVAR(alist_t, test, "peux-tu répéter la question ?");
+    FGVAR(aitem_t, item, test);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     test->vt->add_item(test, "Tu n'es pas le patron de moi maintenant !");
@@ -143,7 +143,7 @@ Test(alist, vt_contains_pt)
 
 Test(alist, vt_contains_mfail)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Je sens quelque-chose...");
+    FGVAR(alist_t, test, "Je sens quelque-chose...");
 
     cr_assert_not_null(test);
     cr_expect_not(test->vt->contains(test, MORPH(PT, NULL)));
@@ -155,7 +155,7 @@ Test(alist, vt_fetch_id)
 {
     ssize_t id = 0;
     aitem_t fetch = NULL;
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Ooh");
+    FGVAR(alist_t, test, "Ooh");
 
     cr_assert_not_null(test);
     id = test->vt->add_item(test, "Eeh");
@@ -173,7 +173,7 @@ Test(alist, vt_fetch_pt)
     ssize_t id = 0;
     aitem_t fetch1 = NULL;
     aitem_t fetch2 = NULL;
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Ooh");
+    FGVAR(alist_t, test, "Ooh");
 
     cr_assert_not_null(test);
     id = test->vt->add_item(test, "Ah-ah");
@@ -187,7 +187,7 @@ Test(alist, vt_fetch_iptr)
 {
     ssize_t item = 0;
     aitem_t fetch = NULL;
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Ting tang");
+    FGVAR(alist_t, test, "Ting tang");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, &item);
@@ -198,7 +198,7 @@ Test(alist, vt_fetch_iptr)
 
 Test(alist, vt_fetch_mfail)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Walla walla bang bang");
+    FGVAR(alist_t, test, "Walla walla bang bang");
 
     cr_assert_not_null(test);
     cr_expect_null(test->vt->fetch(test, MORPH(PT, NULL)));
@@ -208,7 +208,7 @@ Test(alist, vt_fetch_mfail)
 
 Test(alist, vt_remove_id)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Can't touch this");
+    FGVAR(alist_t, test, "Can't touch this");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, &test);
@@ -221,7 +221,7 @@ Test(alist, vt_remove_id)
 
 Test(alist, vt_remove_pt)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Cant touch this");
+    FGVAR(alist_t, test, "Cant touch this");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, test);
@@ -234,7 +234,7 @@ Test(alist, vt_remove_pt)
 
 Test(alist, vt_remove_iptr)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Cant touch this");
+    FGVAR(alist_t, test, "Cant touch this");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, test);
@@ -247,7 +247,7 @@ Test(alist, vt_remove_iptr)
 
 Test(alist, vt_remove_mfail)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "Cant touch this");
+    FGVAR(alist_t, test, "Cant touch this");
 
     cr_assert_not_null(test);
     cr_expect_eq(test->size, 1, ".size = %zu", test->size);
@@ -261,7 +261,7 @@ Test(alist, vt_remove_mfail)
 
 Test(alist, vt_flush)
 {
-    FOXGRAPH(alist_t) test = NEW(alist_t, "STOP !");
+    FGVAR(alist_t, test, "STOP !");
 
     cr_assert_not_null(test);
     test->vt->add_item(test, "Hammer time !");

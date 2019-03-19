@@ -39,7 +39,7 @@ static inline ssize_t alist_additem(ME, void *iptr)
 
     if (tmp != NULL)
         return tmp->i;
-    tmp = NEW(aitem_t, iptr);
+    tmp = FGNEW(aitem_t, iptr);
     if (tmp == NULL)
         return MFAIL;
     me->size += 1;
@@ -80,7 +80,7 @@ static inline void alist_remove(ME, pmorph_t thing)
     if (UNALLOWED_THING(thing))
         return;
     if (MATCH(thing, me->head))
-        DESTROY(alist_t, me);
+        FGDESTROY(alist_t, me);
     for (; i != NULL; i = i->next) {
         if (MATCH(thing, i))
             break;
@@ -92,7 +92,7 @@ static inline void alist_remove(ME, pmorph_t thing)
         me->last = me->vt->fetch(me, MORPH(ID, i->i - 1));
     tmp->next = i->next;
     me->size -= 1;
-    DESTROY(aitem_t, i);
+    FGDESTROY(aitem_t, i);
 }
 
 static inline void alist_flush(ME)

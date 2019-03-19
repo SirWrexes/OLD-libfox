@@ -22,7 +22,7 @@ TestSuite(aitem, .init = reset_errno);
 Test(aitem_create, create_string)
 {
     char *str = "sauce";
-    FOXGRAPH(aitem_t) test = NEW(aitem_t, str);
+    FGVAR(aitem_t, test, str);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_ITEM, ".type = %d", test->type);
@@ -40,7 +40,7 @@ Test(aitem, create_structure)
 {
     struct dummy dumdum = {.str = "durp", .n = 12};
     struct dummy *mudmud = NULL;
-    FOXGRAPH(aitem_t) test = NEW(aitem_t, &dumdum);
+    FGVAR(aitem_t, test, &dumdum);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_ITEM, ".type = %d", test->type);
@@ -57,19 +57,19 @@ Test(aitem, create_structure)
 
 Test(aitem, destroy, .signal = SIGSEGV)
 {
-    aitem_t test = NEW(aitem_t, "hurp");
+    aitem_t test = FGNEW(aitem_t, "hurp");
 
     cr_assert_not_null(test, "%s", strerror(errno));
-    DESTROY(aitem_t, test);
+    FGDESTROY(aitem_t, test);
     cr_expect_null(test);
     test->i += 1;
 }
 
 Test(aitem, destroy_in_list, .signal = SIGSEGV)
 {
-    aitem_t test = NEW(aitem_t, "hurp");
-    FOXGRAPH(aitem_t) test2 = NEW(aitem_t, "durp");
-    FOXGRAPH(aitem_t) test3 = NEW(aitem_t, "burp");
+    aitem_t test = FGNEW(aitem_t, "hurp");
+    FGVAR(aitem_t, test2, "durp");
+    FGVAR(aitem_t, test3, "burp");
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_assert_not_null(test2, "&test2 = %p", test2);
@@ -78,7 +78,7 @@ Test(aitem, destroy_in_list, .signal = SIGSEGV)
     test3->i = 3;
     test2->next = test3;
     test->next = test2;
-    DESTROY(aitem_t, test);
+    FGDESTROY(aitem_t, test);
     cr_expect_null(test);
     cr_expect_eq(test2->i, 1, "test2->i = %zu", test2->i);
     cr_expect_eq(test3->i, 2, "test3->i = %zu", test3->i);

@@ -12,18 +12,20 @@
 #include <stdbool.h>
 #include "fox_define.h"
 
-#if defined(MORPH)      \
-    || defined(ME)      \
-    || defined(NEW)     \
-    || defined(DESTROY) \
-    || defined(MFAIL)   \
-    || defined(FOXGRAPH)
+#if defined(MORPH)          \
+    || defined(ME)          \
+    || defined(FGNEW)       \
+    || defined(FGVAR)       \
+    || defined(FGDESTROY)   \
+    || defined(FGITEM)      \
+    || defined(MFAIL)
     #undef MORPH
     #undef ME
-    #undef NEW
+    #undef FGNEW
+    #undef FGVAR
+    #undef FGDESTROY
+    #undef FGITEM
     #undef MFAIL
-    #undef DESTROY
-    #undef FOXGRAPH
 #endif
 
 /*
@@ -32,16 +34,29 @@
 */
 
 // OOP style macro for creating graph elements.
-#define NEW(type, ...)      type##_create(__VA_ARGS__)
+#define FGNEW(type, ...)      type##_create(__VA_ARGS__)
 
 // We got a constructor so why not a destructor ?
-#define DESTROY(type, ptr)  type##_destroy(&(ptr))
+#define FGDESTROY(type, thing)  type##_destroy(&(thing))
 
 // Use this to create elements that'll auto-destroy
 // when leaving the function's scope.
-#define FOXGRAPH(type)      __cleanup(type##_destroy) type
+#define FGVAR(type, name, ...)                               \
+__cleanup(type##_destroy) type name = FGNEW(type, __VA_ARGS__)
 
-// Error value for boolean Methods
+// When you're sure the aitem you're looking for is in the list you're
+// using this macro with, this'll greatly simplify the task fetching it
+// then casting its iptr into the desired type to access its contents.
+//
+// Say my list list0 has an n-th item with a struct foo_s (foo_t) in its iptr
+// container and foo_t type contains a char* named bar.
+// ((foo_t*) list0->vt->fetch(list0, MORPH(ID, n))->iptr)->bar = "baz"
+// becomes
+// FGITEM(list0, ID, n, foo_t*)->bar = "baz"
+#define FGITEM(list, morphtype, morphvalue, type)                        \
+((type) (list)->vt->fetch((list), MORPH((morphtype), (morphvalue)))->iptr)
+
+// Error value for (ssize_t) function failures
 #define MFAIL (-1)
 
 /*
@@ -78,7 +93,7 @@ typedef struct pseudo_polymorph_s {
     morph_t type;
     union {
         size_t _id;
-        void *_pt;
+        void  *_pt;
     } __transparent;
 } pmorph_t;
 

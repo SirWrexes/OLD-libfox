@@ -97,7 +97,7 @@ static inline void alist_remove(ME, pmorph_t thing)
 
 static inline void alist_flush(ME)
 {
-    while (me->last != me->head)
+    while (me->size > 1 && me->last != me->head)
         me->vt->remove(me, MORPH(ID, me->last->i));
 }
 

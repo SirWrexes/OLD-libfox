@@ -36,7 +36,7 @@ static __a((nonnull, pure))
 long getlong(str3c_t str, char **endptr, size_t i[KEY_COUNT])
 {
     long ret = 0;
-    size_t n = 0
+    size_t n = 0;
     size_t x = 0;
     size_t y = 0;
 
@@ -88,15 +88,4 @@ long fox_strtol(str3c_t str, char **endptr, size_t base)
     i[B] = i[A];
     for(; !IS_EOL(str[i[B]]) && is_base36(str[i[B]]); i[B] += 1);
     return getlong(str, endptr, i);
-}
-
-int main(void)
-{
-    long n = 0;
-    n = fox_strtol("123", NULL, 10);
-    n = fox_strtol("      123", NULL, 10);
-    n = fox_strtol("      +123", NULL, 10);
-    n = fox_strtol("      -123", NULL, 10);
-    n = fox_strtol("      -1:23", NULL, 10);
-    return 0;
 }

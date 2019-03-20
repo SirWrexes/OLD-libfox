@@ -120,7 +120,9 @@ static inline void graph_remove(ME, pmorph_t thing)
             break;
         if (thing.type == ID
         ?   thing._id == tmp->i
-        :   thing._pt == tmp || thing._pt == tmp->head)
+        :   thing._pt == me->graph[tmp->i]
+        ||  thing._pt == tmp->head
+        ||  (tmp->head != NULL && thing._pt == tmp->head->iptr))
             FGDESTROY(alist_t, me->graph[tmp->i]);
         else
             tmp->vt->remove(tmp, thing);

@@ -248,7 +248,7 @@ Test(graph, vt_add_item_aitem_duplicate)
 
 Test(graph, vt_add_item_iptr)
 {
-    FGVAR(graph_t) t = FGNEW(graph_t, 1, NULL);
+    FGVAR(graph_t, t, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(t, "%s", strerror(errno));
@@ -264,7 +264,7 @@ Test(graph, vt_add_item_iptr)
 
 Test(graph, vt_add_item_iptr_duplicate)
 {
-    FGVAR(graph_t) t = FGNEW(graph_t, 1, NULL);
+    FGVAR(graph_t, t, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(t, "%s", strerror(errno));
@@ -538,6 +538,33 @@ Test(graph, vt_remove_mfail)
     test->vt->remove(test, MORPH(PT, NULL));
     test->vt->remove(test, MORPH(ID, 150));
 }
+
+Test(graph, vt_remove_list_head)
+{
+    FGVAR(graph_t, test, 1, NULL);
+
+    cr_assert_not_null(test, "%s", strerror(errno));
+    test->vt->add_list(test, &test);
+    cr_assert_not_null(test->graph[0], "%s", strerror(errno));
+    test->vt->remove(test, MORPH(PT, &test));
+    cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
+    cr_expect_null(test->graph[0]);
+    test->vt->add_list(test, &test);
+    cr_assert_not_null(test->graph[0], "%s", strerror(errno));
+    test->vt->remove(test,
+        MORPH(ID, test->vt->fetch(test, MORPH(PT, &test))->i));
+    cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
+    cr_expect_null(test->graph[0]);
+}
+
+Test(graph, vt_remove)
+{
+    FGVAR(graph_t, test, 1, NULL);
+
+    cr_assert_not_null(test, "%s", strerror(errno));
+}
+
+
 
 Test(graph, vt_flush)
 {

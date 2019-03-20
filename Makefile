@@ -18,20 +18,16 @@ fclean: graph-fclean io-fclean memory-fclean string-fclean
 re:     graph-re io-re memory-re string-re tests
 .PHONY: all tests clean fclean re
 
+
 ############################
 ##         Graph          ##
 ############################
 graph:
 	@$(MAKE)  $(SRCDIR)/libfox_graph
 	@$(CP)    .        $(SRCDIR)/libfox_graph/libfox_graph.a
-	@$(CP) 	  include  $(SRCDIR)/libfox_graph/include/fox_graph.h
+	@$(CP)    include  $(SRCDIR)/libfox_graph/include/fox_graph.h
 graph-tests:
-	@if [ -e "$(SRCDIR)/libfox_graph/tests_graph" ];	\
-	then							\
-		  $(SRCDIR)/libfox_graph/tests_graph;		\
-	else							\
-		  $(MAKE) $(SRCDIR)/libfox_graph tests_graph;	\
-	fi
+	@$(MAKE)  $(SRCDIR)/libfox_graph tests_graph
 graph-clean:
 	@$(MAKE)  $(SRCDIR)/libfox_graph clean
 graph-fclean:
@@ -42,6 +38,7 @@ graph-re:
 	@$(MAKE)  $(SRCDIR)/libfox_graph re
 .PHONY: graph graph-tests graph-clean graph-fclean graph-re
 
+
 ############################
 ##      input/output      ##
 ############################
@@ -50,20 +47,15 @@ io:
 	@$(CP)    .        $(SRCDIR)/libfox_io/libfox_io.a
 	@$(CP)    include  $(SRCDIR)/libfox_io/include/fox_io.h
 io-tests:
-	@if [ -e "$(SRCDIR)/libfox_io/tests_io" ];			\
-	then								\
-		  $(SRCDIR)/libfox_io/tests_io;				\
-	else								\
-		  $(MAKE) $(SRCDIR)/libfox_io tests_io;			\
-	fi
+	@$(MAKE)  $(SRCDIR)/libfox_io tests_io
 io-clean:
-	@$(MAKE) $(SRCDIR)/libfox_io	clean
+	@$(MAKE)  $(SRCDIR)/libfox_io clean
 io-fclean:
-	@$(MAKE) $(SRCDIR)/libfox_io	fclean
-	@$(RM) ./libfox_io.a
-	@$(RM) include/fox_io.h
+	@$(MAKE)  $(SRCDIR)/libfox_io fclean
+	@$(RM)    ./libfox_io.a
+	@$(RM)    include/fox_io.h
 io-re:
-	@$(MAKE) $(SRCDIR)/libfox_io	re
+	@$(MAKE)  $(SRCDIR)/libfox_io re
 .PHONY: io io-tests io-clean io-fclean io-re
 
 
@@ -71,24 +63,19 @@ io-re:
 ##         memory         ##
 ############################
 memory:
-	@$(MAKE) $(SRCDIR)/libfox_memory
-	@$(CP) .		$(SRCDIR)/libfox_memory/libfox_memory.a
-	@$(CP) include  $(SRCDIR)/libfox_memory/include/fox_memory.h
+	@$(MAKE)  $(SRCDIR)/libfox_memory
+	@$(CP)    .        $(SRCDIR)/libfox_memory/libfox_memory.a
+	@$(CP)    include  $(SRCDIR)/libfox_memory/include/fox_memory.h
 memory-tests:
-	@if [ -e "$(SRCDIR)/libfox_memory/tests_memory" ];		\
-	then								\
-		$(SRCDIR)/libfox_memory/tests_memory			\
-	else								\
-		$(MAKE) $(SRCDIR)/libfox_memory tests_memory;		\
-	fi
+	@$(MAKE)  $(SRCDIR)/libfox_memory tests_memory
 memory-clean:
-	@$(MAKE) $(SRCDIR)/libfox_memory	clean
+	@$(MAKE)  $(SRCDIR)/libfox_memory clean
 memory-fclean:
-	@$(MAKE) $(SRCDIR)/libfox_memory	fclean
-	@$(RM) ./libfox_memory.a
-	@$(RM) include/fox_memory.h
+	@$(MAKE)  $(SRCDIR)/libfox_memory fclean
+	@$(RM)    ./libfox_memory.a
+	@$(RM)    include/fox_memory.h
 memory-re:
-	@$(MAKE) $(SRCDIR)/libfox_memory	re
+	@$(MAKE)  $(SRCDIR)/libfox_memory re
 .PHONY: memory memory-tests memory-clean memory-fclean memory-re
 
 
@@ -96,22 +83,17 @@ memory-re:
 ##         string         ##
 ############################
 string:
-	@$(MAKE) $(SRCDIR)/libfox_string
-	@$(CP) 	.		$(SRCDIR)/libfox_string/libfox_string.a
-	@$(CP) 	include  $(SRCDIR)/libfox_string/include/fox_string.h
+	@$(MAKE)  $(SRCDIR)/libfox_string
+	@$(CP)    .        $(SRCDIR)/libfox_string/libfox_string.a
+	@$(CP)    include  $(SRCDIR)/libfox_string/include/fox_string.h
 string-tests:
-	@if [ -e "$(SRCDIR)/libfox_string/tests_string" ];		\
-	then								\
-		$(SRCDIR)/libfox_string/tests_string;			\
-	else								\
-		$(MAKE) $(SRCDIR)/libfox_string tests_string;		\
-	fi
+	@$(MAKE)  $(SRCDIR)/libfox_string tests_string
 string-clean:
-	@$(MAKE) $(SRCDIR)/libfox_string	clean
+	@$(MAKE)  $(SRCDIR)/libfox_string clean
 string-fclean:
-	@$(MAKE) $(SRCDIR)/libfox_string	fclean
-	@$(RM) ./libfox_string.a
-	@$(RM) include/fox_string.h
+	@$(MAKE)  $(SRCDIR)/libfox_string fclean
+	@$(RM)    ./libfox_string.a
+	@$(RM)    include/fox_string.h
 string-re:
-	@$(MAKE) $(SRCDIR)/libfox_string	re
+	@$(MAKE)  $(SRCDIR)/libfox_string re
 .PHONY: string string-tests string-clean string-fclean string-re

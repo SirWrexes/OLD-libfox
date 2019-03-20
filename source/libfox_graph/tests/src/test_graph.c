@@ -574,7 +574,6 @@ Test(graph, vt_remove_id)
     cr_expect_null(test->graph[0]);
 }
 
-
 Test(graph, vt_remove)
 {
     FGVAR(graph_t, test, 1, NULL);
@@ -589,8 +588,6 @@ Test(graph, vt_remove)
         ".head.next = %p", test->graph[0]->head->next);
     cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
 }
-
-
 
 Test(graph, vt_flush)
 {

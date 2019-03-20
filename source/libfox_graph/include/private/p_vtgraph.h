@@ -53,35 +53,22 @@ static inline ssize_t graph_additem(ME, pmorph_t list, void *item)
     return tmp->vt->add_item(tmp, item);
 }
 
-__a((pure))
-static inline bool g_contains_match(ME, pmorph_t thing, size_t i)
-{
-    switch (thing.type) {
-    default :
-    case ID :
-        return (me->graph[i] != NULL ? thing._id == me->graph[i]->i : false);
-    case PT :
-        return (
-            (
-                me->graph[i] != NULL
-                ? thing._pt == me->graph[i]
-                : false
-            ) || (
-                me->graph[i] != NULL && me->graph[i]->head != NULL
-                ?  thing._pt == me->graph[i]->head
-                || thing._pt == me->graph[i]->head->iptr
-                : false
-            )
-        );
-    }
-}
+#undef MATCH
+#define MATCH(thing, x, j)                                      \
+(                                                               \
+    (thing).type == ID                                          \
+    ?  (x)->graph[(thing)._id] != NULL                          \
+    :  (thing)._pt == (x)->graph[j]                             \
+    || ((x)->graph[j] != NULL &&                                \
+        (x)->graph[j]->vt->contains((x)->graph[j], (thing)))    \
+)
 
 static inline bool graph_contains(ME, pmorph_t thing)
 {
     if (UNALLOWED_THING(thing))
         return false;
     for (size_t i = 0; i < me->size; i += 1)
-        if (g_contains_match(me, thing, i))
+        if (MATCH(thing, me, i))
             return true;
     return false;
 }
@@ -102,10 +89,17 @@ static inline alist_t graph_fetch(ME, pmorph_t thing)
 {
     if (UNALLOWED_THING(thing))
         return NULL;
-    for (size_t i = 0; i < me->size; i += 1)
-        if (g_contains_match(me, thing, i))
+    if (thing.type == ID
+    &&  me->size > thing._id
+    &&  me->graph[thing._id] != NULL)
+        return me->graph[thing._id];
+    for (size_t i = 0; i < me->size; i += 1) {
+        if (me->graph[i] == NULL)
+            continue;
+        if (MATCH(thing, me, i))
             return me->graph[i];
-    return NULL;
+    }
+        return NULL;
 }
 
 static inline void graph_remove(ME, pmorph_t thing)
@@ -133,9 +127,7 @@ static inline void graph_flush(ME, pmorph_t list)
 {
     alist_t tmp = NULL;
 
-    if (list.type == XX
-    || (list.type == PT && list._pt == NULL)
-    || (list.type == ID && list._id > me->size))
+    if (UNALLOWED_THING(list) || (list.type == ID && list._id > me->size))
         for (size_t i = 0; i < me->size; i += 1)
             me->graph[i]->vt->flush(me->graph[i]);
     tmp = me->vt->fetch(me, list);

@@ -551,24 +551,66 @@ Test(graph, vt_remove_list_head)
     cr_expect_null(test->graph[0]);
     test->vt->add_list(test, &test);
     cr_assert_not_null(test->graph[0], "%s", strerror(errno));
-    test->vt->remove(test,
-        MORPH(ID, test->vt->fetch(test, MORPH(PT, &test))->i));
+    test->vt->remove(test, MORPH(PT, test->graph[0]));
+    cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
+    cr_expect_null(test->graph[0]);
+    test->vt->add_list(test, &test);
+    cr_assert_not_null(test->graph[0], "%s", strerror(errno));
+    test->vt->remove(test, MORPH(PT, test->graph[0]));
     cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
     cr_expect_null(test->graph[0]);
 }
+
+Test(graph, vt_remove_id)
+{
+    FGVAR(graph_t, test, 1, NULL);
+
+    cr_assert_not_null(test, "%s", strerror(errno));
+    test->vt->add_list(test, &test);
+    cr_assert_not_null(test->graph[0], "%s", strerror(errno));
+    test->vt->remove(test,
+         MORPH(ID, test->vt->fetch(test, MORPH(PT, &test))->i));
+    cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
+    cr_expect_null(test->graph[0]);
+}
+
 
 Test(graph, vt_remove)
 {
     FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    test->vt->add_list(test, test);
+    cr_assert_not_null(test->graph[0], "%s", strerror(errno));
+    test->vt->add_item(test, MORPH(ID, 0), &test);
+    cr_assert_not_null(test->graph[0]->head->next, "%s", strerror(errno));
+    test->vt->remove(test, MORPH(PT, &test));
+    cr_expect_null(test->graph[0]->head->next,
+        ".head.next = %p", test->graph[0]->head->next);
+    cr_expect_not(test->vt->contains(test, MORPH(PT, &test)));
 }
 
 
 
 Test(graph, vt_flush)
 {
-    FGVAR(graph_t, test, 1, NULL);
+    FGVAR(graph_t, test, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    test->vt->add_list(test, test);
+    test->vt->add_list(test, &test);
+    test->vt->add_list(test, test->graph);
+    test->vt->add_item(test, MORPH(ID, 0), test->graph);
+    test->vt->add_item(test, MORPH(ID, 0), &test->vt);
+    test->vt->add_item(test, MORPH(ID, 0), &test->size);
+    test->vt->add_item(test, MORPH(ID, 1), test->graph);
+    test->vt->add_item(test, MORPH(ID, 2), &test->graph);
+    test->vt->add_item(test, MORPH(ID, 2), &test->vt);
+    cr_expect_eq(test->graph[0]->size, 4, "0sz = %zu", test->graph[0]->size);
+    test->vt->flush(test, MORPH(ID, 0));
+    cr_expect_eq(test->graph[0]->size, 1, "0sz = %zu", test->graph[0]->size);
+    test->vt->flush(test, MORPH(ID, 999));
+    cr_expect_eq(test->graph[0]->size, 1, "0sz = %zu", test->graph[0]->size);
+    cr_expect_eq(test->graph[1]->size, 1, "1sz = %zu", test->graph[1]->size);
+    cr_expect_eq(test->graph[2]->size, 1, "2sz = %zu", test->graph[2]->size);
 }

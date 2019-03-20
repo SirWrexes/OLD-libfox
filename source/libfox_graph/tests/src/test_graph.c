@@ -22,7 +22,7 @@ TestSuite(graph, .init = reset_errno);
 Test(graph, create_unnamed)
 {
     str3c_t name = NULL;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, name);
+    FGVAR(graph_t, test, 1, name);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_GRAPH, ".type = %d", test->type);
@@ -36,7 +36,7 @@ Test(graph, create_unnamed)
 Test(graph, create_named)
 {
     str3c_t name = "t ki dan le sport";
-    FOXGRAPH(graph_t) test = NEW(graph_t, 3, name);
+    FGVAR(graph_t, test, 3, name);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_GRAPH, ".type = %d", test->type);
@@ -50,14 +50,14 @@ Test(graph, create_named)
 
 Test(graph, create_invalid_size)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 0, NULL);
+    FGVAR(graph_t, test, 0, NULL);
 
     cr_assert_null(test, "test = %p", test);
 }
 
 Test(graph, destroy)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 2, "sauce");
+    FGVAR(graph_t, test, 2, "sauce");
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }
@@ -66,7 +66,7 @@ Test(graph, destroy_null_graph_t)
 {
     graph_t test = NULL;
 
-    DESTROY(graph_t, test);
+    FGDESTROY(graph_t, test);
 }
 
 Test(graph, destroy_null_grapharray)
@@ -74,12 +74,12 @@ Test(graph, destroy_null_grapharray)
     graph_t test = calloc(1, sizeof(*test));
 
     cr_assert_not_null(test, "%s", strerror(errno));
-    DESTROY(graph_t, test);
+    FGDESTROY(graph_t, test);
 }
 
 Test(graph, vt_add_list_to_empty)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_assert_neq(test->vt->add_list(test, test), MFAIL,
@@ -90,7 +90,7 @@ Test(graph, vt_add_list_to_empty)
 
 Test(graph, vt_add_list_to_non_empty)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
+    FGVAR(graph_t, test, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_assert_neq(test->vt->add_list(test, test),
@@ -105,7 +105,7 @@ Test(graph, vt_add_list_to_non_empty)
 
 Test(graph, vt_add_list_to_full)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_assert_neq(test->vt->add_list(test, test), MFAIL, "%s", strerror(errno));
@@ -117,7 +117,7 @@ Test(graph, vt_add_list_to_full)
 Test(graph, vt_add_list_duplicate)
 {
     ssize_t id = 0;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 2, NULL);
+    FGVAR(graph_t, test, 2, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     id = test->vt->add_list(test, test);
@@ -127,7 +127,7 @@ Test(graph, vt_add_list_duplicate)
 
 Test(graph, vt_add_item_empty_id)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -141,7 +141,7 @@ Test(graph, vt_add_item_empty_id)
 
 Test(graph, vt_add_item_empty_alist)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -155,7 +155,7 @@ Test(graph, vt_add_item_empty_alist)
 
 Test(graph, vt_add_item_id)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -171,7 +171,7 @@ Test(graph, vt_add_item_id)
 
 Test(graph, vt_add_item_id_duplicate)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -186,7 +186,7 @@ Test(graph, vt_add_item_id_duplicate)
 
 Test(graph, vt_add_item_alist)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -202,7 +202,7 @@ Test(graph, vt_add_item_alist)
 
 Test(graph, vt_add_item_alist_duplicate)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -217,7 +217,7 @@ Test(graph, vt_add_item_alist_duplicate)
 
 Test(graph, vt_add_item_aitem)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -233,7 +233,7 @@ Test(graph, vt_add_item_aitem)
 
 Test(graph, vt_add_item_aitem_duplicate)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(test, "%s", strerror(errno));
@@ -248,7 +248,7 @@ Test(graph, vt_add_item_aitem_duplicate)
 
 Test(graph, vt_add_item_iptr)
 {
-    FOXGRAPH(graph_t) t = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t) t = FGNEW(graph_t, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(t, "%s", strerror(errno));
@@ -264,7 +264,7 @@ Test(graph, vt_add_item_iptr)
 
 Test(graph, vt_add_item_iptr_duplicate)
 {
-    FOXGRAPH(graph_t) t = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t) t = FGNEW(graph_t, 1, NULL);
     alist_t list;
 
     cr_assert_not_null(t, "%s", strerror(errno));
@@ -280,7 +280,7 @@ Test(graph, vt_add_item_iptr_duplicate)
 Test(graph, vt_contains_id)
 {
     ssize_t id;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     id = test->vt->add_list(test, test);
@@ -291,7 +291,7 @@ Test(graph, vt_contains_id)
 Test(graph, vt_contains_alist)
 {
     alist_t list = NULL;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     list = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -301,7 +301,7 @@ Test(graph, vt_contains_alist)
 Test(graph, vt_contains_aitem)
 {
     alist_t list = NULL;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     list = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -311,7 +311,7 @@ Test(graph, vt_contains_aitem)
 Test(graph, vt_contains_iptr)
 {
     alist_t list = NULL;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     list = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -320,7 +320,7 @@ Test(graph, vt_contains_iptr)
 
 Test(graph, vt_contains_mfail)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_not(test->vt->contains(test, MORPH(PT, NULL)));
@@ -332,7 +332,7 @@ Test(graph, vt_list_contains_id_id)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -344,7 +344,7 @@ Test(graph, vt_list_contains_id_aitem)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -356,7 +356,7 @@ Test(graph, vt_list_contains_id_iptr)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -369,7 +369,7 @@ Test(graph, vt_list_contains_alist_id)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -381,7 +381,7 @@ Test(graph, vt_list_contains_alist_aitem)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -393,7 +393,7 @@ Test(graph, vt_list_contains_alist_iptr)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -405,7 +405,7 @@ Test(graph, vt_list_contains_aitem_id)
 {
     ssize_t i = -1;
     alist_t list;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
+    FGVAR(graph_t, test, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     i = test->vt->add_list(test, &test);
@@ -421,7 +421,7 @@ Test(graph, vt_list_contains_aitem_aitem)
 {
     ssize_t i = -1;
     alist_t list;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
+    FGVAR(graph_t, test, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     i = test->vt->add_list(test, &test);
@@ -438,7 +438,7 @@ Test(graph, vt_list_contains_aitem_iptr)
 {
     ssize_t i = -1;
     alist_t list;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 3, NULL);
+    FGVAR(graph_t, test, 3, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     i = test->vt->add_list(test, &test);
@@ -455,7 +455,7 @@ Test(graph, vt_list_contains_iptr_id)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -468,7 +468,7 @@ Test(graph, vt_list_contains_iptr_aitem)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -481,7 +481,7 @@ Test(graph, vt_list_contains_iptr_iptr)
 {
     alist_t l;
     aitem_t i;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     l = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, test)));
@@ -492,7 +492,7 @@ Test(graph, vt_list_contains_iptr_iptr)
 
 Test(graph, vt_list_contains_mfail)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_not(
@@ -513,7 +513,7 @@ Test(graph, vt_list_contains_mfail)
 Test(graph, vt_fetch)
 {
     alist_t list = NULL;
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     list = test->vt->fetch(test, MORPH(ID, test->vt->add_list(test, &test)));
@@ -529,16 +529,19 @@ Test(graph, vt_fetch)
     cr_expect_eq(list, test->vt->fetch(test, MORPH(PT, list)));
 }
 
-Test(graph, vt_remove)
+Test(graph, vt_remove_mfail)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    test->vt->remove(test, MORPH(XX, 0));
+    test->vt->remove(test, MORPH(PT, NULL));
+    test->vt->remove(test, MORPH(ID, 150));
 }
 
 Test(graph, vt_flush)
 {
-    FOXGRAPH(graph_t) test = NEW(graph_t, 1, NULL);
+    FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
 }

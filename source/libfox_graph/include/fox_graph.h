@@ -33,6 +33,46 @@
 ****************************************************************
 */
 
+// Remember : These are pointers. To access members, use `->`, not `.` !
+typedef struct aitem_s *aitem_t;
+typedef struct alist_s *alist_t;
+typedef struct graph_s *graph_t;
+
+typedef struct pseudo_polymorph_s pmorph_t;
+typedef enum pseudo_polymorph_type_e morph_t;
+
+/*
+****************************************************************
+****************************************************************
+*/
+
+/* The following functions return NULL in case of failure. */
+
+// Creates a new graph and retruns its pointer.
+// ├ Size : number of rows it graph_t->graph[]
+// │ └ Has to be at least 1
+// └ Name : Self explanatory.
+//   └ Can be NULL
+extern graph_t graph_t_create(size_t size, str3c_t name);
+
+// Creates a new adjacency list and retruns its pointer.
+// └ Item : iptr for list's head item
+//   └ Can be NULL. If so, first added item will be its head.
+extern alist_t alist_t_create(void *item);
+
+// Creates a new graph and retruns its pointer.
+// └ Item : iptr for the item.
+extern aitem_t aitem_t_create(void *item);
+
+extern void graph_t_destroy(graph_t *graphptr);
+extern void alist_t_destroy(alist_t *alistptr);
+extern void aitem_t_destroy(aitem_t *aitemptr);
+
+/*
+****************************************************************
+****************************************************************
+*/
+
 // OOP style macro for creating graph elements.
 #define FGNEW(type, ...)      type##_create(__VA_ARGS__)
 
@@ -77,7 +117,7 @@ __cleanup(type##_destroy) type name = FGNEW(type, __VA_ARGS__)
 
 #define MORPH(type, item) (pmorph_t) {(type), {(size_t) (item)}}
 
-typedef enum pseudo_polymorph_type_e {
+enum pseudo_polymorph_type_e {
     ID  , // aitem_t->i
     PT  , // aitem_t->item
     XX  , // For specific functions
@@ -87,25 +127,20 @@ typedef enum pseudo_polymorph_type_e {
     MT_GRAPH = 'g'  ,
     MT_LIST  = 'l'  ,
     MT_ITEM  = 'i'  ,
-} morph_t;
+};
 
-typedef struct pseudo_polymorph_s {
+struct pseudo_polymorph_s {
     morph_t type;
     union {
         size_t _id;
         void  *_pt;
     } __transparent;
-} pmorph_t;
+};
 
 /*
 ****************************************************************
 ****************************************************************
 */
-
-// Remember : These are pointers. To access members, use `->`, not `.` !
-typedef struct aitem_s *aitem_t;
-typedef struct alist_s *alist_t;
-typedef struct graph_s *graph_t;
 
 struct aitem_s {
     morph_t type;
@@ -262,32 +297,5 @@ struct graph_s {
         #undef ME
     } *vt;
 };
-
-/*
-****************************************************************
-****************************************************************
-*/
-
-/* The following functions return NULL in case of failure. */
-
-// Creates a new graph and retruns its pointer.
-// ├ Size : number of rows it graph_t->graph[]
-// │ └ Has to be at least 1
-// └ Name : Self explanatory.
-//   └ Can be NULL
-extern graph_t graph_t_create(size_t size, str3c_t name);
-
-// Creates a new adjacency list and retruns its pointer.
-// └ Item : iptr for list's head item
-//   └ Can be NULL. If so, first added item will be its head.
-extern alist_t alist_t_create(void *item);
-
-// Creates a new graph and retruns its pointer.
-// └ Item : iptr for the item.
-extern aitem_t aitem_t_create(void *item);
-
-extern void graph_t_destroy(graph_t *graphptr);
-extern void alist_t_destroy(alist_t *alistptr);
-extern void aitem_t_destroy(aitem_t *aitemptr);
 
 #endif //LIBFOX_FOX_GRAPH_H

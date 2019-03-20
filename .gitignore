@@ -4,6 +4,7 @@
 ### C ###
 # Prerequisites
 *.d
+
 # Clion stuff
 CMake*
 cmake*
@@ -65,5 +66,8 @@ _subject/
 
 # Temporary files
 *.old
+
+# Test sources
+aout.c
 
 # End of https://www.gitignore.io/api/c

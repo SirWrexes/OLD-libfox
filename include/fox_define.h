@@ -9,9 +9,7 @@
 #define FOX_MACRO
 
 /*
-** Following macros are sorted in contextual order
-** unless they depend on another macro's previous
-** definition and follow this template  :
+** Following macros are sorted in contextual order and follow this template :
 **
 **     // What purpose the macro serves
 **     #define NAME (instruction)
@@ -30,6 +28,7 @@
     #undef CHAR_PRINTABLE
     #undef CHAR_TOUPPER
     #undef CHAR_TOLOWER
+    #undef IS_NULL
     #undef IS_EOL
     #undef IS_ALPHALO
     #undef IS_ALPHAUP
@@ -70,6 +69,9 @@
 
     // If an alphabetical character is uppercase, make it lowercase
     #define CHAR_TOLOWER(c)  ((c) >= 'A' && (c) <= 'Z' ? (c) - 32 : (c))
+
+    // Check if a pointer is NULL
+    #define IS_NULL(p) ((p) == NULL)
 
     // Check if a char is an end of line (linebreak OR null char)
     #define IS_EOL(c) ((c) == '\n' || (c) == '\0')

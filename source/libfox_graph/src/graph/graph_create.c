@@ -16,7 +16,7 @@ static void *g_abort(graph_t this, str3c_t errstr)
     fox_eputs("Graph: ");
     fox_eputs(errstr);
     fox_eputs("\n");
-    DESTROY(graph_t, this);
+    FGDESTROY(graph_t, this);
     return NULL;
 }
 

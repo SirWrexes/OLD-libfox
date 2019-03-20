@@ -16,6 +16,6 @@ extern void graph_t_destroy(graph_t *graphptr)
         free((*graphptr)->name);
     if ((*graphptr)->graph != NULL)
         for (size_t i = 0; i < (*graphptr)->size; i += 1)
-            DESTROY(alist_t, (*graphptr)->graph[i]);
+            FGDESTROY(alist_t, (*graphptr)->graph[i]);
     *graphptr = NULL;
 }

@@ -33,7 +33,7 @@ static inline ssize_t graph_addlist(ME, void *item)
     for (i = 0; me->graph[i] != NULL && i < me->size; i += 1);
     if (i == me->size)
         RETURN(MFAIL, fox_eputs("add_list(): Graph is full\n"));
-    list = NEW(alist_t, item);
+    list = FGNEW(alist_t, item);
     if (list == NULL)
         RETURN(MFAIL, fox_eputs("add_list(): Abort\n"));
     list->i = i;
@@ -121,7 +121,7 @@ static inline void graph_remove(ME, pmorph_t thing)
         if (thing.type == ID
         ?   thing._id == tmp->i
         :   thing._pt == tmp || thing._pt == tmp->head)
-            DESTROY(alist_t, me->graph[tmp->i]);
+            FGDESTROY(alist_t, me->graph[tmp->i]);
         else
             tmp->vt->remove(tmp, thing);
     }

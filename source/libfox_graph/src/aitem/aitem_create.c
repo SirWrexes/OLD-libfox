@@ -13,7 +13,7 @@ static void *i_abort(aitem_t this, str3c_t errstr)
     fox_eputs("AItem:");
     fox_eputs(errstr);
     fox_eputs("\n");
-    DESTROY(aitem_t, this);
+    FGDESTROY(aitem_t, this);
     return NULL;
 }
 

@@ -529,11 +529,14 @@ Test(graph, vt_fetch)
     cr_expect_eq(list, test->vt->fetch(test, MORPH(PT, list)));
 }
 
-Test(graph, vt_remove)
+Test(graph, vt_remove_mfail)
 {
     FGVAR(graph_t, test, 1, NULL);
 
     cr_assert_not_null(test, "%s", strerror(errno));
+    test->vt->remove(test, MORPH(XX, 0));
+    test->vt->remove(test, MORPH(PT, NULL));
+    test->vt->remove(test, MORPH(ID, 150));
 }
 
 Test(graph, vt_flush)

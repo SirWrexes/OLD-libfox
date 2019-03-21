@@ -136,30 +136,12 @@ DEP         :=	$(OBJ:.o=.d)
 
 .DEFAULT_GOAL := all
 .PHONY: all
-all: syncsubs $(LFOX) $(PROJECT)
+all: $(LFOX) $(PROJECT)
 
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
 	@echo "[$(PROJECT) | $(CC)] OK → $@"                                        | cat
-
-.PHONY: syncsubs
-syncsubs:
-	@if ! [ -e ./.git/.foxinit ];                                                                   \
-	then                                                                                            \
-	    echo    "[Git]: Updating and initializing submodule(s)."                | cat;              \
-	    git     submodule --quiet update --init --recursive -f;                                     \
-	    echo    "[Git]: Synchronizing submodule(s)."                            | cat;              \
-	    git     submodule --quiet sync --recursive;                                                 \
-	    echo -n "This file ensures git submodules are initialized"              >> ./.git/.foxinit; \
-	    echo    "and synced just once."                                         >> ./.git/.foxinit; \
-	    echo    "You can delete it if you want/need and know what you're doing.">> ./.git/.foxinit; \
-	fi
-	@echo  "[Git]: Checking out master on submodule(s)."                        | cat
-	@git   submodule --quiet foreach git checkout master
-	@echo  "[Git]: Pulling latest commits from submodule(s)."                   | cat
-	@git   submodule --quiet foreach git pull
-
 
 .PHONY: $(LFOX)
 $(LFOX):

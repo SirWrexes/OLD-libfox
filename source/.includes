@@ -1,13 +1,19 @@
-DIR_DEFINE  :=  ../..
-DIR_GRAPH   :=  ../libfox_graph
-DIR_IO      :=  ../libfox_io
-DIR_MATH    :=  ../libfox_math
-DIR_MEMORY  :=  ../libfox_memory
-DIR_STRING  :=  ../libfox_string
-MODULES     :=  $(DIR_DEFINE)
-MODULES     +=  $(DIR_GRAPH)
-MODULES     +=  $(DIR_IO)
-MODULES     +=  $(DIR_MATH)
-MODULES     +=  $(DIR_MEMORY)
-MODULES     +=  $(DIR_STRING)
-INCLUDES    :=  $(foreach mod,$(MODULES),-iquote $(mod)/include)
+DIR_DEFINE  :=	../..
+DIR_GRAPH   :=	../libfox_graph
+DIR_IO      :=	../libfox_io
+DIR_MATH    :=	../libfox_math
+DIR_MEMORY  :=	../libfox_memory
+DIR_STRING  :=	../libfox_string
+
+MODULES     :=	$(DIR_DEFINE)
+MODULES     +=	$(DIR_GRAPH)
+MODULES     +=	$(DIR_IO)
+MODULES     +=	$(DIR_MATH)
+MODULES     +=	$(DIR_MEMORY)
+MODULES     +=	$(DIR_STRING)
+INCLUDES    :=	$(foreach mod,$(MODULES),-iquote $(mod)/include)
+
+ifneq "$(NAME)" "memory"
+  TFLAGS    +=	-iquote $(DIR_MEMORY)/tests/include
+  TSRC      +=	$(DIR_MEMORY)/tests/malloc_wrapper.c
+endif

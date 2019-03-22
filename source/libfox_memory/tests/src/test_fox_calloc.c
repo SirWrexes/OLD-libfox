@@ -6,7 +6,10 @@
 */
 
 #include "fox_memory.h"
+#include "test_malloc.h"
 #include <criterion/criterion.h>
+
+TestSuite(calloc, .fini = reset_malloc_cpt);
 
 Test(calloc, regular_usage)
 {
@@ -22,3 +25,17 @@ Test(calloc, null_size)
 
     cr_expect_null(str);
 }
+
+Test(calloc, null_size2)
+{
+    char *str = fox_calloc(42, 0);
+
+    cr_expect_null(str);
+}
+
+Test(calloc, broken_malloc)
+{
+    break_malloc_at(0);
+    cr_expect_null(fox_calloc(42, sizeof(char*)));
+}
+

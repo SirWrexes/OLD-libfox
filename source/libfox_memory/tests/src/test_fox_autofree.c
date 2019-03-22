@@ -9,12 +9,15 @@
 #include <stddef.h>
 #include <signal.h>
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
 
 void *proc_autofree(size_t n)
 {
     CLEANUP_PT void *ptr = malloc(n);
     return ptr;
 }
+
+TestSuite(autofree, .init = cr_redirect_stderr);
 
 Test(autofree, regular_usage, .signal = SIGABRT)
 {

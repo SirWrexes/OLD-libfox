@@ -11,6 +11,7 @@
 #include <stddef.h>
 #include <signal.h>
 #include <criterion/criterion.h>
+#include <criterion/redirect.h>
 
 __attribute__ ((noinline))
 static FILE *proc_autoclose_fp()
@@ -28,6 +29,8 @@ static int proc_autoclose_fd()
     cr_expect_neq(fd, -1);
     return fd;
 }
+
+TestSuite(autoclose_fp, .init = cr_redirect_stderr);
 
 Test(autoclose_fp, regular_usage, .signal = SIGABRT)
 {

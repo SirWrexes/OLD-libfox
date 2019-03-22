@@ -65,7 +65,18 @@ Test(mwrap, no_break)
     free(str);
 }
 
-Test(mwrap, break_at_n)
+Test(mwrap, break_at_1)
+{
+    char *str = NULL;
+
+    break_malloc_at(1);
+    str = malloc(3 * sizeof(*str));
+    cr_assert_null(str);
+    free(str);
+    str = NULL;
+}
+
+Test(mwrap, break_at_4)
 {
     char *str = NULL;
 

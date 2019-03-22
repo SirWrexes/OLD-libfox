@@ -84,15 +84,10 @@ $(TARGET): $(OBJ)
 
 $(TESTS): CFLAGS += $(TFLAGS)
 $(TESTS):
-	$(CC)       -o  $(TESTS) $(CFLAGS) $(PSRC) $(TSRC)
-	@echo                           | cat
-	@echo                           | cat
-	@echo "[$(NAME)]: unit tests"   | cat
-	@printf "\tfox_cleanup tests produce double free exceptions.\n"                         | cat
-	@printf "\t\tIt's part of the testing process. They're intended to happen.\n"           | cat
-	@echo                                                                                   | cat
-	@printf "\tfox_allocbytes produces undefined results.\n"                                | cat
-	@printf "\t\tIts tests may fail and you shouldn't use the function at all for now.\n"   | cat
+	@$(CC)  -o  $(TESTS) $(CFLAGS) $(PSRC) $(TSRC)
+	@echo                             | cat
+	@echo                             | cat
+	@echo   "[$(NAME)]: unit tests"   | cat
 	@./$(TESTS) $(TRFLAGS)
 	@rm -f **test_*.gc*
 	@$(GCOV) -sb

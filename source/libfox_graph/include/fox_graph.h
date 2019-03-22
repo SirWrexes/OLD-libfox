@@ -223,7 +223,7 @@ struct alist_s {
 
 // contains() and fetch() act exactly the same way except
 //   - contains returns a boolean value
-//   - fetch returns the item you're looking for
+//   - fetch returns the list you're looking for
 // The algorithm still is 100% identical.
 // Same goes for list_contains
 

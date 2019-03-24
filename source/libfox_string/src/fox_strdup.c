@@ -9,8 +9,8 @@
 
 str_t fox_strdup(str3c_t src)
 {
-    int   i;
-    char *dest = NULL;
+    int i;
+    str_t dest = NULL;
 
     if (src == NULL)
         return NULL;

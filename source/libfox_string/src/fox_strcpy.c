@@ -16,7 +16,7 @@ str_t fox_strcpy(str_t dst, str3c_t src)
 
     for (i = 0; i < len1 && i < len2; i += 1)
         dst[i] = src[i];
-    for (i -= 1 ; i < len1 ; i += 1)
+    for (i -= 1; i < len1; i += 1)
         dst[i] = '\0';
     return dst;
 }
@@ -30,7 +30,7 @@ str_t fox_strncpy(str_t dst, str3c_t src, size_t n)
 
     for (i = 0; i < n && i < len1 && i < len2; i += 1)
         dst[i] = src[i];
-    for (i -= 1 ; i < len1 ; i += 1)
+    for (i -= 1; i < len1; i += 1)
         dst[i] = '\0';
     return dst;
 }

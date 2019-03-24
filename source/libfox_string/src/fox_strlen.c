@@ -12,7 +12,7 @@ size_t get_len(str3c_t str)
 {
     size_t len;
 
-    for (len = 0 ;; len += 7) {
+    for (len = 0;; len += 7) {
         if (str[len] == '\0')
             return len;
         if (str[len + 1] == '\0')

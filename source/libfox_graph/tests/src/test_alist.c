@@ -11,13 +11,15 @@
 #include <errno.h>
 #include <string.h>
 #include "private/p_foxgraph.h"
+#include "test_malloc.h"
 
-static void reset_errno(void)
+static void init(void)
 {
     errno = 0;
+    cr_redirect_stderr();
 }
 
-TestSuite(alist, .init = reset_errno);
+TestSuite(alist, .init = init, .fini = reset_malloc_cpt);
 
 Test(alist, create_empty)
 {
@@ -245,6 +247,36 @@ Test(alist, vt_remove_iptr)
         ".head = %p, .last = %p", test->head, test->last);
 }
 
+Test(alist, vt_remove_head_id)
+{
+    FGVAR(alist_t, test, "Can't touch this");
+
+    cr_assert_not_null(test);
+    test->vt->remove(test, MORPH(ID, test->head->i));
+}
+
+Test(alist, vt_remove_head_pt)
+{
+    FGVAR(alist_t, test, "Cant touch this");
+
+    cr_assert_not_null(test);
+    test->vt->add_item(test, &test);
+    cr_expect_eq(test->size, 2, ".size = %zu", test->size);
+    test->vt->remove(test, MORPH(PT, test->head));
+    cr_expect_null(test);
+}
+
+Test(alist, vt_remove_head_iptr)
+{
+    FGVAR(alist_t, test, "Cant touch this");
+
+    cr_assert_not_null(test);
+    test->vt->add_item(test, &test);
+    cr_expect_eq(test->size, 2, ".size = %zu", test->size);
+    test->vt->remove(test, MORPH(PT, test->head->iptr));
+    cr_expect_null(test);
+}
+
 Test(alist, vt_remove_mfail)
 {
     FGVAR(alist_t, test, "Cant touch this");
@@ -273,4 +305,29 @@ Test(alist, vt_flush)
     test->vt->flush(test);
     cr_expect_eq(test->size, 1);
 
+}
+
+Test(alist, broken_malloc_creation)
+{
+    break_malloc_at(1);
+    cr_assert_null(FGNEW(alist_t, (void*)0x01));
+    cr_expect_stderr_eq_str("AList: Creation failed.\n");
+}
+
+Test(alist, broken_malloc_item_creation)
+{
+    break_malloc_at(2);
+    cr_assert_null(FGNEW(alist_t, (void*)0x01));
+    cr_expect_stderr_eq_str(
+        "AItem: Creation failed.\n"
+        "AList: Item creation failed.\n");
+}
+
+Test(alist, broken_malloc_additem)
+{
+    FGVAR(alist_t, test, NULL);
+
+    break_malloc_at(1);
+    cr_assert_eq(test->vt->add_item(test, &test), MFAIL);
+    cr_expect_stderr_eq_str("AItem: Creation failed.\n");
 }

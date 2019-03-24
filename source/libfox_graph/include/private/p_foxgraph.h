@@ -10,9 +10,7 @@
 
 #include <stddef.h>
 #include "fox_graph.h"
-
-size_t fox_strlen(str3c_t str) __a((pure));
-ssize_t fox_eputs(str3c_t str);
-str_t fox_strdup(str3c_t str);
+#include "fox_io.h"
+#include "fox_string.h"
 
 #endif //LIBFOX_FOXGRAPH_H

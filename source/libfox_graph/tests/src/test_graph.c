@@ -11,13 +11,15 @@
 #include <errno.h>
 #include <string.h>
 #include "private/p_foxgraph.h"
+#include "test_malloc.h"
 
-static void reset_errno(void)
+static void init(void)
 {
     errno = 0;
+    cr_redirect_stderr();
 }
 
-TestSuite(graph, .init = reset_errno);
+TestSuite(graph, .init = init, .fini = reset_malloc_cpt);
 
 Test(graph, create_unnamed)
 {
@@ -53,6 +55,7 @@ Test(graph, create_invalid_size)
     FGVAR(graph_t, test, 0, NULL);
 
     cr_assert_null(test, "test = %p", test);
+    cr_expect_stderr_eq_str("Graph: Invalid size.\n");
 }
 
 Test(graph, destroy)
@@ -610,4 +613,25 @@ Test(graph, vt_flush)
     cr_expect_eq(test->graph[0]->size, 1, "0sz = %zu", test->graph[0]->size);
     cr_expect_eq(test->graph[1]->size, 1, "1sz = %zu", test->graph[1]->size);
     cr_expect_eq(test->graph[2]->size, 1, "2sz = %zu", test->graph[2]->size);
+}
+
+Test(graph, broken_malloc_creation)
+{
+    break_malloc_at(1);
+    cr_assert_null(FGNEW(graph_t, 1, NULL));
+    cr_expect_stderr_eq_str("Graph: Creation failed.\n");
+}
+
+Test(graph, broken_malloc_array)
+{
+    break_malloc_at(2);
+    cr_assert_null(FGNEW(graph_t, 1, NULL));
+    cr_expect_stderr_eq_str("Graph: Array allocation failed.\n");
+}
+
+Test(graph, broken_malloc_name)
+{
+    break_malloc_at(3);
+    cr_assert_null(FGNEW(graph_t, 1, "I'M GONNA WRECK IT"));
+    cr_expect_stderr_eq_str("Graph: Name assignation failed.\n");
 }

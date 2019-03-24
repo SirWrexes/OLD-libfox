@@ -83,7 +83,7 @@ $(TARGET): $(OBJ)
 
 $(TESTS): CFLAGS += $(TFLAGS)
 $(TESTS):
-	$(CC)       -o  $(TESTS) $(CFLAGS) $(PSRC) $(TSRC)
+	@$(CC)       -o  $(TESTS) $(CFLAGS) $(PSRC) $(TSRC)
 	@echo                                 | cat
 	@echo                                 | cat
 	@echo       "[$(NAME)]: unit tests"   | cat

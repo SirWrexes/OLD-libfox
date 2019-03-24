@@ -5,8 +5,11 @@
 ** fox_strdup
 */
 
-#include <criterion/criterion.h>
 #include "fox_string.h"
+#include "test_malloc.h"
+#include <criterion/criterion.h>
+
+TestSuite(strdup, .fini = reset_malloc_cpt);
 
 Test(strdup, null_string)
 {
@@ -15,21 +18,29 @@ Test(strdup, null_string)
 
 Test(strdup, empty_array)
 {
-    char *arr = {0};
+    str_t arr = {0};
 
     cr_expect_null(fox_strdup(arr));
 }
 
 Test(strdup, empty_string)
 {
-    char *dest = fox_strdup("");
+    str_t str = fox_strdup("");
 
-    cr_expect_str_eq(dest, "");
+    cr_assert_not_null(str);
+    cr_expect_str_eq(str, "");
 }
 
 Test(strdup, normal_string)
 {
-    char *str = fox_strdup("Never argue with the data.");
+    str_t str = fox_strdup("Never argue with the data.");
 
+    cr_assert_not_null(str);
     cr_expect_str_eq(str, "Never argue with the data.");
+}
+
+Test(strdup, broken_malloc)
+{
+    break_malloc_at(1);
+    cr_expect_null(fox_strdup("c kassé :("));
 }

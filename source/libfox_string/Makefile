@@ -5,81 +5,85 @@
 ## Slave Makefile
 ##
 
-SHELL		=	/bin/sh
-CC			?=	gcc
+SHELL       =	/bin/sh
+CC          ?=	gcc
 
 ############
-NAME		=	string
-TARGET		=	libfox_$(NAME).a
-TESTS		=	tests_$(NAME)
+NAME        =	string
+TARGET      =	libfox_$(NAME).a
+TESTS       =	tests_$(NAME)
 ######
-PINC		+=	./include
-PDIR		+=	./src
+PINC        +=	./include
+PDIR        +=	./src
  #
-TINC		+=	./tests/include
-TDIR		+=	./tests/src
+TINC        +=	./tests/include
+TDIR        +=	./tests/src
 ######
-VPATH		=	$(PDIR):$(PINC):$(TDIR):$(TINC)
+VPATH       =	$(PDIR):$(PINC):$(TDIR):$(TINC)
 ############
 
 ############
-PSRC		+=	$(PDIR)/fox_atoi.c
-PSRC		+=	$(PDIR)/fox_isnum.c
-PSRC		+=	$(PDIR)/fox_revstr.c
-PSRC		+=	$(PDIR)/fox_strcmp.c
-PSRC		+=	$(PDIR)/fox_strdup.c
-PSRC		+=	$(PDIR)/fox_strlen.c
+PSRC        +=	$(PDIR)/fox_atoi.c
+PSRC        +=	$(PDIR)/fox_isnum.c
+PSRC        +=	$(PDIR)/fox_revstr.c
+PSRC        +=	$(PDIR)/fox_strcmp.c
+PSRC        +=	$(PDIR)/fox_strdup.c
+PSRC        +=	$(PDIR)/fox_strlen.c
  #
-TSRC		+=	$(TDIR)/test_fox_atoi.c
-TSRC		+=	$(TDIR)/test_fox_isnum.c
-TSRC		+=	$(TDIR)/test_fox_revstr.c
-TSRC		+=	$(TDIR)/test_fox_strcmp.c
-TSRC		+=	$(TDIR)/test_fox_strdup.c
-TSRC		+=	$(TDIR)/test_fox_strlen.c
+TSRC        +=	$(TDIR)/test_fox_atoi.c
+TSRC        +=	$(TDIR)/test_fox_isnum.c
+TSRC        +=	$(TDIR)/test_fox_revstr.c
+TSRC        +=	$(TDIR)/test_fox_strcmp.c
+TSRC        +=	$(TDIR)/test_fox_strdup.c
+TSRC        +=	$(TDIR)/test_fox_strlen.c
 ############
 
 ############
-OBJ			=	$(PSRC:%.c=%.o)
-DEP			=	$(OBJ:.o=.d)
-.PRECIOUS	=	$(DEP)
+OBJ         =	$(PSRC:%.c=%.o)
+DEP         =	$(OBJ:.o=.d)
+.PRECIOUS   =	$(DEP)
 -include $(DEP)
 ############
 
 ############
 include ../.includes
-CFLAGS		+=	$(INCLUDES) -iquote $(PINC)
-CFLAGS		+=	-Wall -Wextra
-CFLAGS		+=	-Werror
+CFLAGS      +=	$(INCLUDES) -iquote $(PINC)
+CFLAGS      +=	-Wall -Wextra
+CFLAGS      +=	-Werror
  #
-TFLAGS		+=	$(CFLAGS)
-TFLAGS		+=	-iquote $(TINC)
-TFLAGS		+=  --coverage -lcriterion
-TFLAGS		+=	-D LIBFOX_UT
+TFLAGS      +=	-D LIBFOX_UT
+TFLAGS      +=	-iquote $(TINC)
+TFLAGS      +=	--coverage -lcriterion
+TFLAGS      +=	$(WRAPPERS)
  #
-TRFLAGS		+=	--always-succeed --timeout 5
+WR_MALLOC   :=	-Wl,--wrap=malloc
+WRAPPERS    +=	$(WR_MALLOC)
+ #
+TRFLAGS     +=	--always-succeed --timeout 5
 ############
 
 .DEFAULT_GOAL := $(TARGET)
 $(TARGET): $(OBJ)
-	@if [ -e $@ ];			\
-	then					\
-		echo "Updating $@";	\
-		ar ru $@ $^;		\
-	else					\
-		echo "Creating $@";	\
-		ar rc $@ $^;		\
+	@if [ -e $@ ];          \
+	then                    \
+	    echo "Updating $@"; \
+	    ar ru $@ $^;        \
+	else                    \
+	    echo "Creating $@"; \
+	    ar rc $@ $^;        \
 	fi
 
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo "[$(NAME) | $(CC)] OK → $@"
+	@$(CC)  $(CFLAGS) -c -o $@ $<
+	@echo   "[$(NAME) | $(CC)] OK → $@"
 
+$(TESTS): CFLAGS += $(TFLAGS)
 $(TESTS):
-	@$(CC) -o $(TESTS) $(TFLAGS) $(PSRC) $(TSRC)
-	@echo							| cat
-	@echo							| cat
-	@echo "[$(NAME)]: unit tests"	| cat
+	@$(CC) -o $(TESTS) $(CFLAGS) $(PSRC) $(TSRC)
+	@echo                           | cat
+	@echo                           | cat
+	@echo "[$(NAME)]: unit tests"   | cat
 	-@./$(TESTS)
 	@rm -f **test_*.gc*
 	@gcovr -sb
@@ -97,10 +101,10 @@ fclean: clean
 	@rm -f $(DEP)
 	@echo "[$(NAME)]: Deleting $(TARGET)"
 	@rm -f $(TARGET)
-	@if [ -e $(TESTS) ];						\
-	then										\
-		echo "[$(NAME)]: Deleting $(TESTS)";	\
-		rm -f $(TESTS);							\
+	@if [ -e $(TESTS) ];                        \
+	then                                        \
+	    echo "[$(NAME)]: Deleting $(TESTS)";    \
+	    rm -f $(TESTS);                         \
 	fi
 
 re:	fclean $(TARGET)

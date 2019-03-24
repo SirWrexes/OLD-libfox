@@ -46,7 +46,7 @@ void fpf_init(size_t acmax, farg_t formatargs[acmax])
 }
 
 extern __a((nonnull, format(printf, 2,3)))
-ssize_t fox_fprintf(int fd, char const * const fstr, ...)
+ssize_t fox_dprintf(int fd, str3c_t fstr, ...)
 {
     va_list ap;
     size_t i = 0;

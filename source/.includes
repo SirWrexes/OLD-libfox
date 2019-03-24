@@ -15,5 +15,5 @@ INCLUDES    :=	$(foreach mod,$(MODULES),-iquote $(mod)/include)
 
 ifneq "$(NAME)" "memory"
   TFLAGS    +=	-iquote $(DIR_MEMORY)/tests/include
-  TSRC      +=	$(DIR_MEMORY)/tests/malloc_wrapper.c
+  TSRC      +=	$(DIR_MEMORY)/tests/test_malloc.c
 endif

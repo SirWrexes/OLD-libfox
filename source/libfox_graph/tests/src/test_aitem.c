@@ -11,13 +11,20 @@
 #include <errno.h>
 #include <string.h>
 #include "private/p_foxgraph.h"
+#include "test_malloc.h"
 
-static void reset_errno(void)
+struct dummy {
+    char *str;
+    int n;
+};
+
+static void init(void)
 {
     errno = 0;
+    cr_redirect_stderr();
 }
 
-TestSuite(aitem, .init = reset_errno);
+TestSuite(aitem, .init = init, .fini = reset_malloc_cpt);
 
 Test(aitem_create, create_string)
 {
@@ -30,11 +37,6 @@ Test(aitem_create, create_string)
     cr_expect_null(test->next, ".next = %p", test->next);
     cr_expect_not(test->i, ".i = %zu", test->i);
 }
-
-struct dummy {
-    char *str;
-    int n;
-};
 
 Test(aitem, create_structure)
 {
@@ -83,4 +85,11 @@ Test(aitem, destroy_in_list, .signal = SIGSEGV)
     cr_expect_eq(test2->i, 1, "test2->i = %zu", test2->i);
     cr_expect_eq(test3->i, 2, "test3->i = %zu", test3->i);
     test->i += 1;
+}
+
+Test(aitem, broken_malloc)
+{
+    break_malloc_at(1);
+    cr_assert_null(FGNEW(aitem_t, (void*)0x01));
+    cr_expect_stderr_eq_str("AItem: Creation failed.\n");
 }

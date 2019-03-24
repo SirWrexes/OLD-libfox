@@ -60,21 +60,21 @@ ssize_t fox_eputullong(ullong_t nbr);
 ssize_t fox_fputullong(int fd, ullong_t nbr);
 
 // Write an unsigned int in given base
-size_t fox_putuint_base(uint nbr, str3c_t base)            __a((nonnull));
-size_t fox_eputuint_base(uint nbr, str3c_t base)           __a((nonnull));
-size_t fox_fputuint_base(int fd, uint nbr, str3c_t base)   __a((nonnull));
+size_t fox_putuint_base(uint nbr, str3c_t base) __a((nonnull));
+size_t fox_eputuint_base(uint nbr, str3c_t base) __a((nonnull));
+size_t fox_fputuint_base(int fd, uint nbr, str3c_t base) __a((nonnull));
 
 // Write an unsigned long long in given base
-size_t fox_putullong_base(ullong_t nbr, str3c_t base)          __a((nonnull));
-size_t fox_eputullong_base(ullong_t nbr, str2c_t base)         __a((nonnull));
+size_t fox_putullong_base(ullong_t nbr, str3c_t base) __a((nonnull));
+size_t fox_eputullong_base(ullong_t nbr, str2c_t base) __a((nonnull));
 size_t fox_fputullong_base(int fd, ullong_t nbr, str2c_t base) __a((nonnull));
 
-__a((nonnull, format(printf, 2,3)))
+__a((nonnull, format(printf, 2, 3)))
 ssize_t fox_dprintf(int fd, char const *fstr, ...); // fPrintf replica
 
 #undef fox_printf
 #undef fox_eprintf
-#define fox_printf(fstr, ...)  fox_dprintf(1, (fstr), ##__VA_ARGS__)
+#define fox_printf(fstr, ...) fox_dprintf(1, (fstr), ##__VA_ARGS__)
 #define fox_eprintf(fstr, ...) fox_dprintf(2, (fstr), ##__VA_ARGS__)
 
 #endif //LIBFOX_LIBFOX_DISPLAY_H

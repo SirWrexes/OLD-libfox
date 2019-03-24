@@ -5,26 +5,12 @@
 ** Adjacency list item
 */
 
-#include <criterion/criterion.h>
-#include <criterion/redirect.h>
-#include <signal.h>
-#include <errno.h>
-#include <string.h>
-#include "private/p_foxgraph.h"
-#include "test_malloc.h"
+#include "test_suites.h"
 
-struct dummy {
+typedef struct dummy_s {
     char *str;
     int n;
-};
-
-static void init(void)
-{
-    errno = 0;
-    cr_redirect_stderr();
-}
-
-TestSuite(aitem, .init = init, .fini = reset_malloc_cpt);
+} dummy_t;
 
 Test(aitem_create, create_string)
 {
@@ -40,19 +26,19 @@ Test(aitem_create, create_string)
 
 Test(aitem, create_structure)
 {
-    struct dummy dumdum = {.str = "durp", .n = 12};
-    struct dummy *mudmud = NULL;
+    dummy_t dumdum = {.str = "durp", .n = 12};
+    dummy_t *mudmud = NULL;
     FGVAR(aitem_t, test, &dumdum);
 
     cr_assert_not_null(test, "%s", strerror(errno));
     cr_expect_eq(test->type, MT_ITEM, ".type = %d", test->type);
     cr_expect_eq(test->iptr, &dumdum,
-        ".iptr = %p, &dumdum = %p", test->iptr, &dumdum);
+    ".iptr = %p, &dumdum = %p", test->iptr, &dumdum);
     mudmud = test->iptr;
     cr_expect_eq(mudmud->n, dumdum.n,
-        "mudmud->n = %d, dumdum.n = %d", mudmud->n, dumdum.n);
+    "mudmud->n = %d, dumdum.n = %d", mudmud->n, dumdum.n);
     cr_expect_str_eq(mudmud->str, dumdum.str,
-        "mudmud->str = %s, dumdum.str = %s", mudmud->str, dumdum.str);
+    "mudmud->str = %s, dumdum.str = %s", mudmud->str, dumdum.str);
     cr_expect_null(test->next, ".next = %p", test->next);
     cr_expect_not(test->i, ".i = %zu", test->i);
 }

@@ -27,9 +27,9 @@ ssize_t print_integer(int fd, farg_t const * const arg)
         return print_integer_small(fd, arg);
     else if (arg->lenmodif <= LM_LLONG)
         if (arg->lenmodif == LM_LONG)
-            return fox_fputllong(fd, arg->argvalue.l);
+            return fox_fputllong(fd, arg->argvalue.ld);
         else
-            return fox_fputllong(fd, arg->argvalue.ll);
+            return fox_fputllong(fd, arg->argvalue.lld);
     else
         return fox_fputullong(fd, arg->argvalue.ull);
 }

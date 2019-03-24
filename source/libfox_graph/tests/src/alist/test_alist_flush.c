@@ -20,5 +20,4 @@ Test(alist, vt_flush)
     cr_expect_eq(test->size, 6, ".size = %zu", test->size);
     test->vt->flush(test);
     cr_expect_eq(test->size, 1);
-
 }

@@ -18,20 +18,15 @@
 #define ME alist_t me
 
 #undef UNALLOWED_THING
-#define UNALLOWED_THING(thing)                  \
-(                                               \
-    ((thing).type != PT && (thing).type != ID)  \
-    ||                                          \
-    ((thing).type == PT && (thing)._pt == NULL) \
-)
+#define UNALLOWED_THING(thing)\
+(((thing).type != PT && (thing).type != ID)\
+|| ((thing).type == PT && (thing)._pt == NULL))
 
 #undef MATCH
-#define MATCH(thing, x)                                 \
-(                                                       \
-    (thing).type == ID                                  \
-    ? (thing)._id == (x)->i                             \
-    : (thing)._pt == (x) || (thing)._pt == (x)->iptr    \
-)
+#define MATCH(thing, x) \
+((thing).type == ID \
+? (thing)._id == (x)->i \
+: (thing)._pt == (x) || (thing)._pt == (x)->iptr)
 
 static inline ssize_t alist_additem(ME, void *iptr)
 {

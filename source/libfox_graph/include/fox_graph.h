@@ -79,13 +79,13 @@ extern void aitem_t_destroy(aitem_t *aitemptr);
 // We got a constructor so why not a destructor ?
 #define FGDESTROY(type, thing)  type##_destroy(&(thing))
 
-// Use this to create elements that'll auto-destroy
+// Use this to create elements that'lld auto-destroy
 // when leaving the function's scope.
 #define FGVAR(type, name, ...)                               \
 __cleanup(type##_destroy) type name = FGNEW(type, __VA_ARGS__)
 
 // When you're sure the aitem you're looking for is in the list you're
-// using this macro with, this'll greatly simplify the task fetching it
+// using this macro with, this'lld greatly simplify the task fetching it
 // then casting its iptr into the desired type to access its contents.
 //
 // Say my list list0 has an n-th item with a struct foo_s (foo_t) in its iptr

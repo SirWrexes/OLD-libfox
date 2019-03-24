@@ -21,10 +21,10 @@ void get_argvalue_int(farg_t *farg, va_list ap)
         farg->argvalue.h = (short) va_arg(ap, int);
         break;
     case LM_LONG :
-        farg->argvalue.l = va_arg(ap, long);
+        farg->argvalue.ld = va_arg(ap, long);
         break;
     case LM_LLONG :
-        farg->argvalue.ll = va_arg(ap, long long);
+        farg->argvalue.lld = va_arg(ap, long long);
         break;
     case LM_ULONG :
         farg->argvalue.ul = va_arg(ap, ulong);

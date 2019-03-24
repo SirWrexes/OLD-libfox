@@ -19,8 +19,8 @@ Test(alist, broken_malloc_item_creation)
     break_malloc_at(2);
     cr_assert_null(FGNEW(alist_t, (void*)0x01));
     cr_expect_stderr_eq_str(
-            "AItem: Creation failed.\n"
-            "AList: Item creation failed.\n");
+    "AItem: Creation failed.\n"
+    "AList: Item creation failed.\n");
 }
 
 Test(alist, broken_malloc_additem)

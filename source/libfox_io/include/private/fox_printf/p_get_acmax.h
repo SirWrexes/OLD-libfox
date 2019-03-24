@@ -15,7 +15,7 @@ static inline size_t _get_acmax_(char const * const fstr)
 {
     size_t acmax = 0;
 
-    for (size_t i = 0 ; fstr[i] ; i += 1)
+    for (size_t i = 0; fstr[i]; i += 1)
         acmax += (fstr[i] == '%');
     return acmax;
 }

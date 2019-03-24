@@ -40,7 +40,7 @@ void fpf_init(size_t acmax, farg_t formatargs[acmax])
         formatargs[i].convspec = 0;
         formatargs[i].flagmask = 0;
         formatargs[i].lenmodif = 0;
-        formatargs[i].argvalue.ll = 0;
+        formatargs[i].argvalue.lld = 0;
     }
     formatargs[acmax - 1].convspec = CS_SENTINEL;
 }

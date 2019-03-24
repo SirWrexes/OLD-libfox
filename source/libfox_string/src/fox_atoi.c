@@ -22,7 +22,7 @@ int fox_atoi(str_t str)
     bool isneg = false;
 
     if (!IS_NUM(str[0])
-    &&  ('\0' != str[1] && !IS_NUM(str[1]) && !IS_SIGN(str[0])))
+        && ('\0' != str[1] && !IS_NUM(str[1]) && !IS_SIGN(str[0])))
         return 0;
     if (str[0] == '-')
         isneg = true;

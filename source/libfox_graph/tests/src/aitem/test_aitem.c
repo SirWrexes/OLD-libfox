@@ -5,7 +5,7 @@
 ** Adjacency list item
 */
 
-#include "test_suites.h"
+#include "test_include.h"
 
 typedef struct dummy_s {
     char *str;

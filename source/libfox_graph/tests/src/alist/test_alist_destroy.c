@@ -5,7 +5,7 @@
 ** Adjacency list
 */
 
-#include "test_suites.h"
+#include "test_include.h"
 
 Test(alist, destroy, .signal = SIGABRT)
 {

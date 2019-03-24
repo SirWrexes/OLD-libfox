@@ -5,7 +5,7 @@
 ** Graph
 */
 
-#include "test_suites.h"
+#include "test_include.h"
 
 Test(graph, create_unnamed)
 {

@@ -5,19 +5,7 @@
 ** Adjacency list
 */
 
-#include "test_suites.h"
-
-Test(alist, destroy, .signal = SIGABRT)
-{
-    aitem_t item = NULL;
-    alist_t test = FGNEW(alist_t, "oui");
-
-    cr_assert_not_null(test, "%s", strerror(errno));
-    item = test->head;
-    FGDESTROY(alist_t, test);
-    cr_expect_null(test);
-    free(item);
-}
+#include "test_include.h"
 
 Test(alist, vt_add_one_to_empty)
 {
@@ -57,4 +45,14 @@ Test(alist, vt_add_one_to_non_empty)
     ".head.iptr = %s", test->head->iptr);
     cr_expect_str_eq(test->last->iptr, "je ne sais pas",
     ".last.iptr = %s", test->last->iptr);
+}
+
+Test(alist, add_duplicate)
+{
+    FGVAR(alist_t, test, &test);
+
+    cr_assert_not_null(test);
+    cr_expect_eq(test->size, 1, ".size = %zu", test->size);
+    cr_expect_eq(test->vt->add_item(test, &test), test->head->i);
+    cr_expect_eq(test->size, 1, ".size = %zu", test->size);
 }

@@ -18,11 +18,11 @@ static char const base[36] = {
 };
 
 enum {
-    A   ,
-    B   ,
+    A,
+    B,
     BASE,
-    POW ,
-    NEG ,
+    POW,
+    NEG,
     KEY_COUNT
 };
 
@@ -40,10 +40,10 @@ long getlong(str3c_t str, char **endptr, size_t i[KEY_COUNT])
     size_t x = 0;
     size_t y = 0;
 
-    for (i[B] -= 1 ; i[B] >= i[A] ; i[B] -= 1) {
-        for (n = 0
-        ;   n < 36 && CHAR_TOUPPER(str[i[B]]) != is_base36(str[i[B]])
-        ;   n += 1);
+    for (i[B] -= 1; i[B] >= i[A]; i[B] -= 1) {
+        for (n = 0;
+        n < 36 && CHAR_TOUPPER(str[i[B]]) != is_base36(str[i[B]]);
+        n += 1);
         x = n * fox_pow(i[BASE], i[POW]++);
         if (y > 0 && ret > LONG_MAX - y)
             return LONG_MAX;
@@ -63,10 +63,10 @@ static bool get_base_and_sign(str3c_t str, size_t base, size_t i[KEY_COUNT])
         return true;
     if (str[i[A]] == '0') {
         i[A] += 1;
-        if (CHAR_TOUPPER(str[i[A]]) == 'X' && (!base  || base == 16)) {
+        if (CHAR_TOUPPER(str[i[A]]) == 'X' && (!base || base == 16)) {
             i[A] += 1;
             i[BASE] = 16;
-        } else if (str[i[A]] == '0' && (!base  || base == 16)) {
+        } else if (str[i[A]] == '0' && (!base || base == 16)) {
             i[A] += 1;
             i[BASE] = 8;
         } else
@@ -86,6 +86,6 @@ long fox_strtol(str3c_t str, char **endptr, size_t base)
     if (get_base_and_sign(str, base, i))
         return 0;
     i[B] = i[A];
-    for(; !IS_EOL(str[i[B]]) && is_base36(str[i[B]]); i[B] += 1);
+    for (; !IS_EOL(str[i[B]]) && is_base36(str[i[B]]); i[B] += 1);
     return getlong(str, endptr, i);
 }

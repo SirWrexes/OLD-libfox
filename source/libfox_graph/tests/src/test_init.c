@@ -5,7 +5,16 @@
 ** No description
 */
 
-#include "test_suites.h"
+#include "test_include.h"
+
+#define const
+#define int
+#define dummy(...) TestSuite(__VA_ARGS__)
+const int dummy(alist, .init = init, .fini = reset_malloc_cpt);
+const int dummy(aitem, .init = init, .fini = reset_malloc_cpt);
+const int dummy(graph, .init = init, .fini = reset_malloc_cpt);
+#undef const
+#undef int
 
 extern inline void init(void)
 {

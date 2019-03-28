@@ -45,7 +45,7 @@ void fpf_init(size_t acmax, farg_t formatargs[acmax])
     formatargs[acmax - 1].convspec = CS_SENTINEL;
 }
 
-extern __a((nonnull, format(printf, 2,3)))
+extern __a((nonnull, format(printf, 2, 3)))
 ssize_t fox_dprintf(int fd, str3c_t fstr, ...)
 {
     va_list ap;

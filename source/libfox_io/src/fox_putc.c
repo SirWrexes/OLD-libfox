@@ -21,4 +21,3 @@ extern inline ssize_t fox_putc(char c)
 {
     return fox_fputc(1, c);
 }
-

@@ -36,31 +36,3 @@ Test(atoi, uni_digit_neg)
 
     cr_expect_eq(fox_atoi(str), atoi(str));
 }
-
-Test(atoi, zero_pos)
-{
-    char *str = strdup("0");
-
-    cr_expect_eq(fox_atoi(str), atoi(str));
-}
-
-Test(atoi, zero_neg)
-{
-    char *str = strdup("-0");
-
-    cr_expect_eq(fox_atoi(str), atoi(str));
-}
-
-Test(atoi, garbage_then_number_pos)
-{
-    char *str = strdup("garbage42");
-
-    cr_expect_eq(fox_atoi(str), atoi(str));
-}
-
-Test(atoi, garbage_then_number_neg)
-{
-    char *str = strdup("junk then -5");
-
-    cr_expect_eq(fox_atoi(str), atoi(str));
-}

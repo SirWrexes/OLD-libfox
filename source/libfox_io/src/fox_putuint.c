@@ -11,7 +11,7 @@ ssize_t fox_fputuint(int fd, uint nbr)
 {
     char conv[fox_uintsize(nbr)];
     size_t len = 0;
-    ssize_t i  = 0;
+    ssize_t i = 0;
     ssize_t n;
 
     do {

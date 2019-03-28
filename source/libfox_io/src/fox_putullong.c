@@ -11,7 +11,7 @@ ssize_t fox_fputullong(int fd, ullong_t nbr)
 {
     char conv[fox_uintsize(nbr)];
     size_t len = 0;
-    ssize_t i  = 0;
+    ssize_t i = 0;
     ssize_t n;
 
     do {
@@ -36,4 +36,3 @@ ssize_t fox_putullong(ullong_t nbr)
 {
     return fox_fputullong(1, nbr);
 }
-

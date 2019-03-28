@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2019
-** libfox
+** libfox_graph
 ** File description:
-** No description
+** AList Virtual Table tests
 */
 
 #include "test_include.h"

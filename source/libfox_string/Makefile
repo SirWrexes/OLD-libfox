@@ -30,12 +30,18 @@ PSRC        +=	$(PDIR)/fox_strcmp.c
 PSRC        +=	$(PDIR)/fox_strdup.c
 PSRC        +=	$(PDIR)/fox_strlen.c
  #
-TSRC        +=	$(TDIR)/test_fox_atoi.c
-TSRC        +=	$(TDIR)/test_fox_isnum.c
+TSRC        +=	$(TDIR)/test_fox_atoi1.c
+TSRC        +=	$(TDIR)/test_fox_atoi2.c
+TSRC        +=	$(TDIR)/test_fox_isnum1.c
+TSRC        +=	$(TDIR)/test_fox_isnum2.c
+TSRC        +=	$(TDIR)/test_fox_isnum3.c
+TSRC        +=	$(TDIR)/test_fox_isnum4.c
 TSRC        +=	$(TDIR)/test_fox_revstr.c
-TSRC        +=	$(TDIR)/test_fox_strcmp.c
+TSRC        +=	$(TDIR)/test_fox_strcmp1.c
+TSRC        +=	$(TDIR)/test_fox_strcmp2.c
 TSRC        +=	$(TDIR)/test_fox_strdup.c
-TSRC        +=	$(TDIR)/test_fox_strlen.c
+TSRC        +=	$(TDIR)/test_fox_strlen1.c
+TSRC        +=	$(TDIR)/test_fox_strlen2.c
 ############
 
 ############

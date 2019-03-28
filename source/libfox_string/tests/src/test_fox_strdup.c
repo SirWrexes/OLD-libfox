@@ -9,7 +9,12 @@
 #include "test_malloc.h"
 #include <criterion/criterion.h>
 
-TestSuite(strdup, .fini = reset_malloc_cpt);
+#define const
+#define int
+#define dummy(...) TestSuite(__VA_ARGS__)
+const int dummy(strdup, .fini = reset_malloc_cpt);
+#undef const
+#undef int
 
 Test(strdup, null_string)
 {

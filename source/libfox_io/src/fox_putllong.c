@@ -10,9 +10,9 @@
 ssize_t fox_fputllong(int fd, llong_t nbr)
 {
     char conv[fox_intsize(nbr)];
-    bool   neg = nbr < 0;
+    bool neg = nbr < 0;
     size_t len = 0;
-    ssize_t i  = 0;
+    ssize_t i = 0;
 
     do {
         conv[len++] = ITOC(ABS(nbr) % 10);

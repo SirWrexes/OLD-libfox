@@ -5,8 +5,6 @@
 ** AList: Adjacency list constructor
 */
 
-#define FOXALIST_CONSTRUCTOR
-
 #include <malloc.h>
 #include "private/p_foxgraph.h"
 #include "private/p_vtalist.h"

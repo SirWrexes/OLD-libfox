@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <criterion/criterion.h>
 #include "test_malloc.h"
+#include "test_malloc_pre.h"
 
 typedef enum {
     MW_RESET,
@@ -41,14 +42,18 @@ void break_malloc_at(size_t n)
     counter(MW_SET, n);
 }
 
-void *__real_malloc(size_t size);
-void *__wrap_malloc(size_t size)
+#define real_malloc __real_malloc
+#define wrap_malloc __wrap_malloc
+void *real_malloc(size_t size);
+void *wrap_malloc(size_t size)
 {
     if (counter(MW_STEP, 1))
-        return __real_malloc(size);
+        return real_malloc(size);
     errno = ENOMEM;
     return NULL;
 }
+#undef real_malloc
+#undef wrap_malloc
 
 TestSuite(mwrap, .fini = reset_malloc_cpt);
 

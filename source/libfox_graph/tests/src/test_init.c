@@ -6,6 +6,7 @@
 */
 
 #include "test_include.h"
+#include "test_suite_trick.h"
 
 #define const
 #define int

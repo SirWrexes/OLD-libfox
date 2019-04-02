@@ -141,7 +141,7 @@ all: $(LFOX) $(PROJECT)
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo "[$(PROJECT) | $(CC)] OK → $@"                                        | cat
+	@echo -e "[$(PROJECT)] $(CGREEN)Compile OK ✓$(CRESET) $@"
 
 .PHONY: $(LFOX)
 $(LFOX):
@@ -151,36 +151,36 @@ $(LFOX):
 $(PROJECT): LDLIBS := $(LDLIBS) $(FOXMODULES)
 $(PROJECT): $(OBJ)
 $(PROJECT): $(MAIN:.c=.o)
-	@echo  "[$(PROJECT)]: Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)]: CC      = $(CC)                                       | cat
-	@echo  "[$(PROJECT)]: OBJECTS = $^"                                         | cat
-	@echo  "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                                  | cat
-	@echo  "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                                 | cat
-	@echo  "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                                  | cat
+	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
+	@echo  "[$(PROJECT)] CC      = $(CC)                                       | cat
+	@echo  "[$(PROJECT)] OBJECTS = $^"                                         | cat
+	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
+	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
+	@echo  "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                                  | cat
 	@$(CC) -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 	@echo  "[$(PROJECT) | linking] OK"                                          | cat
 
 $(PROJECT)_gdb: SRC    += $(MAIN)
 $(PROJECT)_gdb: CFLAGS += -g
 $(PROJECT)_gdb:
-	@echo  "[$(PROJECT)]: Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)]: CC      = $(CC)                                       | cat
-	@echo  "[$(PROJECT)]: SOURCES = $(SRC)"                                     | cat
-	@echo  "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                                  | cat
-	@echo  "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                                 | cat
-	@echo  "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                                  | cat
+	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
+	@echo  "[$(PROJECT)] CC      = $(CC)                                       | cat
+	@echo  "[$(PROJECT)] SOURCES = $(SRC)"                                     | cat
+	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
+	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
+	@echo  "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                                  | cat
 	$(CC)  -o $(PROJECT) $(SRC) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 	@echo  "[$(PROJECT) | linking] OK"                                          | cat
 
 $(PROJECT)_valgrind: CFLAGS += -g3
 $(PROJECT)_valgrind: $(OBJ)
 $(PROJECT)_valgrind: $(MAIN:.c=.o)
-	@echo  "[$(PROJECT)]: Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)]: CC      = $(CC)                                       | cat
-	@echo  "[$(PROJECT)]: OBJECTS = $^"                                         | cat
-	@echo  "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                                  | cat
-	@echo  "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                                 | cat
-	@echo  "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                                  | cat
+	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
+	@echo  "[$(PROJECT)] CC      = $(CC)                                       | cat
+	@echo  "[$(PROJECT)] OBJECTS = $^"                                         | cat
+	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
+	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
+	@echo  "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                                  | cat
 	$(CC)  -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 	@echo  "[$(PROJECT) | linking] OK"                                          | cat
 
@@ -190,47 +190,47 @@ $(TESTBIN): CFLAGS  += $(WRAPPERS)
 $(TESTBIN): LDFLAGS += $(TLDFLAGS)
 $(TESTBIN): LDLIBS  += $(TLDLIBS)  $(FOXMODULES)
 $(TESTBIN): $(LFOX)
-	@echo         "[$(PROJECT)]: Testing lib$(LFOX)"                            | cat
+	@echo         "[$(PROJECT)] Testing lib$(LFOX)"                            | cat
 	@$(MAKE)      $(FOXDIR) tests
-	@echo         "[$(PROJECT)]: Testing project"                               | cat
-	@echo         "[$(PROJECT)]: Linking with follwing options (ordered):"      | cat
-	@echo         "[$(PROJECT)]: CC      = $(CC)                                | cat
-	@echo         "[$(PROJECT)]: OBJECTS = $^"                                  | cat
-	@echo         "[$(PROJECT)]: CFLAGS  = $(CFLAGS)"                           | cat
-	@echo         "[$(PROJECT)]: LDFLAGS = $(LDFLAGS)"                          | cat
-	@echo         "[$(PROJECT)]: LDLIBS  = $(LDLIBS)"                           | cat
+	@echo         "[$(PROJECT)] Testing project"                               | cat
+	@echo         "[$(PROJECT)] Linking with follwing options (ordered):"      | cat
+	@echo         "[$(PROJECT)] CC      = $(CC)                                | cat
+	@echo         "[$(PROJECT)] OBJECTS = $^"                                  | cat
+	@echo         "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                           | cat
+	@echo         "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                          | cat
+	@echo         "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                           | cat
 	@$(CC)        $(CFLAGS) -o $(TESTBIN) $(SRC) $(LDFLAGS) $(LDLIBS)
 	@echo         "[$(PROJECT) | linking] OK"                                   | cat
 	@./$(TESTBIN) $(TRUNFLAGS)
-	@echo         "[$(PROJECT)]: Fetching lib$(LFOX) coverage files"            | cat
+	@echo         "[$(PROJECT)] Fetching lib$(LFOX) coverage files"            | cat
 	@-$(CP)       $(PDIR) $(FOX_COVRG) 2>/dev/null
-	@echo         "[$(PROJECT)]: Moving test sources coverage files"            | cat
+	@echo         "[$(PROJECT)] Moving test sources coverage files"            | cat
 	@$(MV)        $(TDIR) test_*.gc*
-	@echo         "[$(PROJECT)]: Complete coverage report"                      | cat
+	@echo         "[$(PROJECT)] Complete coverage report"                      | cat
 	@$(GCOV)      --exclude-directories tests 2>/dev/null
 
 .PHONY: clean
 clean:
-	@echo    "[$(PROJECT)]: Removing coverage files"                            | cat
+	@echo    "[$(PROJECT)] Removing coverage files"                            | cat
 	@-$(RM)  *.gc* tests/*.gc*
-	@echo    "[$(PROJECT)]: Removing object files"                              | cat
+	@echo    "[$(PROJECT)] Removing object files"                              | cat
 	@-$(RM)  $(OBJ) $(MAIN:.c=.o)
-	@echo    "[$(PROJECT)]: Cleaning slave targets"                             | cat
+	@echo    "[$(PROJECT)] Cleaning slave targets"                             | cat
 	@$(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) $(mod)-clean;)
 
 .PHONY: fclean
 fclean:
-	@echo     "[$(PROJECT)]: Removing dependency files"                         | cat
+	@echo     "[$(PROJECT)] Removing dependency files"                         | cat
 	@-$(RM)   $(DEP) $(MAIN:.c=.d)
-	@echo     "[$(PROJECT)]: Removing coverage files"                           | cat
+	@echo     "[$(PROJECT)] Removing coverage files"                           | cat
 	@-$(RM)   *.gc* tests/*.gc*
-	@echo     "[$(PROJECT)]: Removing object files"                             | cat
+	@echo     "[$(PROJECT)] Removing object files"                             | cat
 	@-$(RM)   $(OBJ)
-	@echo     "[$(PROJECT)]: Removing binary"                                   | cat
+	@echo     "[$(PROJECT)] Removing binary"                                   | cat
 	@-$(RM)   $(PROJECT)
-	@echo     "[$(PROJECT)]: Removing test binary"                              | cat
+	@echo     "[$(PROJECT)] Removing test binary"                              | cat
 	@-$(RM)   $(TESTBIN)
-	@echo     "[$(PROJECT)]: Cleaning slave targets"                            | cat
+	@echo     "[$(PROJECT)] Cleaning slave targets"                            | cat
 	@$(MAKE)  $(FOXDIR) fclean
 
 .PHONY: re

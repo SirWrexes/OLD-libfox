@@ -14,7 +14,7 @@
 #include <criterion/redirect.h>
 
 __attribute__ ((noinline))
-static FILE *proc_autoclose_fp()
+static FILE *proc_autoclose_fp(void)
 {
     CLEANUP_FP FILE *ptr = fopen("Makefile", "r");
 
@@ -22,7 +22,7 @@ static FILE *proc_autoclose_fp()
 }
 
 __attribute__ ((noinline))
-static int proc_autoclose_fd()
+static int proc_autoclose_fd(void)
 {
     CLEANUP_FD int fd = open("Makefile", O_RDONLY);
 

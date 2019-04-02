@@ -6,11 +6,7 @@
 */
 
 #include "test_include.h"
-
-typedef struct dummy_s {
-    char *str;
-    int n;
-} dummy_t;
+#include "t_aitem.h"
 
 Test(aitem_create, create_string)
 {

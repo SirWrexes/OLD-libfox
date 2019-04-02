@@ -5,10 +5,6 @@
 ** No description
 */
 
-#ifndef FOXALIST_CONSTRUCTOR
-#error "vtables should be included only in their corresponding constructors"
-#endif
-
 #ifndef LIBFOX_VTALIST_H
 #define LIBFOX_VTALIST_H
 

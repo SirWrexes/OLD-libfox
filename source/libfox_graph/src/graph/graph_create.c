@@ -5,8 +5,6 @@
 ** Graph constructor
 */
 
-#define FOXGRAPH_CONSTRUCTOR
-
 #include <malloc.h>
 #include "private/p_foxgraph.h"
 #include "private/p_vtgraph.h"
@@ -42,5 +40,3 @@ extern graph_t graph_t_create(size_t size, str3c_t name)
     this->type = MT_GRAPH;
     return this;
 }
-
-#undef FOXGRAPH_CONSTRUCTOR

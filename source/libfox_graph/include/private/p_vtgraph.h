@@ -5,10 +5,6 @@
 ** Graph: Graph virtual table
 */
 
-#ifndef FOXGRAPH_CONSTRUCTOR
-#error "vtables should be included only in their corresponding constructors"
-#endif
-
 #ifndef LIBFOX_VTABLES_H
 #define LIBFOX_VTABLES_H
 

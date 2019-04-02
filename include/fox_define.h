@@ -62,7 +62,7 @@
     #define ITOC(i) ((char) ((i) + '0'))
 
     // True if c is a printable ASCII char
-    #define CHAR_PRINTABLE(c) ((c) >= 32 && (c) <= 176)
+    #define CHAR_PRINTABLE(c) ((c) >= 32 && (c) <= 126)
 
     // If an alphabetical character is lowercase, make it uppercase
     #define CHAR_TOUPPER(c)  ((c) >= 'a' && (c) <= 'z' ? (c) - 32 : (c))

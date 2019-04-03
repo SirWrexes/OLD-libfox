@@ -5,6 +5,14 @@
 ## Master Makefile
 ##
 
+################################################################################
+################################################################################
+##                                                                            ##
+##                               SETTINGS                                     ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 #
 # Fundamentals
 ##############################
@@ -20,7 +28,6 @@ CC           =	gcc
 #CC          =	clang
 #------------------------------
 .DEFAULT_GOAL := all
-.ONESHELL := true
 ##############################
 
 #
@@ -79,6 +86,49 @@ WRAPPERS    +=	$(WR_MALLOC)
 ##############################
 
 #
+# Colours
+##########################################
+CRESET      :=	\033[0m
+
+# \033[38;2;<R>;<G>;<B>m
+CRED        :=	\033[38;2;255;0;0m
+CGREEN      :=	\033[38;2;0;255;0m
+CBLUE       :=	\033[38;2;0;0;255m
+CLIGHTBLUE  :=	\033[38;2;88;255;250m
+##########################################
+
+#
+# Customized implicit rules
+##########################################
+%.a:
+	@if [ -e $@ ];                                             \
+	then                                                       \
+	    echo -e "[$(NAME)] Updating $(CLIGHTBLUE)@$(CRESET)";  \
+	    ar ru $@ $^;                                           \
+	else                                                       \
+	    echo -e "[$(NAME)] Creating $(CLIGHTBLUE)$@$(CRESET)"; \
+	    ar rc $@ $^;                                           \
+	fi
+#------------------------------
+%.o: CFLAGS += -MT $@ -MMD
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo -e "[$(NAME)] $(CGREEN)Compile OK ✓$(CRESET) $@"
+##########################################
+
+
+
+
+
+################################################################################
+################################################################################
+##                                                                            ##
+##                               SOURCES                                      ##
+##                                                                            ##
+################################################################################
+################################################################################
+
+#
 # Graph sources
 ##############################
 SRC_GRAPH   +=	$(DIR_GRAPH)/src/aitem/aitem_create.c
@@ -93,7 +143,9 @@ SRC_GRAPH   +=	$(DIR_GRAPH)/src/graph/graph_destroy.c
 libfox_graph.a: $(DIR_IO)/src/fox_puts.o
 libfox_graph.a: $(DIR_STRING)/src/fox_strdup.o
 libfox_graph.a: $(DIR_STRING)/src/fox_strlen.o
-##########################################
+##############################
+
+
 
 #
 # IO sources
@@ -120,7 +172,9 @@ SRC_IO      +=	$(DIR_IO)/src/fox_printf/va_args_value.c
 #-- Dependencies
 libfox_io.a: $(DIR_MATH)/src/fox_nbsize.o
 libfox_io.a: $(DIR_STRING)/src/fox_strlen.o
-##########################################
+##############################
+
+
 
 #
 # Math sources
@@ -130,7 +184,9 @@ SRC_MATH    +=	$(DIR_MATH)/src/fox_pow.c
 
 #-- Dependencies
 # NONE
-##########################################
+##############################
+
+
 
 #
 # Memory sources
@@ -146,7 +202,9 @@ SRC_MEMORY  +=	$(DIR_MEMORY)/src/cleanup/fox_autofree.c
 
 #-- Dependencies
 # NONE
-##########################################
+##############################
+
+
 
 #
 # String sources
@@ -157,11 +215,15 @@ SRC_STRING  +=	$(DIR_STRING)/src/fox_revstr.c
 SRC_STRING  +=	$(DIR_STRING)/src/fox_strcmp.c
 SRC_STRING  +=	$(DIR_STRING)/src/fox_strdup.c
 SRC_STRING  +=	$(DIR_STRING)/src/fox_strlen.c
+SRC_STRING  +=	$(DIR_STRING)/src/fox_strspn.c
+SRC_STRING  +=	$(DIR_STRING)/src/fox_strtok.c
 %-string: SRC := $(SRC_STRING)
 
 #-- Dependencies
 # NONE
-##########################################
+##############################
+
+
 
 #
 # Test sources
@@ -170,7 +232,6 @@ SRC_STRING  +=	$(DIR_STRING)/src/fox_strlen.c
 SRC_TESTS   +=	$(DIR_TEST)/test_init.c
 SRC_TESTS   +=	$(DIR_TEST)/test_malloc.c
 #-- Graph
-SRC_TESTS   +=	$(DIR_TEST)/graph/suites_graph.c
 SRC_TESTS   +=	$(DIR_TEST)/graph/aitem/test_aitem.c
 SRC_TESTS   +=	$(DIR_TEST)/graph/alist/test_alist_additem.c
 SRC_TESTS   +=	$(DIR_TEST)/graph/alist/test_alist_brokenmalloc.c
@@ -194,21 +255,22 @@ SRC_TESTS   +=	$(DIR_TEST)/graph/graph/test_graph_listcontains1.c
 SRC_TESTS   +=	$(DIR_TEST)/graph/graph/test_graph_listcontains2.c
 SRC_TESTS   +=	$(DIR_TEST)/graph/graph/test_graph_listcontains3.c
 SRC_TESTS   +=	$(DIR_TEST)/graph/graph/test_graph_remove.c
+SRC_TESTS   +=	$(DIR_TEST)/graph/suites_graph.c
 #-- IO
+SRC_TESTS   +=	$(DIR_TEST)/io/fox_printf/test_global_n.c
 SRC_TESTS   +=	$(DIR_TEST)/io/test_fox_putc.c
 SRC_TESTS   +=	$(DIR_TEST)/io/test_fox_putint.c
 SRC_TESTS   +=	$(DIR_TEST)/io/test_fox_puts.c
-SRC_TESTS   +=	$(DIR_TEST)/io/fox_printf/test_global_n.c
 #-- Math
 SRC_TESTS   +=	$(DIR_TEST)/math/test_fox_nbsize.c
 #-- Memory
 SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_allocbytes.c
+SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_autoclose.c
+SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_autofree.c
 SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_calloc.c
 SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_memcpy.c
 SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_memset.c
 SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_realloc.c
-SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_autofree.c
-SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_autoclose.c
 #-- String
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_atoi1.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_atoi2.c
@@ -222,51 +284,19 @@ SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strcmp2.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strdup.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strlen1.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strlen2.c
-##########################################
-
-#
-# Colours
-##########################################
-CRESET      :=	\033[0m
-
-# \033[38;2;<R>;<G>;<B>m
-CRED        :=	\033[38;2;255;0;0m
-CGREEN      :=	\033[38;2;0;255;0m
-CBLUE       :=	\033[38;2;0;0;255m
-CLIGHTBLUE  :=	\033[38;2;88;255;250m
-##########################################
-
-
-#
-# Customized implicit rules
-##########################################
-%.a:
-	@if [ -e $@ ];                                             \
-	then                                                       \
-	    echo -e "[$(NAME)] Updating $(CLIGHTBLUE)@$(CRESET)";  \
-	    ar ru $@ $^;                                           \
-	else                                                       \
-	    echo -e "[$(NAME)] Creating $(CLIGHTBLUE)$@$(CRESET)"; \
-	    ar rc $@ $^;                                           \
-	fi
-#------------------------------
-%.o: CFLAGS += -MT $@ -MMD
-%.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo -e "[$(NAME)] $(CGREEN)Compile OK ✓$(CRESET) $@"
-##########################################
+SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strspn.c
+SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strtok.c
+##############################
 
 
 
-##########################################
-##########################################
-##                                      ##
-##                                      ##
-##              Reciepes                ##
-##                                      ##
-##                                      ##
-##########################################
-##########################################
+################################################################################
+################################################################################
+##                                                                            ##
+##                              RECEIPES                                      ##
+##                                                                            ##
+################################################################################
+################################################################################
 
 ############################
 ##          ALL           ##
@@ -283,6 +313,7 @@ tests: $(TESTBIN)
 	@$(GCOV) $(COVFLAGS)
 	@./$(TESTBIN) $(RUNFLAGS)
 
+.PHONY: $(TESTBIN)
 $(TESTBIN): CFLAGS += $(TFLAGS)
 $(TESTBIN): RUNFLAGS = --always-succeed --timeout 5
 $(TESTBIN):

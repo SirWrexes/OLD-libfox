@@ -35,4 +35,11 @@ str_t fox_strncpy(str_t dst, str3c_t src) __a((nonnull));
 // Returns a pointer to a newly created duplicate of src string
 str_t fox_strdup(str3c_t src) __a((malloc));
 
+// String tokenizer
+str_t fox_strtok(str_t str, str3c_t delim);
+
+// Returns the length of a prefix substring
+size_t fox_strspn(str3c_t str, str3c_t accept) __a((nonnull));
+size_t fox_strcspn(str3c_t str, str3c_t reject) __a((nonnull));
+
 #endif //LIBFOX_FOX_STRING_H

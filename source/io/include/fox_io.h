@@ -70,7 +70,7 @@ size_t fox_eputullong_base(ullong_t nbr, str2c_t base) __a((nonnull));
 size_t fox_fputullong_base(int fd, ullong_t nbr, str2c_t base) __a((nonnull));
 
 __a((nonnull, format(printf, 2, 3)))
-ssize_t fox_dprintf(int fd, char const *fstr, ...); // fPrintf replica
+ssize_t fox_dprintf(int fd, char const *fstr, ...); // dprintf replica
 
 #undef fox_printf
 #undef fox_eprintf

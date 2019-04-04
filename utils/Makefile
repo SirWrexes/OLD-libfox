@@ -5,6 +5,14 @@
 ## Main Makefile
 ##
 
+################################################################################
+################################################################################
+##                                                                            ##
+##                               SETTINGS                                     ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 #
 # Fundamentals
 ##############################
@@ -18,21 +26,76 @@ MV          =	mv -t
 GCOV        =	gcovr
 CC          =	gcc
 #CC          =	clang
+.DEFAULT_GOAL := all
 ##############################
+
+#
+# Colours
+##########################################
+CRESET      :=	\033[0m
+
+# \033[38;2;<R>;<G>;<B>m
+CRED        :=	\033[38;2;255;0;0m
+CGREEN      :=	\033[38;2;0;255;0m
+CBLUE       :=	\033[38;2;0;0;255m
+CLIGHTBLUE  :=	\033[38;2;88;255;250m
+##########################################
 
 #
 # Project architecture
 ##############################
 PDIR        =	.
 TDIR        =	$(PDIR)/tests
-#
+#------------------------------
 TSRC        =	$(TDIR)
 PSRC        =	$(PDIR)/src
-#
+#------------------------------
 TINC        =	$(TDIR)/include
 PINC        =	$(PDIR)/include
-#
+#------------------------------
 VPATH       =	$(PSRC):$(TSRC)
+##############################
+
+#
+# Custom compilation settings
+##############################
+DEFINE      +=
+#------------------------------
+INCLUDES    +=	-iquote $(PINC)
+INCLUDES    +=	-iquote $(TINC)
+#------------------------------
+CFLAGS      +=	$(DEFINE)
+CFLAGS      +=	$(INCLUDES)
+#------------------------------
+GCCFLAGS    +=	-Wall -Wextra
+GCCFLAGS    +=	-Werror
+CLANGFLAGS  +=	-Weverything
+ifeq ($(CC), clang)
+    CFLAGS += $(CLANGFLAGS)
+else
+    CFLAGS += $(GCCFLAGS)
+endif
+#------------------------------
+LDFLAGS     +=
+LDLIBS      +=
+##############################
+
+#
+# Test configuration
+##############################
+TDEFINE     +=	-D _TESTS_RUN_
+TLDLIBS     +=	-l criterion
+TLDFLAGS    +=	--coverage
+#------------------------------
+#WR_MALLOC   =	-Wl,--wrap=malloc
+WRAPPERS    +=	$(WR_MALLOC)
+#------------------------------
+TRUNFLAGS   +=	-S
+TRUNFLAGS   +=	--timeout 5
+TRUNFLAGS   +=	--always-succeed
+#------------------------------
+GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(TDIR))
+GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 ##############################
 
 #
@@ -64,10 +127,7 @@ LFOX_IO     =	io
 LFOX_MEMORY =	memory
 LFOX_STRING =	string
 #
-FOX_COVRG   +=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_GRAPH)/*.gc*
-FOX_COVRG   +=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_IO)/*.gc*
-FOX_COVRG   +=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_MEMORY)/*.gc*
-FOX_COVRG   +=	$(FOXSRC)/lib$(LFOXPREFIX)$(LFOX_STRING)/*.gc*
+FOX_COVRG   +=	$(FOXSRC)/*.gc*
 #
 FOXMODULES  :=	$(foreach mod,$(USEDMODULES),-l $(LFOXPREFIX)$(mod))
 #
@@ -75,66 +135,44 @@ INCLUDES    +=	-iquote $(FOXINC)
 LDFLAGS     +=	-L $(FOXDIR)
 ##############################
 
+################################################################################
+################################################################################
+##                                                                            ##
+##                               SOURCES                                      ##
+##                                                                            ##
+################################################################################
+################################################################################
 
 #
-# Custom compilation settings
-##############################
-DEFINE      +=
-#
-INCLUDES    +=	-iquote $(PINC)
-INCLUDES    +=	-iquote $(TINC)
-#
-CFLAGS      +=	$(DEFINE)
-CFLAGS      +=	$(INCLUDES)
-#
-GCCFLAGS    +=	-Wall -Wextra
-GCCFLAGS    +=	-Werror
-CLANGFLAGS  +=	-Weverything
-ifeq ($(CC), clang)
-    $(info --- $(PROJECT) Makefile config: Using CLANG compiler)
-    CFLAGS += $(CLANGFLAGS)
-else
-    $(info --- $(PROJECT) Makefile config: Using DEFAULT compiler [$(CC)])
-    CFLAGS += $(GCCFLAGS)
-endif
-#
-LDFLAGS     +=
-LDLIBS      +=
-##############################
-
-#
-# Test configuration
-##############################
-TDEFINE     +=	-D _TESTS_RUN_
-TLDLIBS     +=	-l criterion
-TLDFLAGS    +=	--coverage
-#
-#WR_MALLOC   =	-Wl,--wrap=malloc
-WRAPPERS    +=	$(WR_MALLOC)
-#
-TRUNFLAGS   +=	-S
-TRUNFLAGS   +=	--timeout 5
-TRUNFLAGS   +=	--always-succeed
-#
-GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(TDIR))
-GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
-##############################
-
-#
-# Sources
+# Project
 ##############################
 MAIN        :=
 SRC         +=
+##############################
+
 #
+# Test
+##############################
 TESTS       +=
+##############################
+
 #
+# Dependency automation & .o's
+##############################
 OBJ         :=	$(SRC:.c=.o)
-DEP         :=	$(OBJ:.o=.d)
+DEP         :=	$(OBJ:.o=.d) $(MAIN:.c=.d)
 -include $(DEP)
 .PRECIOUS := $(DEP)
 ##############################
 
-.DEFAULT_GOAL := all
+################################################################################
+################################################################################
+##                                                                            ##
+##                              RECEIPES                                      ##
+##                                                                            ##
+################################################################################
+################################################################################
+
 .PHONY: all
 all: $(LFOX) $(PROJECT)
 
@@ -216,7 +254,7 @@ clean:
 	@echo    "[$(PROJECT)] Removing object files"                              | cat
 	@-$(RM)  $(OBJ) $(MAIN:.c=.o)
 	@echo    "[$(PROJECT)] Cleaning slave targets"                             | cat
-	@$(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) $(mod)-clean;)
+	@$(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) clean-$(mod);)
 
 .PHONY: fclean
 fclean:

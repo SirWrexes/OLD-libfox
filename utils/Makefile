@@ -190,7 +190,7 @@ $(PROJECT): LDLIBS := $(LDLIBS) $(FOXMODULES)
 $(PROJECT): $(OBJ)
 $(PROJECT): $(MAIN:.c=.o)
 	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)] CC      = $(CC)                                       | cat
+	@echo  "[$(PROJECT)] CC      = $(CC)"                                      | cat
 	@echo  "[$(PROJECT)] OBJECTS = $^"                                         | cat
 	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
 	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
@@ -202,7 +202,7 @@ $(PROJECT)_gdb: SRC    += $(MAIN)
 $(PROJECT)_gdb: CFLAGS += -g
 $(PROJECT)_gdb:
 	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)] CC      = $(CC)                                       | cat
+	@echo  "[$(PROJECT)] CC      = $(CC)"                                      | cat
 	@echo  "[$(PROJECT)] SOURCES = $(SRC)"                                     | cat
 	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
 	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
@@ -214,7 +214,7 @@ $(PROJECT)_valgrind: CFLAGS += -g3
 $(PROJECT)_valgrind: $(OBJ)
 $(PROJECT)_valgrind: $(MAIN:.c=.o)
 	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)] CC      = $(CC)                                       | cat
+	@echo  "[$(PROJECT)] CC      = $(CC)"                                      | cat
 	@echo  "[$(PROJECT)] OBJECTS = $^"                                         | cat
 	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
 	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat

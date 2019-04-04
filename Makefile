@@ -103,7 +103,7 @@ CLIGHTBLUE  :=	\033[38;2;88;255;250m
 %.a:
 	@if [ -e $@ ];                                             \
 	then                                                       \
-	    echo -e "[$(NAME)] Updating $(CLIGHTBLUE)@$(CRESET)";  \
+	    echo -e "[$(NAME)] Updating $(CLIGHTBLUE)$@$(CRESET)"; \
 	    ar ru $@ $^;                                           \
 	else                                                       \
 	    echo -e "[$(NAME)] Creating $(CLIGHTBLUE)$@$(CRESET)"; \

@@ -261,10 +261,10 @@ $(TESTBIN): CFLAGS  += $(WRAPPERS)
 $(TESTBIN): LDFLAGS += $(TLDFLAGS)
 $(TESTBIN): LDLIBS  += $(TLDLIBS)
 $(TESTBIN): FILES   += $(SRC) $(TESTS)
-$(TESTBIN): $(LFOX)
 $(TESTBIN): $(SRC) $(TESTS)
 $(TESTBIN): build
 $(TESTBIN): $(LFOX)-tests
+$(TESTBIN): $(LFOX)
 	@./$(BIN) $(TRUNFLAGS) -q
 	@echo     "[$(PROJECT)] Complete coverage report"  | cat
 	@$(GCOV)  --exclude-directories tests 2>/dev/null

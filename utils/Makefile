@@ -2,8 +2,10 @@
 ## <COMPANY>, <YEAR>
 ## <PROJECT>
 ## File description:
-## Main Makefile
+## <DESCRIPTION>
 ##
+
+
 
 ################################################################################
 ################################################################################
@@ -26,20 +28,8 @@ MV          =	mv -t
 GCOV        =	gcovr
 CC          =	gcc
 #CC          =	clang
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := $(PROJECT)
 ##############################
-
-#
-# Colours
-##########################################
-CRESET      :=	\033[0m
-
-# \033[38;2;<R>;<G>;<B>m
-CRED        :=	\033[38;2;255;0;0m
-CGREEN      :=	\033[38;2;0;255;0m
-CBLUE       :=	\033[38;2;0;0;255m
-CLIGHTBLUE  :=	\033[38;2;88;255;250m
-##########################################
 
 #
 # Project architecture
@@ -57,12 +47,52 @@ VPATH       =	$(PSRC):$(TSRC)
 ##############################
 
 #
+# Don't touch that
+##############################
+LFOX        =	fox
+LFOXPREFIX  =	$(LFOX)_
+FOXDIR      =	$(PDIR)/lib$(LFOX)
+FOXSRC      =	$(FOXDIR)/source
+FOXINC      =	$(FOXDIR)/include
+#
+LFOX_GRAPH  =	graph
+LFOX_IO     =	io
+LFOX_MEMORY =	memory
+LFOX_STRING =	string
+#
+FOX_COVRG   +=	$(FOXSRC)/*.gc*
+#
+FOXMODULES  =	$(foreach mod,$(USEDMODULES),-l$(LFOXPREFIX)$(mod))
+#
+INCLUDES    =	-iquote$(FOXINC)
+LDFLAGS     =	-L$(FOXDIR)
+LDLIBS      =	$(FOXMODULES)
+##############################
+
+#
+# Colours/Format
+##########################################
+CRESET      :=	\033[0m
+
+# Colours
+# \033[38;2;<R>;<G>;<B>m
+CRED        :=	\033[38;2;255;0;0m
+CGREEN      :=	\033[38;2;0;255;0m
+CBLUE       :=	\033[38;2;0;0;255m
+CLIGHTBLUE  :=	\033[38;2;88;255;250m
+
+# Format
+CBOLD       :=	\033[1m
+CUNDERLN    :=	\033[4m
+##########################################
+
+#
 # Custom compilation settings
 ##############################
 DEFINE      +=
 #------------------------------
-INCLUDES    +=	-iquote $(PINC)
-INCLUDES    +=	-iquote $(TINC)
+INCLUDES    +=	-iquote$(PINC)
+INCLUDES    +=	-iquote$(TINC)
 #------------------------------
 CFLAGS      +=	$(DEFINE)
 CFLAGS      +=	$(INCLUDES)
@@ -84,7 +114,7 @@ LDLIBS      +=
 # Test configuration
 ##############################
 TDEFINE     +=	-D _TESTS_RUN_
-TLDLIBS     +=	-l criterion
+TLDLIBS     +=	-lcriterion
 TLDFLAGS    +=	--coverage
 #------------------------------
 #WR_MALLOC   =	-Wl,--wrap=malloc
@@ -113,27 +143,135 @@ GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 # making this. Please buy me a coffee.
 ##############################
 
-#
-# Don't touch that
-##############################
-LFOX        =	fox
-LFOXPREFIX  =	$(LFOX)_
-FOXDIR      =	$(PDIR)/lib$(LFOX)
-FOXSRC      =	$(FOXDIR)/source
-FOXINC      =	$(FOXDIR)/include
-#
-LFOX_GRAPH  =	graph
-LFOX_IO     =	io
-LFOX_MEMORY =	memory
-LFOX_STRING =	string
-#
-FOX_COVRG   +=	$(FOXSRC)/*.gc*
-#
-FOXMODULES  :=	$(foreach mod,$(USEDMODULES),-l $(LFOXPREFIX)$(mod))
-#
-INCLUDES    +=	-iquote $(FOXINC)
-LDFLAGS     +=	-L $(FOXDIR)
-##############################
+
+
+################################################################################
+################################################################################
+##                                                                            ##
+##                                RECIPES                                     ##
+##                                                                            ##
+################################################################################
+################################################################################
+
+%.o: CFLAGS += -MT $@ -MMD
+%.o: %.c
+	@$(CC) $(CFLAGS) -c -o $@ $<
+	@echo -e "[$(PROJECT)] $(CGREEN)Compile OK ✓$(CRESET) $@"
+
+.PHONY: $(LFOX)
+$(LFOX):
+	@if ( ! $(MAKE) $(FOXDIR) $(USEDMODULES) );                     \
+	then                                                            \
+	    echo    "[$(LFOX)]: Making modules {$(USEDMODULES)}" | cat; \
+	    $(MAKE) $(FOXDIR) $(USEDMODULES);                           \
+	fi
+
+.PHONY: $(LFOX)-tests
+$(LFOX)-tests:
+	@if ( ! $(MAKE) $(FOXDIR) tests );                \
+	then                                              \
+	    echo    "[$(LFOX)]: Making unit tests" | cat; \
+	    $(MAKE) $(FOXDIR) tests;                      \
+	fi
+
+.PHONY: $(LFOX)-clean
+$(LFOX)-clean:
+	@echo "[$(PROJECT)] Cleaning slave targets" | cat
+	@if [ -e $(FOXDIR)/unit_tests ];                                           \
+	then                                                                       \
+	    $(MAKE) $(FOXDIR) fclean;                                              \
+	else                                                                       \
+	    $(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) $(FOXCLEAN)-$(mod);)   \
+	fi
+
+
+.PHONY: build
+build:
+	@echo  -e  "[$(PROJECT)] $(CBOLD)Linking with follwing options (ordered):$(CRESET)"       | cat
+	@echo  -e  "[$(PROJECT)] $(CUNDERLN)CC$(CRESET)      = $(CC)"                             | cat
+	@echo  -ne "[$(PROJECT)] $(CUNDERLN)FILES$(CRESET)   = \n$(foreach i,$(FILES),\t$(i)\n)"  | cat
+	@echo  -ne "[$(PROJECT)] $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)" | cat
+	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)"| cat
+	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)" | cat
+	@$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	@echo  -e  "[$(PROJECT)] $(CGREEN)Linking OK$(CRESET)" | cat
+
+.PHONY: clean
+clean: FOXCLEAN = clean
+clean: $(LFOX)-clean
+	@echo    "[$(PROJECT)] Removing coverage files"       | cat
+	@-$(RM)  *.gc* tests/*.gc*
+	@echo    "[$(PROJECT)] Removing object files"         | cat
+	@-$(RM)  $(OBJ) $(MAIN:.c=.o)
+	@echo     "[$(PROJECT)] Removing dependency files"    | cat
+	@-$(RM)   $(DEP)
+
+.PHONY: fclean
+fclean: FOXCLEAN = fclean
+fclean: $(LFOX)-clean
+	@echo     "[$(PROJECT)] Removing coverage files"      | cat
+	@-$(RM)   *.gc* tests/*.gc*
+	@echo     "[$(PROJECT)] Removing object files"        | cat
+	@-$(RM)   $(OBJ) $(MAIN:.c=.o)
+	@echo     "[$(PROJECT)] Removing binary"              | cat
+	@-$(RM)   $(PROJECT) $(PROJECT)_gdb $(PROJECT)_vgd
+	@echo     "[$(PROJECT)] Removing test binary"         | cat
+	@-$(RM)   $(TESTBIN)
+
+.PHONY: re
+re:	fclean all
+
+
+
+################################################################################
+################################################################################
+##                                                                            ##
+##                               TARGETS                                      ##
+##                                                                            ##
+################################################################################
+################################################################################
+
+.PHONY: all
+all: $(PROJECT)
+
+$(PROJECT): BIN   = $(PROJECT)
+$(PROJECT): FILES = $(MAIN:.c=.o) $(OBJ)
+$(PROJECT): $(LFOX)
+$(PROJECT): $(MAIN:.c=.o) $(OBJ)
+$(PROJECT): build
+
+$(PROJECT)_gdb: BIN     = $(PROJECT)_gdb
+$(PROJECT)_gdb: CFLAGS += -g
+$(PROJECT)_gdb: FILES   = $(MAIN) $(SRC)
+$(PROJECT)_gdb: $(LFOX)
+$(PROJECT)_gdb: $(MAIN) $(SRC)
+$(PROJECT)_gdb: build
+
+
+$(PROJECT)_vgd: BIN     = $(PROJECT)_vgd
+$(PROJECT)_vgd: CFLAGS += -g3
+$(PROJECT)_vgd: FILES   = $(MAIN:.c=.o) $(OBJ)
+$(PROJECT)_vgd: $(LFOX)
+$(PROJECT)_vgd: $(MAIN:.c=.o) $(OBJ)
+$(PROJECT)_vgd: build
+
+$(TESTBIN): BIN      = $(TESTBIN)
+$(TESTBIN): DEFINE  += $(TDEFINE)
+$(TESTBIN): CFLAGS  += $(WRAPPERS)
+$(TESTBIN): LDFLAGS += $(TLDFLAGS)
+$(TESTBIN): LDLIBS  += $(TLDLIBS)
+$(TESTBIN): FILES   += $(SRC) $(TESTS)
+$(TESTBIN): $(LFOX)
+$(TESTBIN): $(SRC) $(TESTS)
+$(TESTBIN): build
+$(TESTBIN): $(LFOX)-tests
+	@./$(BIN) $(TRUNFLAGS) -q
+	@echo     "[$(PROJECT)] Complete coverage report"  | cat
+	@$(GCOV)  --exclude-directories tests 2>/dev/null
+	@echo     "[$(PROJECT)] Unit tests summary"        | cat
+	@./$(BIN) $(TRUNFLAGS)
+
+
 
 ################################################################################
 ################################################################################
@@ -147,6 +285,7 @@ LDFLAGS     +=	-L $(FOXDIR)
 # Project
 ##############################
 MAIN        :=
+#------------------------------
 SRC         +=
 ##############################
 
@@ -164,112 +303,3 @@ DEP         :=	$(OBJ:.o=.d) $(MAIN:.c=.d)
 -include $(DEP)
 .PRECIOUS := $(DEP)
 ##############################
-
-################################################################################
-################################################################################
-##                                                                            ##
-##                              RECEIPES                                      ##
-##                                                                            ##
-################################################################################
-################################################################################
-
-.PHONY: all
-all: $(LFOX) $(PROJECT)
-
-%.o: CFLAGS += -MT $@ -MMD
-%.o: %.c
-	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo -e "[$(PROJECT)] $(CGREEN)Compile OK ✓$(CRESET) $@"
-
-.PHONY: $(LFOX)
-$(LFOX):
-	@echo    "[$(LFOX)]: Making modules {$(USEDMODULES)}"                       | cat
-	@$(MAKE) $(FOXDIR) $(USEDMODULES)
-
-$(PROJECT): LDLIBS := $(LDLIBS) $(FOXMODULES)
-$(PROJECT): $(OBJ)
-$(PROJECT): $(MAIN:.c=.o)
-	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)] CC      = $(CC)"                                      | cat
-	@echo  "[$(PROJECT)] OBJECTS = $^"                                         | cat
-	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
-	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
-	@echo  "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                                  | cat
-	@$(CC) -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-	@echo  "[$(PROJECT) | linking] OK"                                          | cat
-
-$(PROJECT)_gdb: SRC    += $(MAIN)
-$(PROJECT)_gdb: CFLAGS += -g
-$(PROJECT)_gdb:
-	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)] CC      = $(CC)"                                      | cat
-	@echo  "[$(PROJECT)] SOURCES = $(SRC)"                                     | cat
-	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
-	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
-	@echo  "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                                  | cat
-	$(CC)  -o $(PROJECT) $(SRC) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-	@echo  "[$(PROJECT) | linking] OK"                                          | cat
-
-$(PROJECT)_valgrind: CFLAGS += -g3
-$(PROJECT)_valgrind: $(OBJ)
-$(PROJECT)_valgrind: $(MAIN:.c=.o)
-	@echo  "[$(PROJECT)] Linking with follwing options (ordered):"             | cat
-	@echo  "[$(PROJECT)] CC      = $(CC)"                                      | cat
-	@echo  "[$(PROJECT)] OBJECTS = $^"                                         | cat
-	@echo  "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                                  | cat
-	@echo  "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                                 | cat
-	@echo  "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                                  | cat
-	$(CC)  -o $(PROJECT) $^ $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-	@echo  "[$(PROJECT) | linking] OK"                                          | cat
-
-$(TESTBIN): DEFINE  += $(TDEFINE)
-$(TESTBIN): SRC     += $(TESTS)
-$(TESTBIN): CFLAGS  += $(WRAPPERS)
-$(TESTBIN): LDFLAGS += $(TLDFLAGS)
-$(TESTBIN): LDLIBS  += $(TLDLIBS)  $(FOXMODULES)
-$(TESTBIN): $(LFOX)
-	@echo         "[$(PROJECT)] Testing lib$(LFOX)"                            | cat
-	@$(MAKE)      $(FOXDIR) tests
-	@echo         "[$(PROJECT)] Testing project"                               | cat
-	@echo         "[$(PROJECT)] Linking with follwing options (ordered):"      | cat
-	@echo         "[$(PROJECT)] CC      = $(CC)                                | cat
-	@echo         "[$(PROJECT)] OBJECTS = $^"                                  | cat
-	@echo         "[$(PROJECT)] CFLAGS  = $(CFLAGS)"                           | cat
-	@echo         "[$(PROJECT)] LDFLAGS = $(LDFLAGS)"                          | cat
-	@echo         "[$(PROJECT)] LDLIBS  = $(LDLIBS)"                           | cat
-	@$(CC)        $(CFLAGS) -o $(TESTBIN) $(SRC) $(LDFLAGS) $(LDLIBS)
-	@echo         "[$(PROJECT) | linking] OK"                                   | cat
-	@./$(TESTBIN) $(TRUNFLAGS)
-	@echo         "[$(PROJECT)] Fetching lib$(LFOX) coverage files"            | cat
-	@-$(CP)       $(PDIR) $(FOX_COVRG) 2>/dev/null
-	@echo         "[$(PROJECT)] Moving test sources coverage files"            | cat
-	@$(MV)        $(TDIR) test_*.gc*
-	@echo         "[$(PROJECT)] Complete coverage report"                      | cat
-	@$(GCOV)      --exclude-directories tests 2>/dev/null
-
-.PHONY: clean
-clean:
-	@echo    "[$(PROJECT)] Removing coverage files"                            | cat
-	@-$(RM)  *.gc* tests/*.gc*
-	@echo    "[$(PROJECT)] Removing object files"                              | cat
-	@-$(RM)  $(OBJ) $(MAIN:.c=.o)
-	@echo    "[$(PROJECT)] Cleaning slave targets"                             | cat
-	@$(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) clean-$(mod);)
-
-.PHONY: fclean
-fclean:
-	@echo     "[$(PROJECT)] Removing dependency files"                         | cat
-	@-$(RM)   $(DEP) $(MAIN:.c=.d)
-	@echo     "[$(PROJECT)] Removing coverage files"                           | cat
-	@-$(RM)   *.gc* tests/*.gc*
-	@echo     "[$(PROJECT)] Removing object files"                             | cat
-	@-$(RM)   $(OBJ)
-	@echo     "[$(PROJECT)] Removing binary"                                   | cat
-	@-$(RM)   $(PROJECT)
-	@echo     "[$(PROJECT)] Removing test binary"                              | cat
-	@-$(RM)   $(TESTBIN)
-	@echo     "[$(PROJECT)] Cleaning slave targets"                            | cat
-	@$(MAKE)  $(FOXDIR) fclean
-
-.PHONY: re
-re:	fclean all

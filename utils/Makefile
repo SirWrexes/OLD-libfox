@@ -193,7 +193,7 @@ build: $(FILES)
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)" | cat
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)"| cat
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)" | cat
-	$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	@$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 	@echo  -e  "[$(PROJECT)] $(CGREEN)Linking OK$(CRESET)" | cat
 
 .PHONY: clean

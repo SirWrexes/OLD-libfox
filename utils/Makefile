@@ -148,7 +148,7 @@ GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 ################################################################################
 ################################################################################
 ##                                                                            ##
-##                                RECIPES                                     ##
+##                               RECEIPES                                     ##
 ##                                                                            ##
 ################################################################################
 ################################################################################
@@ -184,16 +184,16 @@ $(LFOX)-clean:
 	    $(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) $(FOXCLEAN)-$(mod);)   \
 	fi
 
-
 .PHONY: build
-build:
+build: $(FILES)
+	@$(MAKE) . $(FILES)
 	@echo  -e  "[$(PROJECT)] $(CBOLD)Linking with follwing options (ordered):$(CRESET)"       | cat
 	@echo  -e  "[$(PROJECT)] $(CUNDERLN)CC$(CRESET)      = $(CC)"                             | cat
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)FILES$(CRESET)   = \n$(foreach i,$(FILES),\t$(i)\n)"  | cat
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)" | cat
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)"| cat
 	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)" | cat
-	@$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
+	$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
 	@echo  -e  "[$(PROJECT)] $(CGREEN)Linking OK$(CRESET)" | cat
 
 .PHONY: clean
@@ -236,24 +236,18 @@ all: $(PROJECT)
 
 $(PROJECT): BIN   = $(PROJECT)
 $(PROJECT): FILES = $(MAIN:.c=.o) $(OBJ)
-$(PROJECT): $(LFOX)
-$(PROJECT): $(MAIN:.c=.o) $(OBJ)
-$(PROJECT): build
+$(PROJECT): $(LFOX) build
 
 $(PROJECT)_gdb: BIN     = $(PROJECT)_gdb
 $(PROJECT)_gdb: CFLAGS += -g
 $(PROJECT)_gdb: FILES   = $(MAIN) $(SRC)
-$(PROJECT)_gdb: $(LFOX)
-$(PROJECT)_gdb: $(MAIN) $(SRC)
-$(PROJECT)_gdb: build
+$(PROJECT)_gdb: $(LFOX) build
 
 
 $(PROJECT)_vgd: BIN     = $(PROJECT)_vgd
 $(PROJECT)_vgd: CFLAGS += -g3
 $(PROJECT)_vgd: FILES   = $(MAIN:.c=.o) $(OBJ)
-$(PROJECT)_vgd: $(LFOX)
-$(PROJECT)_vgd: $(MAIN:.c=.o) $(OBJ)
-$(PROJECT)_vgd: build
+$(PROJECT)_vgd: $(LFOX) build
 
 $(TESTBIN): BIN      = $(TESTBIN)
 $(TESTBIN): DEFINE  += $(TDEFINE)
@@ -261,10 +255,8 @@ $(TESTBIN): CFLAGS  += $(WRAPPERS)
 $(TESTBIN): LDFLAGS += $(TLDFLAGS)
 $(TESTBIN): LDLIBS  += $(TLDLIBS)
 $(TESTBIN): FILES   += $(SRC) $(TESTS)
-$(TESTBIN): $(SRC) $(TESTS)
-$(TESTBIN): build
 $(TESTBIN): $(LFOX)-tests
-$(TESTBIN): $(LFOX)
+$(TESTBIN): $(LFOX) build
 	@./$(BIN) $(TRUNFLAGS) -q
 	@echo     "[$(PROJECT)] Complete coverage report"  | cat
 	@$(GCOV)  --exclude-directories tests 2>/dev/null

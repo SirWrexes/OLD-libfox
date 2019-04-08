@@ -39,7 +39,7 @@ str_t fox_strdup(str3c_t src) __a((malloc));
 str_t fox_strtok(str_t str, str3c_t delim);
 
 // Returns the length of a prefix substring
-size_t fox_strspn(str3c_t str, str3c_t accept) __a((nonnull));
-size_t fox_strcspn(str3c_t str, str3c_t reject) __a((nonnull));
+size_t fox_strspn(str3c_t str, str3c_t accept) __a((pure));
+size_t fox_strcspn(str3c_t str, str3c_t reject) __a((pure));
 
 #endif //LIBFOX_FOX_STRING_H

@@ -37,6 +37,7 @@ str_t fox_strdup(str3c_t src) __a((malloc));
 
 // String tokenizer
 str_t fox_strtok(str_t str, str3c_t delim);
+str_t fox_strtok_r(str_t str, str3c_t delim, str_t *old);
 
 // Returns the length of a prefix substring
 size_t fox_strspn(str3c_t str, str3c_t accept) __a((pure));

@@ -16,21 +16,25 @@ bool is_delim(char c, str3c_t delims)
     return false;
 }
 
-__a((pure, nonnull))
+__a((pure))
 size_t fox_strspn(str3c_t str, str3c_t delims)
 {
     size_t i = 0;
 
+    if (str == NULL)
+        return 0;
     while (str[i] && is_delim(str[i], delims))
         i += 1;
     return i;
 }
 
-__a((pure, nonnull))
+__a((pure))
 size_t fox_strcspn(str3c_t str, str3c_t delims)
 {
     size_t i = 0;
 
+    if (str == NULL)
+        return 0;
     while (str[i] && !is_delim(str[i], delims))
         i += 1;
     return i;

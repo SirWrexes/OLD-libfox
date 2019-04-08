@@ -34,6 +34,8 @@
     #undef IS_ALPHAUP
     #undef IS_ALPHA
     #undef IS_NUM
+    #undef IS_PAIR
+    #undef IS_ODD
     #undef IS_ALPHANUM
     #undef IS_PUNCT
     #undef IS_SIGN
@@ -88,6 +90,12 @@
     // Check if a char is strictly numeric
     #define IS_NUM(c) ((c) >= '0' && (c) <= '9')
 
+    // Check if a number is pair
+    #define IS_PAIR(n) !((n) % 2)
+
+    // Check if a number is odd
+    #define IS_ODD(n) ((n) % 2)
+
     // Check if a char is strictly alphanumeric
     #define IS_ALPHANUM(c) (IS_ALPHA(c) || IS_NUM(c))
 
@@ -125,18 +133,31 @@
     #define RETURN(value, funcs...) return (0 ? : (funcs, value))
 #endif // LIBFOX_MACRO_DEF
 
-#ifndef CCSTR_TYPE
-    #define CCSTR_TYPE
+// I find it annoying to have to include <stddef.h> everwhere
+#ifndef NULL
+    #define NULL (void*) 0x0
+#endif
+
+#ifndef FOX_CCSTR_TYPE
+    #define VCCSTR_TYPE
     typedef char const * const * const  str4c_t;
     typedef char const * const          str3c_t;
     typedef char const *                str2c_t;
     typedef char *                      str_t;
-#endif // CCSTR_TYPE
+#endif // FOX_CCSTR_TYPE
 
-#ifndef LLONG_TYPE
-    #define LLONG_TYPE
+#ifndef FOX_LLONG_TYPE
+    #define FOX_LLONG_TYPE
     typedef          long long llong_t;
     typedef unsigned long long ullong_t;
-#endif // LLONG_TYPE
+#endif // FOX_LLONG_TYPE
+
+#ifndef FOX_WTAB_TYPE
+    #define FOX_WTAB_TYPE
+    typedef struct word_array_s {
+        size_t size;
+        str_t *word;
+    } wtab_t;
+#endif // FOX_WTAB_TYPE
 
 #endif // FOX_MACRO

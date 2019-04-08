@@ -23,7 +23,7 @@ str_t fox_strtok_r(str_t str, str3c_t delims, str_t *stock)
         return NULL;
     }
     end = str + fox_strcspn(str, delims);
-    *stock = end + (*end == '\0');
+    *stock = end + (*end != '\0');
     *end = '\0';
     return str;
 }

@@ -5,8 +5,8 @@
 ** Adjacency list item
 */
 
+
 #include "fox_graph.h"
-#include "test_include.h"
 #include "graph/test_graph_extra.h"
 
 Test(aitem_create, create_string)

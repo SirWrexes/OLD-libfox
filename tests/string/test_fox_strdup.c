@@ -8,8 +8,6 @@
 #include "fox_string.h"
 #include "test_include.h"
 
-tsuite_t test_suite(strdup, .fini = reset_malloc_cpt);
-
 Test(strdup, null_string)
 {
     cr_expect_null(fox_strdup(NULL));

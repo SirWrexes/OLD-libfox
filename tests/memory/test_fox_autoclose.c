@@ -25,8 +25,6 @@ static int proc_autoclose_fd(void)
     return fd;
 }
 
-tsuite_t test_suite(autoclose_fp, .init = cr_redirect_stderr);
-
 Test(autoclose_fp, regular_usage, .signal = SIGABRT)
 {
     FILE *test = proc_autoclose_fp();

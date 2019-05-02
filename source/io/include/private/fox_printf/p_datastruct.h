@@ -64,7 +64,7 @@ typedef struct {
     uint flagmask; // bit mask for flags
     lnmod_t lenmodif; // length modifier
     cspec_t convspec; // conversion specifier
-    fargv_t argvalue; // argument value
+    fargv_t value; // argument value
 } farg_t;
 
 #endif //LIBFOX_DATASTRUCT_H

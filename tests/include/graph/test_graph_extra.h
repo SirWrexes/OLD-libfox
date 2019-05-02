@@ -8,7 +8,7 @@
 #ifndef LIBFOX_TEST_GRAPH_EXTRA_H
 #define LIBFOX_TEST_GRAPH_EXTRA_H
 
-#include "../test_include.h"
+#include "test_include.h"
 #include "fox_graph.h"
 
 typedef struct dummy_s {

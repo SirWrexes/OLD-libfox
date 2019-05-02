@@ -12,22 +12,22 @@ void get_argvalue_int(farg_t *farg, va_list ap)
 {
     switch (farg->lenmodif) {
     default :
-        farg->argvalue.i = va_arg(ap, int);
+        farg->value.i = va_arg(ap, int);
         break;
     case LM_CHAR :
-        farg->argvalue.c = (char) va_arg(ap, int);
+        farg->value.c = (char) va_arg(ap, int);
         break;
     case LM_SHORT :
-        farg->argvalue.h = (short) va_arg(ap, int);
+        farg->value.h = (short) va_arg(ap, int);
         break;
     case LM_LONG :
-        farg->argvalue.ld = va_arg(ap, long);
+        farg->value.ld = va_arg(ap, long);
         break;
     case LM_LLONG :
-        farg->argvalue.lld = va_arg(ap, long long);
+        farg->value.lld = va_arg(ap, long long);
         break;
     case LM_ULONG :
-        farg->argvalue.ul = va_arg(ap, ulong);
+        farg->value.ul = va_arg(ap, ulong);
         break;
     }
 }
@@ -37,22 +37,22 @@ void get_argvalue_unsigned(farg_t *farg, va_list ap)
 {
     switch (farg->lenmodif) {
     default :
-        farg->argvalue.ui = va_arg(ap, uint);
+        farg->value.ui = va_arg(ap, uint);
         break;
     case LM_CHAR :
-        farg->argvalue.uc = (u_char) va_arg(ap, int);
+        farg->value.uc = (u_char) va_arg(ap, int);
         break;
     case LM_SHORT :
-        farg->argvalue.uh = (ushort) va_arg(ap, int);
+        farg->value.uh = (ushort) va_arg(ap, int);
         break;
     case LM_LONG :
-        farg->argvalue.ul = va_arg(ap, ulong);
+        farg->value.ul = va_arg(ap, ulong);
         break;
     case LM_LLONG :
-        farg->argvalue.ull = va_arg(ap, ullong_t);
+        farg->value.ull = va_arg(ap, ullong_t);
         break;
     case LM_ULONG :
-        farg->argvalue.ul = va_arg(ap, ulong);
+        farg->value.ul = va_arg(ap, ulong);
         break;
     }
 }
@@ -66,12 +66,12 @@ void get_argvalue_other(farg_t *farg, va_list ap)
         farg->lenmodif = LM_ULONG;
         break;
     case CS_PERC :
-        farg->argvalue.c = '%';
+        farg->value.c = '%';
         farg->convspec = CS_CHAR;
         break;
     case CS_STR :
     case CS_STR2 :
-        farg->argvalue.str = va_arg(ap, char *);
+        farg->value.str = va_arg(ap, char *);
         break;
     }
 }

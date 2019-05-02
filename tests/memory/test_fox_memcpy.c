@@ -38,4 +38,3 @@ Test(memcpy, found_c)
     cr_assert_not_null(dstend);
     cr_expect_eq(dstend, dst + i + 1);
 }
-

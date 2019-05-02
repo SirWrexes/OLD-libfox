@@ -17,8 +17,6 @@ void *proc_autofree(size_t n)
     return ptr;
 }
 
-TestSuite(autofree, .init = cr_redirect_stderr);
-
 Test(autofree, regular_usage, .signal = SIGABRT)
 {
     char *test = proc_autofree(12 * sizeof(*test));

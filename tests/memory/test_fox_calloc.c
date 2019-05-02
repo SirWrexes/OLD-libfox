@@ -8,8 +8,6 @@
 #include "fox_memory.h"
 #include "test_include.h"
 
-tsuite_t test_suite(calloc, .fini = reset_malloc_cpt);
-
 Test(calloc, regular_usage)
 {
     char *str = fox_calloc(42, sizeof(*str));
@@ -37,4 +35,3 @@ Test(calloc, broken_malloc)
     break_malloc_at(0);
     cr_expect_null(fox_calloc(42, sizeof(char*)));
 }
-

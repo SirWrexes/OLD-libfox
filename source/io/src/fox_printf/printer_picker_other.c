@@ -13,11 +13,11 @@ ssize_t print_other(int fd, farg_t const * const arg)
     switch (arg->convspec) {
     default : return 0;
     case CS_CHAR :
-        return fox_fputc(fd, arg->argvalue.c);
+        return fox_fputc(fd, arg->value.c);
     case CS_STR :
-        return fox_fputs(fd, arg->argvalue.str);
+        return fox_fputs(fd, arg->value.str);
     case CS_STR2 :
-        return fox_fputnps(fd, arg->argvalue.str);
+        return fox_fputnps(fd, arg->value.str);
     case CS_LEN :
         return fox_putullong(N_GET);
     }

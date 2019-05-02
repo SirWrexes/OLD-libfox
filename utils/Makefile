@@ -1,8 +1,8 @@
 ##
-## <COMPANY>, <YEAR>
-## <PROJECT>
+## <COMPANY> <YEAR>
+## <PROJECT NAME>
 ## File description:
-## <DESCRIPTION>
+## Core Makefile
 ##
 
 
@@ -18,9 +18,9 @@
 #
 # Fundamentals
 ##############################
-PROJECT     =
+PROJECT     =	
 TESTBIN     =	tests_run
-SHELL       =	/bin/sh
+SHELL       =	/bin/bash
 MAKE        =	make --silent -C
 RM          =	rm -f
 CP          =	cp -t
@@ -38,7 +38,7 @@ PDIR        =	.
 TDIR        =	$(PDIR)/tests
 #------------------------------
 TSRC        =	$(TDIR)
-PSRC        =	$(PDIR)/src
+PSRC        =	$(PDIR)/source
 #------------------------------
 TINC        =	$(TDIR)/include
 PINC        =	$(PDIR)/include
@@ -78,12 +78,26 @@ CRESET      :=	\033[0m
 # \033[38;2;<R>;<G>;<B>m
 CRED        :=	\033[38;2;255;0;0m
 CGREEN      :=	\033[38;2;0;255;0m
+CLIGHTGREEN :=	\033[38;2;190;255;200m
 CBLUE       :=	\033[38;2;0;0;255m
 CLIGHTBLUE  :=	\033[38;2;88;255;250m
+CYELLOW     :=	\033[38;2;255;247;3m
 
 # Format
 CBOLD       :=	\033[1m
 CUNDERLN    :=	\033[4m
+##########################################
+
+#
+# Progress counter
+##########################################
+ifndef ECHO
+T           :=	$(shell make -nrRf $(firstword $(MAKEFILE_LIST)) $(MAKECMDGOALS) \
+                  ECHO="P-COUNT" | grep -c "P-COUNT")
+N           :=	x
+C           :=	0
+ECHO         = echo -e "$(CGREEN)[$(PROJECT) | `expr $C '*' 100 / $T`%]$(CRESET)"$(eval N = x $N)$(eval C = $(words $N))
+endif
 ##########################################
 
 #
@@ -135,9 +149,9 @@ GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 # to modules used in the project
 
 #USEDMODULES +=	$(LFOX_GRAPH)
-#USEDMODULES +=	$(LFOX_IO)
+USEDMODULES +=	$(LFOX_IO)
 #USEDMODULES +=	$(LFOX_MEMORY)
-#USEDMODULES +=	$(LFOX_STRING)
+USEDMODULES +=	$(LFOX_STRING)
 
 # I wasted way to much sleep time
 # making this. Please buy me a coffee.
@@ -156,27 +170,31 @@ GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo -e "[$(PROJECT)] $(CGREEN)Compile OK ✓$(CRESET) $@"
+	@$(ECHO) "$(CLIGHTGREEN)Compile OK ✓$(CRESET) $@"
+	@sleep 0.1
+
 
 .PHONY: $(LFOX)
 $(LFOX):
-	@if ( ! $(MAKE) $(FOXDIR) $(USEDMODULES) );                     \
-	then                                                            \
-	    echo    "[$(LFOX)]: Making modules {$(USEDMODULES)}" | cat; \
-	    $(MAKE) $(FOXDIR) $(USEDMODULES);                           \
+	@if ( ! $(MAKE) $(FOXDIR) $(USEDMODULES) -q );              \
+	then                                                        \
+	    $(ECHO) "Making Lib$(LFOX) modules {$(USEDMODULES)}";   \
+	    $(MAKE) $(FOXDIR) $(USEDMODULES);                       \
+	else                                                        \
+	    echo -e "$(CGREEN)[$(PROJECT)]$(CRESET) Lib$(LFOX) modules are up to date."; \
 	fi
 
 .PHONY: $(LFOX)-tests
 $(LFOX)-tests:
-	@if ( ! $(MAKE) $(FOXDIR) tests );                \
-	then                                              \
-	    echo    "[$(LFOX)]: Making unit tests" | cat; \
-	    $(MAKE) $(FOXDIR) tests;                      \
+	@if ( ! $(MAKE) $(FOXDIR) tests ); \
+	then                               \
+	    $(ECHO) "Making unit tests";   \
+	    $(MAKE) $(FOXDIR) tests;       \
 	fi
 
 .PHONY: $(LFOX)-clean
 $(LFOX)-clean:
-	@echo "[$(PROJECT)] Cleaning slave targets" | cat
+	@$(ECHO) "Cleaning slave targets"
 	@if [ -e $(FOXDIR)/unit_tests ];                                           \
 	then                                                                       \
 	    $(MAKE) $(FOXDIR) fclean;                                              \
@@ -187,35 +205,35 @@ $(LFOX)-clean:
 .PHONY: build
 build: $(FILES)
 	@$(MAKE) . $(FILES)
-	@echo  -e  "[$(PROJECT)] $(CBOLD)Linking with follwing options (ordered):$(CRESET)"       | cat
-	@echo  -e  "[$(PROJECT)] $(CUNDERLN)CC$(CRESET)      = $(CC)"                             | cat
-	@echo  -ne "[$(PROJECT)] $(CUNDERLN)FILES$(CRESET)   = \n$(foreach i,$(FILES),\t$(i)\n)"  | cat
-	@echo  -ne "[$(PROJECT)] $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)" | cat
-	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)"| cat
-	@echo  -ne "[$(PROJECT)] $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)" | cat
+	@echo  -e  "$(CGREEN)[$(PROJECT)]$(CRESET) $(CBOLD)Linking with follwing options (ordered):$(CRESET)"
+	@echo  -e  "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)CC$(CRESET)      = $(CC)"
+	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)FILES$(CRESET)   = \n$(foreach i,$(sort $(FILES)),\t$(i)\n)"
+	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)"
+	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)"
+	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)"
 	@$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-	@echo  -e  "[$(PROJECT)] $(CGREEN)Linking OK$(CRESET)" | cat
+	@echo  -e  "$(CGREEN)[$(PROJECT)] $(CLIGHTGREEN)$(CBOLD)Linking OK$(CRESET)"
 
 .PHONY: clean
 clean: FOXCLEAN = clean
 clean: $(LFOX)-clean
-	@echo    "[$(PROJECT)] Removing coverage files"       | cat
+	@$(ECHO) "Removing coverage files"
 	@-$(RM)  *.gc* tests/*.gc*
-	@echo    "[$(PROJECT)] Removing object files"         | cat
+	@$(ECHO) "Removing object files"
 	@-$(RM)  $(OBJ) $(MAIN:.c=.o)
-	@echo     "[$(PROJECT)] Removing dependency files"    | cat
+	@$(ECHO)  "Removing dependency files"
 	@-$(RM)   $(DEP)
 
 .PHONY: fclean
 fclean: FOXCLEAN = fclean
 fclean: $(LFOX)-clean
-	@echo     "[$(PROJECT)] Removing coverage files"      | cat
+	@$(ECHO)  "Removing coverage files"
 	@-$(RM)   *.gc* tests/*.gc*
-	@echo     "[$(PROJECT)] Removing object files"        | cat
+	@$(ECHO)  "Removing object files"
 	@-$(RM)   $(OBJ) $(MAIN:.c=.o)
-	@echo     "[$(PROJECT)] Removing binary"              | cat
+	@$(ECHO)  "Removing binary"
 	@-$(RM)   $(PROJECT) $(PROJECT)_gdb $(PROJECT)_vgd
-	@echo     "[$(PROJECT)] Removing test binary"         | cat
+	@$(ECHO)  "Removing test binary"
 	@-$(RM)   $(TESTBIN)
 
 .PHONY: re
@@ -276,9 +294,9 @@ $(TESTBIN): $(LFOX) build
 #
 # Project
 ##############################
-MAIN        :=
+MAIN        :=	$(PSRC)/main.c
 #------------------------------
-SRC         +=
+SRC         +=	
 ##############################
 
 #

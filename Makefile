@@ -16,9 +16,9 @@
 #
 # Fundamentals
 ##############################
-PROJECT      =	libfox
+PROJECT      =	Libfox
 TESTBIN      =	unit_tests
-SHELL        =	/bin/sh
+SHELL        =	/bin/bash
 MAKE         =	make --silent -C
 RM           =	rm -f
 CP           =	cp -t
@@ -93,27 +93,50 @@ CRESET      :=	\033[0m
 # \033[38;2;<R>;<G>;<B>m
 CRED        :=	\033[38;2;255;0;0m
 CGREEN      :=	\033[38;2;0;255;0m
+CLIGHTGREEN :=  \033[38;2;190;255;200m
 CBLUE       :=	\033[38;2;0;0;255m
 CLIGHTBLUE  :=	\033[38;2;88;255;250m
+CORANGE     :=	\033[38;2;255;167;4m
+
+# Format
+CBOLD       :=  \033[1m
+CUNDERLN    :=  \033[4m 
+##########################################
+
+#
+# Progress counter
+##########################################
+ifndef ECHO
+T           :=  $(shell make --no-print-directory -nrRf $(firstword $(MAKEFILE_LIST)) $(MAKECMDGOALS) \
+                  ECHO="LFOX-COUNT" | grep -c "LFOX-COUNT")
+N           :=  
+C           :=  0
+ECHO         = echo -e "$(CORANGE)[$(PROJECT) | `expr $C '*' 100 / $T`% ($(NAME))]$(CRESET)"$(eval N = x $N)$(eval C = $(words $N))
+endif
 ##########################################
 
 #
 # Customized implicit rules
 ##########################################
+ifneq ("LFOX-COUNT",$(ECHO))
 %.a:
-	@if [ -e $@ ];                                             \
-	then                                                       \
-	    echo -e "[$(NAME)] Updating $(CLIGHTBLUE)$@$(CRESET)"; \
-	    ar ru $@ $^;                                           \
-	else                                                       \
-	    echo -e "[$(NAME)] Creating $(CLIGHTBLUE)$@$(CRESET)"; \
-	    ar rc $@ $^;                                           \
+	@if [ -e $@ ];                                   \
+	then                                             \
+	    $(ECHO) "Updating $(CLIGHTBLUE)$@$(CRESET)"; \
+	    ar ru $@ $^;                                 \
+	else                                             \
+	    $(ECHO) "Creating $(CLIGHTBLUE)$@$(CRESET)"; \
+	    ar rc $@ $^;                                 \
 	fi
+else
+%.a:
+	@$(ECHO)
+endif
 #------------------------------
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-	@echo -e "[$(NAME)] $(CGREEN)Compile OK ✓$(CRESET) $@"
+	@$(ECHO) "$(CLIGHTGREEN)Compile OK ✓$(CRESET) $@"
 ##########################################
 
 
@@ -303,13 +326,17 @@ SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strtok.c
 ############################
 .PHONY: all $(PROJECT)
 $(PROJECT): all
-all: graph io memory string tests
+all: libfox_graph.a
+all: libfox_io.a
+all: libfox_memory.a
+all: libfox_string.a
+all: tests
 
 .PHONY: tests
 tests: RUNFLAGS = --always-succeed --timeout 5
 tests: COVFLAGS = -s --root $(DIR_SRC) .
 tests: $(TESTBIN)
-	@echo "[Libfox] Unit tests"
+	@echo "[$(PROJECT)] Unit tests"
 	@$(GCOV) $(COVFLAGS)
 	@./$(TESTBIN) $(RUNFLAGS)
 
@@ -322,18 +349,20 @@ $(TESTBIN):
 
 .PHONY: clean
 clean: clean-graph clean-io clean-memory clean-string
-	@if ls *.gc* 1 > /dev/null 2>&1;               \
-	then                                           \
-	    echo   "[Libfox] Removing coverage files"; \
-	    $(RM)  *.gc*;                              \
+	@if ls *.gc* 1 > /dev/null 2>&1;                    \
+	then                                                \
+	    $(eval NAME = "Cleanup");                       \
+	    $(ECHO) "[$(PROJECT)] Removing coverage files"; \
+	    $(RM)   **.gcda **.gcno;                        \
 	fi
 
 .PHONY: fclean
 fclean: fclean-graph fclean-io fclean-memory fclean-string
-	@if [ -e $(TESTBIN) ];                       \
-	then                                         \
-	    echo   "[Libfox] Removing test binary";  \
-	    $(RM)  $(TESTBIN);                       \
+	@if [ -e $(TESTBIN) ];                           \
+	then                                             \
+	    $(eval NAME = "Cleanup");                    \
+	    $(ECHO) "[$(PROJECT)] Removing test binary"; \
+	    $(RM)   $(TESTBIN);                          \
 	fi
 
 .PHONY: re
@@ -354,19 +383,19 @@ libfox_graph.a: $(SRC_GRAPH:.c=.o)
 
 .PHONY: clean-graph
 clean-graph:
-	@echo   "[$(NAME)] Removing object files"
-	@$(RM)  $(SRC:.c=.o)
-	@echo   "[$(NAME)] Deleting temp files"
-	@$(RM)  *~ **.gc*
-	@echo   "[$(NAME)] Deleting dummy binaries (a.out)"
-	@$(RM)  a.out
+	@$(ECHO) "Removing object files"
+	@$(RM)   $(SRC:.c=.o)
+	@$(ECHO) "Deleting temp files"
+	@$(RM)   *~ **.gc*
+	@$(ECHO) "Deleting dummy binaries (a.out)"
+	@$(RM)   a.out
 
 .PHONY: fclean-graph
 fclean-graph: clean-graph
-	@echo   "[$(NAME)] Deleting dependency files"
-	@$(RM)  $(SRC:.c=.d)
-	@echo   "[$(NAME)] Deleting lib file"
-	@$(RM)  libfox_graph.a
+	@$(ECHO) "Deleting dependency files"
+	@$(RM)   $(SRC:.c=.d)
+	@$(ECHO) "Deleting lib file"
+	@$(RM)   libfox_graph.a
 
 .PHONY: re-graph
 re-graph: fclean-graph lib-graph
@@ -386,19 +415,19 @@ libfox_io.a: $(SRC_IO:.c=.o)
 
 .PHONY: clean-io
 clean-io:
-	@echo   "[$(NAME)] Removing object files"
-	@$(RM)  $(SRC:.c=.o)
-	@echo   "[$(NAME)] Deleting temp files"
-	@$(RM)  *~ **.gc*
-	@echo   "[$(NAME)] Deleting dummy binaries (a.out)"
-	@$(RM)  a.out
+	@$(ECHO) "Removing object files"
+	@$(RM)   $(SRC:.c=.o)
+	@$(ECHO) "Deleting temp files"
+	@$(RM)   *~ **.gc*
+	@$(ECHO) "Deleting dummy binaries (a.out)"
+	@$(RM)   a.out
 
 .PHONY: fclean-io
 fclean-io: clean-io
-	@echo   "[$(NAME)] Deleting dependency files"
-	@$(RM)  $(SRC:.c=.d)
-	@echo   "[$(NAME)] Deleting lib file"
-	@$(RM)  libfox_io.a
+	@$(ECHO) "Deleting dependency files"
+	@$(RM)   $(SRC:.c=.d)
+	@$(ECHO) "Deleting lib file"
+	@$(RM)   libfox_io.a
 
 .PHONY: re-io
 re-io: fclean-io io
@@ -418,19 +447,19 @@ libfox_memory.a: $(SRC_MEMORY:.c=.o)
 
 .PHONY: clean-memory
 clean-memory:
-	@echo   "[$(NAME)] Removing object files"
-	@$(RM)  $(SRC:.c=.o)
-	@echo   "[$(NAME)] Deleting temp files"
-	@$(RM)  *~ **.gc*
-	@echo   "[$(NAME)] Deleting dummy binaries (a.out)"
-	@$(RM)  a.out
+	@$(ECHO) "Removing object files"
+	@$(RM)   $(SRC:.c=.o)
+	@$(ECHO) "Deleting temp files"
+	@$(RM)   *~ **.gc*
+	@$(ECHO) "Deleting dummy binaries (a.out)"
+	@$(RM)   a.out
 
 .PHONY: fclean-memory
 fclean-memory: clean-memory
-	@echo   "[$(NAME)] Deleting dependency files"
-	@$(RM)  $(SRC:.c=.d)
-	@echo   "[$(NAME)] Deleting lib file"
-	@$(RM)  libfox_memory.a
+	@$(ECHO) "Deleting dependency files"
+	@$(RM)   $(SRC:.c=.d)
+	@$(ECHO) "Deleting lib file"
+	@$(RM)   libfox_memory.a
 
 .PHONY: re-memory
 re-memory: fclean-memory memory
@@ -450,19 +479,19 @@ libfox_string.a: $(SRC_STRING:.c=.o)
 
 .PHONY: clean-string
 clean-string:
-	@echo   "[$(NAME)] Removing object files"
-	@$(RM)  $(SRC:.c=.o)
-	@echo   "[$(NAME)] Deleting temp files"
-	@$(RM)  *~ **.gc*
-	@echo   "[$(NAME)] Deleting dummy binaries (a.out)"
-	@$(RM)  a.out
+	@$(ECHO) "Removing object files"
+	@$(RM)   $(SRC:.c=.o)
+	@$(ECHO) "Deleting temp files"
+	@$(RM)   *~ **.gc*
+	@$(ECHO) "Deleting dummy binaries (a.out)"
+	@$(RM)   a.out
 
 .PHONY: fclean-string
 fclean-string: clean-string
-	@echo   "[$(NAME)] Deleting dependency files"
-	@$(RM)  $(SRC:.c=.d)
-	@echo   "[$(NAME)] Deleting lib file"
-	@$(RM)  libfox_string.a
+	@$(ECHO) "Deleting dependency files"
+	@$(RM)   $(SRC:.c=.d)
+	@$(ECHO) "Deleting lib file"
+	@$(RM)   libfox_string.a
 
 .PHONY: re-string
 re-string: fclean-string string

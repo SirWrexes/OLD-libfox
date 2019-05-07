@@ -8,6 +8,8 @@
 #ifndef FOX_MACRO
 #define FOX_MACRO
 
+#include <stddef.h>
+
 /*
 ** Following macros are sorted in contextual order and follow this template :
 **
@@ -21,6 +23,7 @@
     #define LIBFOX_MACRO_UNDEF
     #undef __a
     #undef __cleanup
+    #undef __packed
     #undef __transparent
     #undef __unused
     #undef CTOI
@@ -53,7 +56,8 @@
     // Shorter ways of writing attributes
     // For more information about these, check GNU GCC's docs
     #define __a(attributes)     __attribute__(attributes)
-    #define __transparent        __a((__transparent_union__))
+    #define __packed            __a((packed))
+    #define __transparent       __a((__transparent_union__))
     #define __unused            __a((unused))
     #define __cleanup(janitor)  __a((cleanup(janitor)))
 
@@ -132,11 +136,6 @@
     // -- I.G. returning a specific value while printing an error string
     #define RETURN(value, funcs...) return (0 ? : (funcs, value))
 #endif // LIBFOX_MACRO_DEF
-
-// I find it annoying to have to include <stddef.h> everwhere
-#ifndef NULL
-    #define NULL (void*) 0x0
-#endif
 
 #ifndef FOX_CCSTR_TYPE
     #define VCCSTR_TYPE

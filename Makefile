@@ -348,7 +348,7 @@ $(TESTBIN):
 clean: clean-graph clean-io clean-memory clean-string
 	@if ls *.gc* 1 > /dev/null 2>&1;                    \
 	then                                                \
-	    $(eval NAME = "Cleanup");                       \
+	    $(eval NAME = "Cleanup")                        \
 	    $(ECHO) "[$(PROJECT)] Removing coverage files"; \
 	    $(RM)   **.gcda **.gcno;                        \
 	fi
@@ -357,7 +357,7 @@ clean: clean-graph clean-io clean-memory clean-string
 fclean: fclean-graph fclean-io fclean-memory fclean-string
 	@if [ -e $(TESTBIN) ];                           \
 	then                                             \
-	    $(eval NAME = "Cleanup");                    \
+	    $(eval NAME = "Cleanup")                     \
 	    $(ECHO) "[$(PROJECT)] Removing test binary"; \
 	    $(RM)   $(TESTBIN);                          \
 	fi

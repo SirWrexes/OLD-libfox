@@ -51,6 +51,9 @@ cmake*
 *.idb
 *.pdb
 *gdb*
+*.gcda
+*.gcno
+*.vgcore
 
 # Kernel Module Compile Results
 *.mod*
@@ -69,5 +72,6 @@ _subject/
 
 # Test sources
 aout.c
+unit_tests
 
 # End of https://www.gitignore.io/api/c

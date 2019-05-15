@@ -1,8 +1,8 @@
 ##
 ## <COMPANY> <YEAR>
-## <PROJECT NAME>
+## <PROJECT>
 ## File description:
-## Core Makefile
+## <DESCRIPTION>
 ##
 
 
@@ -37,14 +37,32 @@ CC          =	gcc
 PDIR        =	.
 TDIR        =	$(PDIR)/tests
 #------------------------------
-TSRC        =	$(TDIR)
+TSRC        =	$(TDIR)/source
 PSRC        =	$(PDIR)/source
 #------------------------------
 TINC        =	$(TDIR)/include
 PINC        =	$(PDIR)/include
 #------------------------------
+BINDIR      =	$(PDIR)
+#------------------------------
 VPATH       =	$(PSRC):$(TSRC)
 ##############################
+
+#
+# Libfox Module automation
+##############################
+# Uncomment lines corresponding
+# to modules used in the project
+
+#USEDMODULES +=	$(LFOX_GRAPH)
+#USEDMODULES +=	$(LFOX_IO)
+#USEDMODULES +=	$(LFOX_MEMORY)
+#USEDMODULES +=	$(LFOX_STRING)
+
+# I wasted way to much sleep time
+# making this. Please buy me a coffee.
+##############################
+
 
 #
 # Don't touch that
@@ -142,21 +160,6 @@ GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(TDIR))
 GCOVFLAGS   +=	--exclude-directories $(subst ./,,$(FOXDIR))
 ##############################
 
-#
-# Module automation
-##############################
-# Uncomment lines corresponding
-# to modules used in the project
-
-#USEDMODULES +=	$(LFOX_GRAPH)
-USEDMODULES +=	$(LFOX_IO)
-#USEDMODULES +=	$(LFOX_MEMORY)
-USEDMODULES +=	$(LFOX_STRING)
-
-# I wasted way to much sleep time
-# making this. Please buy me a coffee.
-##############################
-
 
 
 ################################################################################
@@ -170,10 +173,11 @@ USEDMODULES +=	$(LFOX_STRING)
 %.o: CFLAGS += -MT $@ -MMD
 %.o: %.c
 	@$(CC) $(CFLAGS) -c -o $@ $<
-	@$(ECHO) "$(CLIGHTGREEN)Compile OK ✓$(CRESET) $@"
+	@$(ECHO) "$(CLIGHTGREEN)Compile OK ✓$(CRESET) $(subst $(PSRC)/,,$@)"
+	@$(eval RELINK = 1)
 	@sleep 0.1
 
-
+ifdef USEDMODULES
 .PHONY: $(LFOX)
 $(LFOX):
 	@if ( ! $(MAKE) $(FOXDIR) $(USEDMODULES) -q );              \
@@ -202,17 +206,32 @@ $(LFOX)-clean:
 	    $(foreach mod,$(USEDMODULES), $(MAKE) $(FOXDIR) $(FOXCLEAN)-$(mod);)   \
 	fi
 
+else
+.PHONY: $(LFOX)
+$(LFOX):
+	@echo -n ""
+
+.PHONY: $(LFOX)-clean
+$(LFOX)-tests:
+	@$(MAKE) $(FOXDIR) fclean 
+
+endif
+
 .PHONY: build
-build: $(FILES)
-	@$(MAKE) . $(FILES)
-	@echo  -e  "$(CGREEN)[$(PROJECT)]$(CRESET) $(CBOLD)Linking with follwing options (ordered):$(CRESET)"
-	@echo  -e  "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)CC$(CRESET)      = $(CC)"
-	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)FILES$(CRESET)   = \n$(foreach i,$(sort $(FILES)),\t$(i)\n)"
-	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)"
-	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)"
-	@echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)"
-	@$(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS)
-	@echo  -e  "$(CGREEN)[$(PROJECT)] $(CLIGHTGREEN)$(CBOLD)Linking OK$(CRESET)"
+build: $(FILES) $(BIN)
+	@
+	@if ( ! $(MAKE) . $(FILES) -q ); \
+	then                             \
+	    $(MAKE) . $(FILES);          \
+	    echo  -e  "$(CGREEN)[$(PROJECT)]$(CRESET) $(CBOLD)Linking with follwing options (ordered):$(CRESET)";                                 \
+	    echo  -e  "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)CC$(CRESET)      = $(CC)";                                                       \
+	    echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)FILES$(CRESET)   = \n$(foreach i,$(sort $(subst $(PSRC)/,,$(FILES))),\t$(i)\n)"; \
+	    echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)CFLAGS$(CRESET)  = \n$(foreach i,$(CFLAGS),\t$(i)\n)";                           \
+	    echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)LDFLAGS$(CRESET) = \n$(foreach i,$(LDFLAGS),\t$(i)\n)";                          \
+	    echo  -ne "$(CGREEN)[$(PROJECT)]$(CRESET) $(CUNDERLN)LDLIBS$(CRESET)  = \n$(foreach i,$(LDLIBS),\t$(i)\n)";                           \
+	    $(CC) -o  $(BIN) $(FILES) $(CFLAGS) $(LDFLAGS) $(LDLIBS);                                                                             \
+	    echo  -e  "$(CGREEN)[$(PROJECT)] $(CLIGHTGREEN)$(CBOLD)Linking OK$(CRESET)";                                                          \
+	fi
 
 .PHONY: clean
 clean: FOXCLEAN = clean
@@ -232,9 +251,9 @@ fclean: $(LFOX)-clean
 	@$(ECHO)  "Removing object files"
 	@-$(RM)   $(OBJ) $(MAIN:.c=.o)
 	@$(ECHO)  "Removing binary"
-	@-$(RM)   $(PROJECT) $(PROJECT)_gdb $(PROJECT)_vgd
+	@-$(RM)   $(BINDIR)/$(PROJECT) $(BINDIR)/$(PROJECT)_gdb $(BINDIR)/$(PROJECT)_vgd
 	@$(ECHO)  "Removing test binary"
-	@-$(RM)   $(TESTBIN)
+	@-$(RM)   $(BINDIR)/$(TESTBIN)
 
 .PHONY: re
 re:	fclean all
@@ -252,22 +271,35 @@ re:	fclean all
 .PHONY: all
 all: $(PROJECT)
 
-$(PROJECT): BIN   = $(PROJECT)
+ifneq "$(BINDIR)" "."
+
+.PHONY: $(PROJECT)
+.PHONY: $(PROJECT)_gdb
+.PHONY: $(PROJECT)_vgd
+.PHONY: $(TESTBIN)
+
+endif
+
+$(BINDIR)/$(PROJECT): $(PROJECT)
+$(PROJECT): BIN   = $(BINDIR)/$(PROJECT)
 $(PROJECT): FILES = $(MAIN:.c=.o) $(OBJ)
+$(PROJECT): CFLAGS += -O
 $(PROJECT): $(LFOX) build
 
-$(PROJECT)_gdb: BIN     = $(PROJECT)_gdb
+$(BINDIR)/$(PROJECT)_gdb: $(POJECT)_gdb
+$(PROJECT)_gdb: BIN     = $(BINDIR)/$(PROJECT)_gdb
 $(PROJECT)_gdb: CFLAGS += -g
 $(PROJECT)_gdb: FILES   = $(MAIN) $(SRC)
 $(PROJECT)_gdb: $(LFOX) build
 
-
-$(PROJECT)_vgd: BIN     = $(PROJECT)_vgd
+$(BINDIR)/$(PROJECT)_vgd: $(PROJECT)_vgd
+$(PROJECT)_vgd: BIN     = $(BINDIR)/$(PROJECT)_vgd
 $(PROJECT)_vgd: CFLAGS += -g3
 $(PROJECT)_vgd: FILES   = $(MAIN:.c=.o) $(OBJ)
 $(PROJECT)_vgd: $(LFOX) build
 
-$(TESTBIN): BIN      = $(TESTBIN)
+$(BINDIR)/$(TESTBIN): $(TESTBIN)
+$(TESTBIN): BIN      = $(BINDIR)/$(TESTBIN)
 $(TESTBIN): DEFINE  += $(TDEFINE)
 $(TESTBIN): CFLAGS  += $(WRAPPERS)
 $(TESTBIN): LDFLAGS += $(TLDFLAGS)
@@ -294,7 +326,7 @@ $(TESTBIN): $(LFOX) build
 #
 # Project
 ##############################
-MAIN        :=	$(PSRC)/main.c
+MAIN        :=	$(PSRC)/
 #------------------------------
 SRC         +=	
 ##############################

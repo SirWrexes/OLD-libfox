@@ -348,20 +348,20 @@ $(TESTBIN):
 
 .PHONY: clean
 clean: clean-graph clean-io clean-memory clean-string
-	@if ls *.gc* 1 > /dev/null 2>&1;                    \
-	then                                                \
-	    $(eval NAME = "Cleanup")                        \
-	    $(ECHO) "[$(PROJECT)] Removing coverage files"; \
-	    $(RM)   **.gcda **.gcno;                        \
+	@if ls *.gc* 1 > /dev/null 2>&1;       \
+	then                                   \
+	    $(eval NAME = "Cleanup")           \
+	    $(ECHO) "Removing coverage files"; \
+	    $(RM)   **.gcda **.gcno;           \
 	fi
 
 .PHONY: fclean
 fclean: fclean-graph fclean-io fclean-memory fclean-string
-	@if [ -e $(TESTBIN) ];                           \
-	then                                             \
-	    $(eval NAME = "Cleanup")                     \
-	    $(ECHO) "[$(PROJECT)] Removing test binary"; \
-	    $(RM)   $(TESTBIN);                          \
+	@if [ -e $(TESTBIN) ];              \
+	then                                \
+	    $(eval NAME = "Cleanup")        \
+	    $(ECHO) "Removing test binary"; \
+	    $(RM)   $(TESTBIN);             \
 	fi
 
 .PHONY: re

@@ -297,10 +297,7 @@ SRC_TESTS   +=	$(DIR_TEST)/memory/test_fox_realloc.c
 #-- String
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_atoi1.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_atoi2.c
-SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_isnum1.c
-SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_isnum2.c
-SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_isnum3.c
-SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_isnum4.c
+SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_isnum.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_revstr.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strcmp1.c
 SRC_TESTS   +=	$(DIR_TEST)/string/test_fox_strcmp2.c

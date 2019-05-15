@@ -43,4 +43,11 @@ str_t fox_strtok_r(str_t str, str3c_t delim, str_t *old);
 size_t fox_strspn(str3c_t str, str3c_t accept) __a((pure));
 size_t fox_strcspn(str3c_t str, str3c_t reject) __a((pure));
 
+// Returns true if str contains character accept
+bool fox_strcont_c(str2c_t str, char accept) __a((nonnull, pure));
+// Returns true if str contains any character from accept
+bool fox_strcont(str2c_t str, str3c_t accept) __a((nonnull, pure));
+// Returns true if str contains only chars from accept
+bool fox_strcont_r(str2c_t str, str3c_t accept) __a((nonnull, pure));
+
 #endif //LIBFOX_FOX_STRING_H

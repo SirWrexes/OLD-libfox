@@ -15,8 +15,8 @@ bool fox_isnum(str3c_t str)
     for (i = 0; str[i] && IS_SIGN(str[i]); i += 1);
     if (str[i] == '\0')
         return false;
-    while (str[i])
-        if (!IS_NUM(str[i++]))
+    for (; str[i]; i += 1)
+        if (!IS_NUM(str[i]))
             return false;
     return true;
 }

@@ -1,4 +1,4 @@
-___# Almost everything here is outdated.___
+# ___Almost everything here is outdated.___
 
 # Modular Makefile example
 This folder contains a basic CMakeLists.txt template for Clion users like me.

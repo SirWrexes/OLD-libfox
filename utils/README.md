@@ -1,3 +1,5 @@
+___# Almost everything here is outdated.___
+
 # Modular Makefile example
 This folder contains a basic CMakeLists.txt template for Clion users like me.
 It also contains my gitignore which is basically GitHub's with a few additions,
